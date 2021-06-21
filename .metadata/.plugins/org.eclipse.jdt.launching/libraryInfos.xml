@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="D:\Anwendungen\Coding\Java\jre-8u191" version="1.8.0_191">
+<bootpath>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\resources.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\rt.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\sunrsasign.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\jsse.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\jce.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\charsets.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\jfr.jar"/>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\ext"/>
+<entry path="C:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="D:\Anwendungen\Coding\Java\jre-8u191\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

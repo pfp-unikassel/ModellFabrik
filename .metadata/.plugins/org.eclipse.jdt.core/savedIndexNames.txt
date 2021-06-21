@@ -1,0 +1,6 @@
+INDEX VERSION 1.129+D:\Daten\Lejos Eclipse Offical\.metadata\.plugins\org.eclipse.jdt.core
+966229569.index
+400399894.index
+605304343.index
+254052302.index
+4191622240.index
