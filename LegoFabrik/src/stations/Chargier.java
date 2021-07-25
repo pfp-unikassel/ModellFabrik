@@ -183,6 +183,10 @@ public class Chargier {
 		//Theoretischer Wert, testen ob Sensoren genau genug sind
 		drehtischRotieren.rotateTo(0);
 		
+		
+		//-----------TODO-----------
+		//Test drehtisch.rotate 
+	
 		//Alternative, Grad hardcoden und testen
 		// drehtischRotieren.rotate(30);
 		
