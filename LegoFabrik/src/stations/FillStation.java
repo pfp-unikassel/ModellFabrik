@@ -9,9 +9,9 @@ public class FillStation {
 
 	private Steuerung s;
 	private RMIRegulatedMotor wheel;
-	private int wheelspeed =90; //60
-	private int numberOfTurns = 0; // 1 turn 360degree
-	private int numberOfDeliveredBalls =0;
+	private int wheelspeed = 90; //60
+	private int numberOfTurns = 0; // 1 turn 360 degree
+	private int numberOfDeliveredBalls = 0;
 	
 	public FillStation(Steuerung s, RMIRegulatedMotor m){
 		this.s=s;

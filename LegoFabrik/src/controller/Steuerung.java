@@ -1,7 +1,7 @@
 package controller;
 
 /**
- *  wird vom Controller des Ui´s initialisiert.
+ *  wird vom Controller des Ui's initialisiert.
  *  Steuerung ist das Hauptprogramm welches alle anderen subprogramme verbindet und steuert.
  *	Es Initialisiert die Lego Bricks, hier müssen auch die Ip´s hinterlegt werden.
  * 	Initialisiert ebenfalls den SensorDeamon, die Station und den LegoClient
@@ -149,6 +149,10 @@ public class Steuerung {
 	private boolean b1054Status = false;
 	private boolean b1061Status = false;
 	private boolean b1072Status = false;
+	
+	//Neu
+	private boolean b1051Status = false;
+	private boolean b1052Status = false;
 
 	private Controller c;
 	private static LegoClient legoClient;
@@ -955,10 +959,6 @@ public class Steuerung {
 	// --------------------------------------------------------
 
 	public void b1053Fired() { // lift schalter
-		/**
-		 * Programm ablauf wartet auf diesen boolean
-		 * Sensor lift schalter
-		 */
 		chargier.touchLiftfired();
 		b1053Status = true;
 	}
@@ -970,6 +970,17 @@ public class Steuerung {
 		 */
 		chargier.touchTablefired();
 		b1054Status = true;
+	}
+	
+	
+	public void b1051Fired() { // drehtischschalter Richtung Lager
+		chargier.touchTable1fired();
+		b1051Status = true;
+	}
+
+	public void b1052Fired() { // drehtischschalter Richtung Rüttelplatte
+		chargier.touchTable2fired();
+		b1052Status = true;
 	}
 
 	public void b1061Fired() { // ultraschall sensor
@@ -1028,6 +1039,13 @@ public class Steuerung {
 		b1054Status = false;
 		b1061Status = false;
 		b1072Status = false;
+		
+		
+		//TODO noch Variablenname ändern
+		
+		b1051Status = false;
+		b1052Status = false;
+		
 		quality.resetColorString();
 	}
 
@@ -1164,7 +1182,7 @@ public class Steuerung {
 						while (!b1054Status) {
 							System.out.println("hänge in schleife 1");
 						}
-
+						//Hier die Sensoren resetten
 						chargier.stopLineToTable();
 						chargier.stopTableLine();
 						chargier.turnTable(660, false);
@@ -1173,8 +1191,9 @@ public class Steuerung {
 						chargier.startTableLine(false);
 
 						while (!b1053Status) {
-							System.out.println("hänge in schleife 2");
+							System.out.println("hänge in schleife 2");	
 						}
+						
 						chargier.stopLineToLifter();
 						chargier.stopTableLine();
 						chargier.startLineToLifter(true);
@@ -1464,16 +1483,27 @@ public class Steuerung {
 						Thread.sleep(100);
 					}
 					
-				System.out.println("Sensorschleife 01 verlassen.");
-
+					System.out.println("Sensorschleife 01 verlassen.");
 					chargier.stopLineToTable();
 					chargier.stopTableLine();
-					int speed = chargier.turnToLift(false);
+					
+					//Drehen Richtung Produktion start
+					
+					//Aufzeichnen, wie viele Umdrehungen getan werden
+							
+					chargier.rotateTable(true);
+					while(!b1052Status) {
+						System.out.println("In der neuen Knopfschleife 1");
+						Thread.sleep(100);
+					}
+					//Stoppen des Drehens
+					chargier.stopRotateTable();
+					System.out.println("Jezt muss der Tisch stoppen!");
 
-					System.out.println("Speed " + speed);
+					//System.out.println("Speed " + speed);
 					
 					chargier.startLineToLifter(false);
-					Thread.sleep(500);
+					//Thread.sleep(500);
 					chargier.startTableLine(false);
 					
 					System.out.println("Warte in Sensorschleife 02");
@@ -1498,14 +1528,23 @@ public class Steuerung {
 
 					System.out.println("Warte in Sensorschleife 03");
 					while (!b1054Status) { // wait table button pushed
-						
 						Thread.sleep(100);
 					}
+					
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
-
-					chargier.turnToStock(false);
-
+					
+					//Tisch rotiert in Richtung Lager
+					chargier.rotateTable(false);
+					
+					while(!b1051Status) {
+						System.out.println("In der neuen Knopfschleife 2");
+						Thread.sleep(100);
+					}
+					
+					chargier.stopRotateTable();
+					System.out.println("Jezt muss der Tisch stoppen!");
+					
 					Thread.sleep(1000);
 					
 					chargier.startLineToStore(false); 
@@ -1519,10 +1558,9 @@ public class Steuerung {
 					chargier.stopLineToStorer();
 
 					chargier.turnTableToWheel(false);
-					// chargier.resetTable(true); // turns 660 to much repair later
-					
+										
 					Thread.sleep(10000); // wait 10 sec
-					//
+			
 					cleaner.stopLiftLine();
 					cleaner.stop();
 					//
@@ -1533,7 +1571,7 @@ public class Steuerung {
 
 					System.out.println("N/IO: " + quality.getBadBalls() + "  IO: " + quality.getGoodBalls());
 
-					System.out.println("Speed: " + speed);
+					//System.out.println("Speed: " + speed);
 					
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block

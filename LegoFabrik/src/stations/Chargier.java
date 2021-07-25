@@ -40,17 +40,51 @@ public class Chargier {
 		
 		
 	}
+	//Neuer Teil Roman
+	//Drehtisch drehen
+	
+	int tachoCountRotate = 0;
+	
+	public int rotateTable(boolean direction){
+		try {
+			//Reset Tachocount at the beginning: To wheel -> 0 
+			//drehtischRotieren.resetTachoCount();
+			int beginTacho = drehtischRotieren.getTachoCount();
+			
+			drehtischRotieren.setSpeed(turnTableSpeed);
+			if (direction) {
+				drehtischRotieren.forward();			
+			} else {
+				drehtischRotieren.backward();
+			}
+			int endTacho = drehtischRotieren.getTachoCount();
+			
+			//alternativ auch ein reset des Tachocounts resetTachoCount()
+			System.out.println("Anfangswert Tacho: " + beginTacho + ", Endwert Tacho: " + endTacho);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return tachoCountRotate;
+	}
+	
+	
+	//UNSAFE!
+	public void stopRotateTable() throws RemoteException { //stop Table Rotation
+		antriebDrehtisch.stop(false);
+	}
+	
 
 	public void startLineToTable(boolean direction) throws RemoteException { // start line from car to table if
-																				// direction true turn forword
-		antriebBandZumDT.setSpeed(getLineSpeed());
+		antriebBandZumDT.setSpeed(getLineSpeed()); 							// direction true turn forward
 		
 		if (direction) {
 			antriebBandZumDT.forward();
+			
 		} else {
 			antriebBandZumDT.backward();
 		}
-
 	}
 
 	public void stopLineToTable() throws RemoteException { // start line from Table to lifer
@@ -82,6 +116,9 @@ public class Chargier {
 		int ret = drehtischRotieren.getSpeed();
 		System.out.println("Drehtischrotator Tachostand Beginn: " + drehtischRotieren.getTachoCount());
 		drehtischRotieren.rotate(degree, instantReturn); // maybe - degree depends on motor settings
+		
+		//TODO neu einfügen
+		//drehtischRotieren.getTachoCount();
 		tablePosition = tablePosition + degree;
 		System.out.println("Drehtischrotator Tachostand Ende: " + drehtischRotieren.getTachoCount());
 		return ret;
@@ -89,7 +126,7 @@ public class Chargier {
 
 	public void turnToStock(boolean instantReturn) {
 		if(getTablePostion() == -2 * quarterRotation) {
-			//is allready in position
+			//is already in position
 		}else {
 			
 			try {
@@ -116,7 +153,7 @@ public class Chargier {
 		int ret = 0;
 		
 		if(getTablePostion() == quarterRotation) {
-			//is allready in position
+			//is already in position
 			System.out.println("Im in the right position already");
 		}else {
 			
@@ -133,19 +170,39 @@ public class Chargier {
 		return ret;
 	}
 	
+//	public void turnTableToWheel(boolean instantReturn) throws RemoteException {
+//		drehtischRotieren.rotate(1 * quarterRotation, instantReturn);
+//		// resetTable(instantReturn);
+//	}
+	
+	//NEU NOCH NICHT LAUFEND
 	public void turnTableToWheel(boolean instantReturn) throws RemoteException {
-		drehtischRotieren.rotate(1 * quarterRotation, instantReturn);
+		
+		//int temp = (tachoCountRotate/2);
+		
+		//Theoretischer Wert, testen ob Sensoren genau genug sind
+		drehtischRotieren.rotateTo(0);
+		
+		//Alternative, Grad hardcoden und testen
+		// drehtischRotieren.rotate(30);
+		
+		//System.out.println(temp);
+		//drehtischRotieren.rotate(temp, instantReturn);
+		
 		// resetTable(instantReturn);
 	}
 	
+	
 	public void resetTable(boolean instantReturn) throws RemoteException { // turns table back to start position
-
+		drehtischRotieren.resetTachoCount();
+		
 		drehtischRotieren.rotate(-1 * tablePosition, instantReturn);
 		tablePosition = 0;
+		
 	}
 
 	public void startLineToLifter(boolean direction) throws RemoteException { // start line from Table to lifer if
-																				// direction true turn forword
+																				// direction true turn forward
 
 		antriebBandProd.setSpeed(getLineSpeed());
 
@@ -164,7 +221,7 @@ public class Chargier {
 	}
 
 	public void startLineToStore(boolean direction) throws RemoteException { // start line from Table to Store if
-																				// direction true turn forword
+																				// direction true turn forward
 		s.sendMessage("BL");
 		antriebBandLeergut.setSpeed(getLineSpeed());
 
@@ -220,6 +277,15 @@ public class Chargier {
 	public void touchTablefired() {
 		System.out.println("Table Sensor fired");
 
+	}
+	
+	
+	//NEU
+	public void touchTable1fired() {
+		System.out.println("Table Lager Sensor fired");
+	}
+	public void touchTable2fired() {
+		System.out.println("Table Rüttelplatte Sensor fired");
 	}
 
 	public void schrankefired() {

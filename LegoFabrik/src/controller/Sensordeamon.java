@@ -33,7 +33,7 @@ public class Sensordeamon extends Thread {
 		// m
 		// vom
 		// greifarm
-		setDaemon(true); // makes this thread a deamon, closes hisself after the
+		setDaemon(true); // makes this thread a deamon, closes itself after the
 							// main thread
 		this.b105 = b105; // turntable
 		this.b106 = b106;
@@ -63,32 +63,42 @@ public class Sensordeamon extends Thread {
 		// instead
 		// null
 
-		RMISampleProvider b1054 = b105.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift
 		RMISampleProvider b1053 = b105.createSampleProvider("S3", "lejos.hardware.sensor.EV3TouchSensor", null); // drehtisch
+		RMISampleProvider b1054 = b105.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift
 		RMISampleProvider b1072 = b107.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // counter
 		RMISampleProvider b1131 = b113.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // kompressor
 		RMISampleProvider b1073 = b107.createSampleProvider("S3", "lejos.hardware.sensor.EV3ColorSensor", "ColorID");
-		// RMISampleProvider b1151 = b115.createSampleProvider("S1",
 		// "lejos.hardware.sensor.EV3ColorSensor", "ColorID");
 		
+		//NEU:
+		RMISampleProvider b1051 = b105.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // lift1
+		RMISampleProvider b1052 = b105.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // lift2
+
 		
 		s.addToSensorList(b1053);
 		s.addToSensorList(b1054);
+		//Neu
+		s.addToSensorList(b1051);
+		s.addToSensorList(b1052);
+		
 		// s.addToSensorList(b1061);
 		s.addToSensorList(b1072);
 		s.addToSensorList(b1131);
 		s.addToSensorList(b1073);
 		// s.addToSensorList(b1151);
 
+		
+		//HIER NOCH EINFÜGEN
 		float[] Sensorarray1 = new float[5];
 		float[] Sensorarray2 = new float[5];
 		float[] Sensorarray3 = new float[5];
 		float[] Sensorarray4 = new float[5];
 		float[] Sensorarray5 = new float[5];
 		float[] Sensorarray6 = new float[5];
-		// float[] Sensorarray7 = new float[5];
-
-		int[] filterArray = new int[15];
+		float[] Sensorarray7 = new float[5];
+		float[] Sensorarray8 = new float[5];
+		
+		//int[] filterArray = new int[15];
 
 		// try {
 		// m.setStallThreshold(1, 100); // int fehler in zeit and Motor anpassen
@@ -106,20 +116,25 @@ public class Sensordeamon extends Thread {
 				// Sensorarray1 = b1061.fetchSample();
 				Sensorarray2 = b1053.fetchSample();
 				Sensorarray3 = b1054.fetchSample();
+				
 				Sensorarray4 = b1072.fetchSample();
 				Sensorarray5 = b1073.fetchSample();
 				Sensorarray6 = b1131.fetchSample();
-				// Sensorarray7 = b1151.fetchSample();
+								
+				Sensorarray7 = b1051.fetchSample();
+				Sensorarray8 = b1052.fetchSample();
+				
 
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
+			
 			if (Sensorarray1[0] == 1) { // wenn schalter gedrueckt wurde dann
 
 				s.b1061Fired();
-				waitSek(20);
+				waitSek(4);
 				Sensorarray1[0] = 0;
 				s.resetSensorStatus();
 
@@ -127,7 +142,7 @@ public class Sensordeamon extends Thread {
 			if (Sensorarray2[0] == 1) {
 				s.b1053Fired();
 				s.sendMessage("LF");
-				waitSek(30);
+				waitSek(5);
 				Sensorarray2[0] = 0;
 				s.resetSensorStatus();
 
@@ -135,7 +150,7 @@ public class Sensordeamon extends Thread {
 			if (Sensorarray3[0] == 1) {
 				s.b1054Fired();
 				s.sendMessage("TF");
-				waitSek(30);
+				waitSek(5);
 				Sensorarray3[0] = 0;
 				s.resetSensorStatus();
 			}
@@ -155,7 +170,7 @@ public class Sensordeamon extends Thread {
 				case Color.BLACK:
 					colorString = "BLACK";
 // 				System.out.println("black");
-//					s.sendMessage("S0");  bring it back in after the Line is yello/ not black anymore
+//					s.sendMessage("S0");  bring it back in after the Line is yellow/ not black anymore
 					break;
 				case Color.BLUE:
 					colorString = "BLUE";
@@ -204,63 +219,27 @@ public class Sensordeamon extends Thread {
 			if (Sensorarray6[0] == 1) {
 				s.b1131Fired(true);
 				Sensorarray6[0] = 0;
+				//Thread.sleep(100);
 			} else {
 				s.b1131Fired(false);
 			}
 
-			// Qualitistation
-			// if (Sensorarray7[0] != -1) {
-			// System.out.println("Farbsensortower erkennt farbe");
-			// int coloIndex = (int) Sensorarray7[0];
-			// String colorString = "";
-			// switch (coloIndex) {
-			//
-			// case Color.BLACK:
-			// colorString = "BLACK";
-			// s.sendMessage("B3");
-			// break;
-			// case Color.BLUE:
-			// colorString = "BLUE";
-			// break;
-			// case Color.GREEN:
-			// colorString = "GREEN";
-			// break;
-			// case Color.YELLOW:
-			// colorString = "YELLOW";
-			// break;
-			// case Color.RED:
-			// colorString = "RED";
-			// s.sendMessage("R3");
-			// break;
-			// case Color.WHITE:
-			// colorString = "WHITE";
-			// s.sendMessage("W2");
-
-			// break;
-			// case Color.BROWN:
-			// colorString = "BROWN";
-			// break;
-			// }
-			// s.b1151Fired(colorString);
-			// waitSek(1); // TODO: maybe turn line to sensor slow
-			//
-			// if(colorString != "BLACK"){
-			// s.resetSensorStatus();
-			//
-			// }
-			// }
-
-			// try {
-			// if (m.isStalled()) {
-			// s.armIsStalled(true);
-			// } else {
-			// s.armIsStalled(false);
-			// }
-			// } catch (RemoteException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			//
-			// }
+			//NEU
+			if (Sensorarray7[0] == 1) {
+				s.b1051Fired();
+				waitSek(2);
+				Sensorarray7[0] = 0;
+				s.resetSensorStatus();
+			}
+				
+			if (Sensorarray8[0] == 1) {
+				s.b1052Fired();
+				waitSek(2);
+				Sensorarray8[0] = 0;
+				s.resetSensorStatus();
+			}
+			
+			
 
 			// -------------UI
 			// changes--------------------------------------------------------------------------------------------
