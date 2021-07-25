@@ -139,7 +139,7 @@ public class Steuerung {
 	static QualityStation qualitystation;
 	static Stock stock;
 	static FillStation fillStation;
-	private Sensordeamon sensordeamon;
+	private Sensordaemon sensordeamon;
 	static Car car;
 	static Transport transport;
 
@@ -231,7 +231,7 @@ public class Steuerung {
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b102, b103, b104, b107, b109);
+		sensordeamon = new Sensordaemon(this, b102, b103, b104, b107, b109);
 		sensordeamon.start();
 	}
 
@@ -790,7 +790,7 @@ public class Steuerung {
 	public void createLegoClient(String ip, int port) { // ip and port can be null in this case default values will be
 														// used
 
-		legoClient = new LegoClient(ip, port);
+		legoClient = new LegoClient();
 
 	}
 
@@ -859,7 +859,7 @@ public class Steuerung {
 				@Override
 				public void run() {
 
-					legoClient = new LegoClient("192.168.0.117", 33333);
+					legoClient = new LegoClient();
 
 					lastRecivedMessage = legoClient.sendMessage(message); // sendMessage allways returns the answer
 

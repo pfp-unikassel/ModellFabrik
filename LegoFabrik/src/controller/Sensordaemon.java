@@ -15,7 +15,7 @@ import lejos.remote.ev3.RMISampleProvider;
 import lejos.remote.ev3.RemoteEV3;
 import lejos.robotics.Color;
 
-public class Sensordeamon extends Thread {
+public class Sensordaemon extends Thread {
 
 	private Steuerung s;
 	private int counter = 0;
@@ -28,7 +28,7 @@ public class Sensordeamon extends Thread {
 	private RemoteEV3 b115;
 	private RMIRegulatedMotor m;
 
-	public Sensordeamon(Steuerung s, RemoteEV3 b105, RemoteEV3 b106, RemoteEV3 b107, RemoteEV3 b113, RemoteEV3 b115) { // ad
+	public Sensordaemon(Steuerung s, RemoteEV3 b105, RemoteEV3 b106, RemoteEV3 b107, RemoteEV3 b113, RemoteEV3 b115) { // ad
 		// Motor
 		// m
 		// vom

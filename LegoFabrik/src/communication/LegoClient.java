@@ -21,14 +21,6 @@ public class LegoClient {
 
 	}
 
-	public LegoClient(String ip) {
-		targetIP = ip;
-	}
-
-	public LegoClient(String ip, int port) {
-		targetIP = ip;
-		targetPort = port;
-	}
 
 	public static void main(String[] args) {
 		// LegoClient client = new LegoClient();
