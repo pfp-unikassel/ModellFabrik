@@ -13,22 +13,50 @@ import java.util.concurrent.Executors;
 
 
 public class DigitalTwin {
-	static ExecutorService executor;
-	public static Socket socket;
+	ExecutorService executor;
+	
+	public Socket socket;
+	public Socket outputSocket;
+
+	private String ip;
+	private int port;
+	
+	
 	private static String targetIP = "192.168.0.114";
 	private static int targetPort = 33333;
-
-	public static void main(String[] args) {
+	
+	public DigitalTwin (String targetIP, int targetPort){
+		
+		if (targetIP == null){
+			ip = DigitalTwin.targetIP;
+			port = DigitalTwin.targetPort;
+		} else {
+			ip = targetIP;
+			port = targetPort;		
+		}	
+	}
+	
+	
+	public boolean init(){
+		boolean result = true;
 		executor = Executors.newCachedThreadPool();
 		
 		try {
 			socket = new java.net.Socket(targetIP, targetPort);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//outputSocket = new java.net.Socket();
+		} catch (Exception e) {
+			result = false;
 			e.printStackTrace();
 		}
 		
-		if (socket != null) {
+		
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		DigitalTwin twin = new DigitalTwin("80.69.196.188", 333);
+		
+		if (twin.init()){
 			System.out.println("Socket geöffnet");
 			
 			Runnable socketListener = new Runnable() {
@@ -37,7 +65,7 @@ public class DigitalTwin {
 				public void run() {
 					// TODO Auto-generated method stub
 					try {
-						String antwort = leseNachricht();
+						String antwort = twin.leseNachricht();
 						System.out.println(antwort);
 					} catch (SocketTimeoutException e) {
 						System.out.println("Socket Timeout");
@@ -48,30 +76,42 @@ public class DigitalTwin {
 				}
 				
 			};
+			twin.executor.execute(socketListener);
 			
-			executor.execute(socketListener);
+			Runnable out = new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			};
 			
+			
+			try {
+				Thread.sleep(50000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			twin.shutdown();
+		}
+			
+
+		
 			
 		try {
-			schreibeNachricht("ST");
+			twin.schreibeNachricht("ST");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		
-		
-		
 		}
-		try {
-			Thread.sleep(20000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		shutdown();
-	}
 
-	protected static void schreibeNachricht(String nachricht) throws IOException {
+
+	protected void schreibeNachricht(String nachricht) throws IOException {
 
 		PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 		printWriter.print(nachricht);
@@ -81,7 +121,7 @@ public class DigitalTwin {
 	
 	
 	
-	protected static String leseNachricht() throws IOException {
+	protected String leseNachricht() throws IOException {
 
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -100,12 +140,12 @@ public class DigitalTwin {
 		
 	}
 
-	public static void shutdown(){
+	public void shutdown(){
 		closeSocket();
 		executor.shutdown();
 	}
 	
-	public static void closeSocket() {
+	public void closeSocket() {
 		try {
 			if (socket != null) {
 				socket.close();
