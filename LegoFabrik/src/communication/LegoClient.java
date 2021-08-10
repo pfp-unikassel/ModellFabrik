@@ -22,12 +22,12 @@ public class LegoClient {
 	}
 
 	public LegoClient(String ip) {
-		targetIP = ip;
+	//	targetIP = ip;
 	}
 
 	public LegoClient(String ip, int port) {
-		targetIP = ip;
-		targetPort = port;
+		//targetIP = ip;
+		//targetPort = port;
 	}
 
 	public static void main(String[] args) {
