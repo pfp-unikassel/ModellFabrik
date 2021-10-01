@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 public class LegoClient {
 
-	private String targetIP = "192.168.0.117";//"localhost";
+	
+	// TODO IP richtig vom Laptop eintragen!
+	private String targetIP = "192.168.0.114";//"localhost   192.168.0.114";
 	private int targetPort = 33333;
 	private int sendErrorCounter = 0;
 	private int numberOfSendTrys = 3;
@@ -22,21 +24,23 @@ public class LegoClient {
 	}
 
 	public LegoClient(String ip) {
-	//	targetIP = ip;
+		targetIP = ip;
 	}
 
 	public LegoClient(String ip, int port) {
-		//targetIP = ip;
-		//targetPort = port;
+		targetIP = ip;
+		targetPort = port;
 	}
 
 	public static void main(String[] args) {
-		// LegoClient client = new LegoClient();
-		// try {
-		// client.test();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
+		LegoClient client = new LegoClient();
+		
+		try {
+		client.test();
+		} catch (IOException e) {
+		e.printStackTrace();
+		}
+			
 	}
 
 	void test() throws IOException {
@@ -45,8 +49,8 @@ public class LegoClient {
 		java.net.Socket socket = new java.net.Socket(ip, port); // verbindet
 																// sich mit
 																// Server
-		String zuSendendeNachricht = "hallo";
-		schreibeNachricht(socket, zuSendendeNachricht);
+		//String zuSendendeNachricht = "ABCD-13455";
+		//schreibeNachricht(socket, zuSendendeNachricht);
 //		String empfangeneNachricht = leseNachricht(socket);
 //		System.out.println(empfangeneNachricht);
 	}

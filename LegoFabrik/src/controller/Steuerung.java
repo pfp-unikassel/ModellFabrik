@@ -854,15 +854,19 @@ public class Steuerung {
 		 *  
 		 *  @param Message as String
 		 * */
-		if (isConnected()) { // should be inside if
+		if (true) {
+				//isConnected()) { // should be inside if
+				//TODO reparieren von isConnected?
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
 
-					legoClient = new LegoClient("192.168.0.117", 33333);
+					legoClient = new LegoClient("192.168.0.114", 33333);
 
-					lastRecivedMessage = legoClient.sendMessage(message); // sendMessage allways returns the answer
+					lastRecivedMessage = legoClient.sendMessage(message); // sendMessage always returns the answer
 
+					//System.out.print("Nachricht wurde gesendet!");
+					
 					// if(lastRecivedMessage == null && sendErrorCounter >
 					// numberOfSendTrys) { // try again
 					// sendErrorCounter++;
@@ -1464,7 +1468,7 @@ public class Steuerung {
 		sendMessage("ST");
 		sendPowerLevels();
 		sendMessage("CA"); // Send everytime 1 new Container gets delivered, not
-							
+						
 
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
