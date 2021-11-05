@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import controller.Steuerung;
 import lejos.remote.ev3.RMIRegulatedMotor;
 
-public class Airarms { // schalter rechts rechts rechts links
+public class Airarms { // DEFAULT: Schalter rechts rechts rechts links
 
 	private boolean grabStatus = true; // true is open   just set to 
 	private boolean grabPosition = false; // true is || over the line
@@ -49,7 +49,7 @@ public class Airarms { // schalter rechts rechts rechts links
 
 	
 	
-	public void turnArm() { //A
+	public void turnArm() { //A; Arm Extended
 
 		System.out.println("In turnArm");
 		
@@ -76,7 +76,7 @@ public class Airarms { // schalter rechts rechts rechts links
 		}
 	}
 	
-	public void armUp() { // B
+	public void armUp() { // B; Arm geht hoch
 
 		System.out.println("In armUp");
 		
@@ -91,7 +91,7 @@ public class Airarms { // schalter rechts rechts rechts links
 		}
 	}
 
-	public void armDown() { //B
+	public void armDown() { //B; Arm geht runter
 
 		System.out.println("In armDown");
 		
@@ -109,7 +109,7 @@ public class Airarms { // schalter rechts rechts rechts links
 
 
 
-	public void grabTurn() { //C
+	public void grabTurn() { //C; ??????
 
 		System.out.println("In grabTurn");
 		
@@ -136,7 +136,7 @@ public class Airarms { // schalter rechts rechts rechts links
 	}
 	
 	
-	public void grabClose() { //D
+	public void grabClose() { //D; Schlieﬂt den Greifer
 
 		System.out.println("In grabClose");
 		
@@ -152,7 +152,7 @@ public class Airarms { // schalter rechts rechts rechts links
 		}
 	}
 
-	public void grabOpen() { //D
+	public void grabOpen() { //D; ÷ffnet den Greifer
 
 		System.out.println("In grabOpen");
 		
@@ -168,7 +168,7 @@ public class Airarms { // schalter rechts rechts rechts links
 		}
 	}
 
-	public void turnTower() {
+	public void turnTower() { //Dreht den Turm
 
 		System.out.println("In turnTower");
 		

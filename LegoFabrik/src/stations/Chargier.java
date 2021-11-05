@@ -70,7 +70,6 @@ public class Chargier {
 	}
 	
 	
-	//UNSAFE!
 	public void stopRotateTable() throws RemoteException { //stop Table Rotation
 		drehtischRotieren.stop(false);
 	}
