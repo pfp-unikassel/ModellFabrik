@@ -19,7 +19,7 @@ public class Chargier {
 	private int tablePosition = 0;
 	private int lineSpeed = 300; // TODO: change to default speed
 	
-	private int quarterRotation = 130; // 135; // Vierteldrehung am Drehtisch
+	private int quarterRotation = 130;
 	// private int quarterRotation = 180;
 	private static int turnTableSpeed = 100;
 	
@@ -72,7 +72,7 @@ public class Chargier {
 	
 	//UNSAFE!
 	public void stopRotateTable() throws RemoteException { //stop Table Rotation
-		antriebDrehtisch.stop(false);
+		drehtischRotieren.stop(false);
 	}
 	
 

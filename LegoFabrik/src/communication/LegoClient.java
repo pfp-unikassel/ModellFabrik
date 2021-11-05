@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class LegoClient {
 
 	
-	// TODO IP richtig vom Laptop eintragen!
+	// IP richtig vom Laptop eintragen!
 	private String targetIP = "192.168.0.114";//"localhost   192.168.0.114";
 	private int targetPort = 33333;
 	private int sendErrorCounter = 0;
@@ -36,9 +36,9 @@ public class LegoClient {
 		LegoClient client = new LegoClient();
 		
 		try {
-		client.test();
+			client.test();
 		} catch (IOException e) {
-		e.printStackTrace();
+			e.printStackTrace();
 		}
 			
 	}

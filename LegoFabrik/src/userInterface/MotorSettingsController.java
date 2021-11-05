@@ -194,6 +194,7 @@ public class MotorSettingsController implements Initializable {
 
 	public void fetchTwinToggleButton() {
 
+		//TODO isConnected() jemals True? überprüfen
 		if (s.isConnected()) {
 			zwillingOn.setSelected(true);
 		} else {

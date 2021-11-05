@@ -848,14 +848,14 @@ public class Steuerung {
 		sendMessage("ST");
 	}
 
-	public void sendMessage(String message) { // vergesse nicht vorher ein client aufzumachen
+	public void sendMessage(String message) {
 
 		/**sendet Nachricht an den Zwilling, Ip und Port sind in der Methode hardcoded
 		 *  
 		 *  @param Message as String
 		 * */
-		if (true) {
-				//isConnected()) { // should be inside if
+		if (false) {    //true einsetzen, wenn digitaler Zwilling benutzt werden soll
+				isConnected(); { // should be inside if
 				//TODO reparieren von isConnected?
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
@@ -886,6 +886,7 @@ public class Steuerung {
 		}
 
 	}
+}
 
 	// ---------------------Brick interactions------------------------
 
@@ -1498,12 +1499,12 @@ public class Steuerung {
 					chargier.rotateTable(true);
 					while(!b1052Status) {
 						System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(100);
+						Thread.sleep(10);
 					}
 					//Stoppen des Drehens
 					chargier.stopRotateTable();
 					System.out.println("Jezt muss der Tisch stoppen!");
-
+					Thread.sleep(100);
 					//System.out.println("Speed " + speed);
 					
 					chargier.startLineToLifter(false);
