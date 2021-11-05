@@ -1668,7 +1668,23 @@ public class Steuerung {
 					chargier.stopLineToTable();
 					chargier.stopTableLine();
 
-					chargier.turnToLift(false);
+					
+					//AB HIER NEU-----------
+					//chargier.turnToLift(false);
+					
+					chargier.rotateTable(true);
+					while(!b1052Status) {
+						System.out.println("In der neuen Knopfschleife 1");
+						Thread.sleep(10);
+					}
+					//Stoppen des Drehens
+					chargier.stopRotateTable();
+					System.out.println("Jezt muss der Tisch stoppen!");
+					Thread.sleep(100);
+					
+					//-------------------
+					
+					
 					chargier.startLineToLifter(false);
 					chargier.startTableLine(false);
 
@@ -1688,8 +1704,29 @@ public class Steuerung {
 						@Override
 						public void run() {
 							try {
-
-								chargier.turnToStock(false);
+								
+								
+								//AB HIER NEU----------
+								
+								//chargier.turnToStock(false);
+								
+								//Tisch rotiert in Richtung Lager
+								chargier.rotateTable(false);
+								
+								while(!b1051Status) {
+									System.out.println("In der neuen Knopfschleife 2");
+									Thread.sleep(100);
+								}
+								
+								chargier.stopRotateTable();
+								System.out.println("Jezt muss der Tisch stoppen!");
+								
+								Thread.sleep(1000);
+								
+								//---------------------
+								
+								//TODO: Checken ob die Reihenfolge nicht doch anders ist?
+								
 								chargier.startLineToStore(true); // auf Tisch
 								chargier.startTableLine(true);
 
@@ -1700,7 +1737,17 @@ public class Steuerung {
 								}
 								chargier.stopLineToStorer();
 								chargier.stopTableLine();
+								
+								
+								//Hier noch checken ob 
+								//chargier.turnTableToWheel(false); ??
+								
 								chargier.turnToCar(false);
+								
+								//das hier gebraucht wird. 
+								
+								
+								
 								chargier.startTableLine(false);
 								chargier.startLineToTable(true);
 								Thread.sleep(2000);
