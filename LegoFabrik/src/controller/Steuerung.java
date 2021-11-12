@@ -1455,6 +1455,73 @@ public class Steuerung {
 		}, 1000);
 	}
 	
+	
+  public void testRun() { //Testprogramm zum Bugfixen, ersetzt temporär Szenario 2 
+  //Aktuell: Test für Pneumatik //Gehe von Standartstellung aus: rehchts, rechts, rechts, links 
+  new java.util.Timer().schedule(new java.util.TimerTask() {
+	  @Override public void run() { 
+
+		  //Fahre den Arm hoch
+		  airarms.armUp();
+		  
+		  try {
+			Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		  
+		  //Schließe den Greifer
+		  airarms.grabClose();
+		  
+		  try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		  
+		  //Öffne den Greifer
+		  airarms.grabOpen();
+		  
+		  try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		  				  
+		  //Fahre den Arm runter
+		  airarms.armDown();
+	  
+		  try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//Drehe den Arm
+		airarms.turnArm();
+		
+		  try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		  
+		//Drehe den Turm  
+		airarms.turnTower();
+		
+		  try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	  }
+	  
+	  }, 1000);
+  }
+ 
+
+	
 	// --------------------Szenarios------------------------------
 
 	public void startSzenario1() {
@@ -1603,7 +1670,7 @@ public class Steuerung {
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-			 runExport(); //TODO: Test me
+			 testRun(); 
 		 	}
 		 }, 1000);
 
