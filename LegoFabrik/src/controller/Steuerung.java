@@ -54,7 +54,7 @@ public class Steuerung {
 
 	static RMIRegulatedMotor b101a;
 	static RMIRegulatedMotor b101b;
-	static RMIRegulatedMotor b101c;
+	//static RMIRegulatedMotor b101c;
 	static RMIRegulatedMotor b101d;
 
 	static RMIRegulatedMotor b102a;
@@ -198,7 +198,7 @@ public class Steuerung {
 
 		fillStation = new FillStation(this, b102a);
 		chargier = new Chargier(this, b103a, b103d, b103b, b102d, b102c);
-		lift = new Lift(this, b101a, b101b, b101c, b101d, b105a);
+		lift = new Lift(this, b101a, b101b, b101d, b105a);
 		cleaner = new Cleaning(this, b105b, b105c);
 		quality = new Quality(this, b104c, b104b, b104d);
 		qualitystation = new QualityStation(this, b109a, b109b, b109c, b109d);
@@ -292,12 +292,12 @@ public class Steuerung {
 		}
 		b101a = b101.createRegulatedMotor("A", 'M');
 		b101b = b101.createRegulatedMotor("B", 'M');
-		b101c = b101.createRegulatedMotor("C", 'M');
+		//b101c = b101.createRegulatedMotor("C", 'M');
 		b101d = b101.createRegulatedMotor("D", 'M');
 
 		openMotorPorts.add(b101a);
 		openMotorPorts.add(b101b);
-		openMotorPorts.add(b101c);
+		//openMotorPorts.add(b101c);
 		openMotorPorts.add(b101d);
 
 		bricks.add(b101);

@@ -8,7 +8,7 @@ import lejos.remote.ev3.RMIRegulatedMotor;
 public class Lift {
 
 	RMIRegulatedMotor hebenLinks;
-	RMIRegulatedMotor hebenRechts;
+	//RMIRegulatedMotor hebenRechts;
 	RMIRegulatedMotor greifenLinks;
 	RMIRegulatedMotor greifenRechts;
 	RMIRegulatedMotor shaker;
@@ -16,52 +16,52 @@ public class Lift {
 	private int winkelGreifen = 320;//280
 	private int winkelHeben = 3400;
 	private int liftSpeed = 740;
-	private int shakerSpeed = 720;//360
+	private int shakerSpeed = 520;//360
 	private boolean running = false;
 		
 	private Steuerung s;
 	
-	public Lift(	Steuerung s,RMIRegulatedMotor greifenLinks,
+	public Lift(Steuerung s,RMIRegulatedMotor greifenLinks,
 			RMIRegulatedMotor greifenRechts,
 			RMIRegulatedMotor hebenLinks, 
-			RMIRegulatedMotor hebenRechts,
+			//RMIRegulatedMotor hebenRechts,
 			RMIRegulatedMotor shaker) {
 		this.s = s;
 		this.greifenLinks=greifenLinks;
 		this.greifenRechts=greifenRechts;
 		this.hebenLinks=hebenLinks;
-		this.hebenRechts=hebenRechts;
+		//this.hebenRechts=hebenRechts;
 		this.shaker = shaker;
 	}
 	
 	public void startGrab(boolean instantReturn) throws RemoteException {  
 		
-		greifenLinks.rotate(winkelGreifen,true);
-		greifenRechts.rotate(-winkelGreifen,instantReturn);
+		greifenLinks.rotate(winkelGreifen,instantReturn);
+		greifenRechts.rotate(winkelGreifen,instantReturn);
 	}
 	
 	public void releaseGrab(boolean instantReturn) throws RemoteException { 
 		
-		greifenLinks.rotate(-winkelGreifen,true);
-		greifenRechts.rotate(winkelGreifen,instantReturn);
+		greifenLinks.rotate(-winkelGreifen,instantReturn);
+		greifenRechts.rotate(-winkelGreifen,instantReturn);
 	}
 	public void startLiftUp(boolean instantReturn) throws RemoteException {   // start lift/elevator and hold him up
 		
 		hebenLinks.setSpeed(liftSpeed);
-		hebenRechts.setSpeed(liftSpeed);
+		//hebenRechts.setSpeed(liftSpeed);
 		
-		hebenLinks.rotate(winkelHeben,true);
-		hebenRechts.rotate(winkelHeben,instantReturn);
+		hebenLinks.rotate(-winkelHeben,instantReturn);
+		//hebenRechts.rotate(winkelHeben,instantReturn);
 		
 	}
 	
 	public void startLiftDown(boolean instantReturn) throws RemoteException { // brings box and elevator/lift back down 
 		
 		hebenLinks.setSpeed(liftSpeed);
-		hebenRechts.setSpeed(liftSpeed);
+		//hebenRechts.setSpeed(liftSpeed);
 		
-		hebenLinks.rotate(-winkelHeben,true);
-		hebenRechts.rotate(-winkelHeben,instantReturn);
+		hebenLinks.rotate(winkelHeben,instantReturn);
+		//hebenRechts.rotate(-winkelHeben,instantReturn);
 		
 	}
 	
@@ -131,13 +131,13 @@ public class Lift {
 		this.hebenLinks = hebenLinks;
 	}
 
-	public RMIRegulatedMotor getHebenRechts() {
-		return hebenRechts;
-	}
+	//public RMIRegulatedMotor getHebenRechts() {
+	//	return hebenRechts;
+	//}
 
-	public void setHebenRechts(RMIRegulatedMotor hebenRechts) {
-		this.hebenRechts = hebenRechts;
-	}
+	//public void setHebenRechts(RMIRegulatedMotor hebenRechts) {
+	//	this.hebenRechts = hebenRechts;
+	//}
 
 	public RMIRegulatedMotor getGreifenLinks() {
 		return greifenLinks;
