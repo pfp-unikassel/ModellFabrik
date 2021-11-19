@@ -13,8 +13,8 @@ public class Lift {
 	RMIRegulatedMotor greifenRechts;
 	RMIRegulatedMotor shaker;
 	
-	private int winkelGreifen = 320;//280
-	private int winkelHeben = 3400;
+	private int winkelGreifen = 450;//280
+	private int winkelHeben =  3500;     //3400;
 	private int liftSpeed = 740;
 	private int shakerSpeed = 520;//360
 	private boolean running = false;
@@ -36,14 +36,14 @@ public class Lift {
 	
 	public void startGrab(boolean instantReturn) throws RemoteException {  
 		
-		greifenLinks.rotate(winkelGreifen,instantReturn);
-		greifenRechts.rotate(winkelGreifen,instantReturn);
+		greifenLinks.rotate(winkelGreifen, true);
+		greifenRechts.rotate(winkelGreifen,false);
 	}
 	
 	public void releaseGrab(boolean instantReturn) throws RemoteException { 
 		
-		greifenLinks.rotate(-winkelGreifen,instantReturn);
-		greifenRechts.rotate(-winkelGreifen,instantReturn);
+		greifenLinks.rotate(-winkelGreifen,true);
+		greifenRechts.rotate(-winkelGreifen,false);
 	}
 	public void startLiftUp(boolean instantReturn) throws RemoteException {   // start lift/elevator and hold him up
 		
