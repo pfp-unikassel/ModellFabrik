@@ -1548,7 +1548,7 @@ public class Steuerung {
 					chargier.startLineToTable(false);
 					chargier.startTableLine(true);
 
-					// wait till Table Button is pushed, test maybe Ui freezes
+					// wait till Table Button is pushed
 					System.out.println("Warte Sensorschleife 01");
 					while (!b1054Status) {
 						// System.out.println("Warte Sensorschleife 01");
@@ -1560,13 +1560,11 @@ public class Steuerung {
 					chargier.stopTableLine();
 					
 					//Drehen Richtung Produktion start
-					
-					//Aufzeichnen, wie viele Umdrehungen getan werden
-							
+												
 					chargier.rotateTable(true);
 					while(!b1052Status) {
-						System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(10);
+						//System.out.println("In der neuen Knopfschleife 1");
+						Thread.sleep(1);
 					}
 					//Stoppen des Drehens
 					chargier.stopRotateTable();
@@ -1580,7 +1578,7 @@ public class Steuerung {
 					
 					System.out.println("Warte in Sensorschleife 02");
 					while (!b1053Status) {// wait on lift button
-						Thread.sleep(100);
+						Thread.sleep(1);
 					}
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
