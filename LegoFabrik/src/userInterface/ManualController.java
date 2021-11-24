@@ -649,42 +649,10 @@ public class ManualController implements Initializable {
 		}
 	}
 
-	// -------------------------------------------------------------------- lift
-	// right up down
-	public void liftVorButtonPressed13() {
-		try {
-			s.getLift().getHebenRechts().forward();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void liftVorButtonReleased13() {
-		try {
-			s.getLift().getHebenRechts().stop(false);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void liftBackButtonPressed13() {
-		try {
-			s.getLift().getHebenRechts().backward();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void liftBackButtonReleased13() {
-		try {
-			s.getLift().getHebenRechts().stop(false);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
 	// -------------------------------------------------------------------- lift
-	// left up down
+	// up down
 	public void liftVorButtonPressed14() {
 		try {
 			s.getLift().getHebenLinks().forward();
