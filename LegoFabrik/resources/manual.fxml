@@ -287,7 +287,7 @@
                         </Label>
                         <HBox layoutX="10.0" layoutY="734.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Links Up/Down :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Up/Down :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -297,20 +297,6 @@
                               </Label>
                               <Button fx:id="liftBack14" mnemonicParsing="false" onMousePressed="#liftBackButtonPressed14" onMouseReleased="#liftBackButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
                               <Button fx:id="liftVor14" mnemonicParsing="false" onMousePressed="#liftVorButtonPressed14" onMouseReleased="#liftVorButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
-                           </children>
-                        </HBox>
-                        <HBox layoutX="10.0" layoutY="704.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
-                           <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Rechts Up/Down :">
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding>
-                              </Label>
-                              <Button fx:id="liftBack13" mnemonicParsing="false" onMousePressed="#liftBackButtonPressed13" onMouseReleased="#liftBackButtonReleased13" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
-                              <Button fx:id="liftVor13" mnemonicParsing="false" onMousePressed="#liftVorButtonPressed13" onMouseReleased="#liftVorButtonReleased13" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="674.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
