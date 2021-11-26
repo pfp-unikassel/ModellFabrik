@@ -1450,7 +1450,6 @@ public class Steuerung {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		}, 1000);
 	}

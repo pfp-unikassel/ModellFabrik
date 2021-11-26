@@ -129,7 +129,7 @@ public class Sensordeamon extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Sensordeamon fired");
+			//System.out.println("Sensordeamon fired");
 			
 			if (Sensorarray1[0] == 1) { // wenn schalter gedrueckt wurde dann
 

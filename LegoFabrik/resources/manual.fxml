@@ -47,7 +47,7 @@
                         </Label>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Rotier Tisch:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -61,7 +61,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zur Produktion :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band auf Tisch:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -75,7 +75,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Lager :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Lager:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -89,7 +89,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band auf Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zu Produktion/Heber:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -103,7 +103,7 @@
                         </HBox>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Rotier Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band bei Ausgabe:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
