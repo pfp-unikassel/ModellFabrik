@@ -1469,7 +1469,7 @@ public class Steuerung {
 		  System.out.println("Arm runter");
 		  airarms.armDown();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1478,7 +1478,7 @@ public class Steuerung {
 		  System.out.println("Greifer zu");
 		  airarms.grabClose();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1487,7 +1487,7 @@ public class Steuerung {
 		  System.out.println("Arm hoch");
 		  airarms.armUp();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1496,7 +1496,7 @@ public class Steuerung {
 		  System.out.println("Arm einfahren");
 		  airarms.turnArm();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1514,7 +1514,7 @@ public class Steuerung {
 		  System.out.println("Greifer drehen");
 		  airarms.grabTurn();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1523,7 +1523,7 @@ public class Steuerung {
 		  System.out.println("Arm ausfahren");
 		  airarms.turnArm();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1532,7 +1532,7 @@ public class Steuerung {
 		  System.out.println("Arm runter");
 		  airarms.armDown();
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1541,7 +1541,7 @@ public class Steuerung {
 		  System.out.println("Greifer loslassen");		  
 		  airarms.grabOpen();		  
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1550,7 +1550,7 @@ public class Steuerung {
 		  System.out.println("Arm hoch");
 		  airarms.armUp();		  
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1559,7 +1559,7 @@ public class Steuerung {
 		  System.out.println("Arm einfahren");		  
 		  airarms.turnArm();		  
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1568,7 +1568,7 @@ public class Steuerung {
 		  System.out.println("Turm drehen");
 		  airarms.turnTower();		  
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1586,7 +1586,7 @@ public class Steuerung {
 		  System.out.println("Arm vorn");
 		  airarms.turnArm();		  
 		  try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

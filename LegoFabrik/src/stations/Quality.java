@@ -57,7 +57,7 @@ public class Quality {
 	}
 
 	public void openGate() {
-		if (!gateStatus) { // if gate is close open if allready open stay open
+		if (!gateStatus) { // if gate is close open if already open stay open
 
 			gateStatus = true;
 
