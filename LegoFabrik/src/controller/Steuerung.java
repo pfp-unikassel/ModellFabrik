@@ -1466,195 +1466,156 @@ public class Steuerung {
 		  //3 = airarms.grabTurn(); 
 		  //4 = airarms.grabOpen(); airarms.grabClose();
 		  
-		  System.out.println("Arm runter");
-		  airarms.armDown();
+		  qualitystation.startTower();
 		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		  qualitystation.stopTower();
 		  
-		  System.out.println("Greifer zu");
-		  airarms.grabClose();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm hoch");
-		  airarms.armUp();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm einfahren");
-		  airarms.turnArm();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Turm drehen");
-		  airarms.turnTower();
-		  try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Greifer drehen");
-		  airarms.grabTurn();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm ausfahren");
-		  airarms.turnArm();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm runter");
-		  airarms.armDown();
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Greifer loslassen");		  
-		  airarms.grabOpen();		  
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm hoch");
-		  airarms.armUp();		  
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm einfahren");		  
-		  airarms.turnArm();		  
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Turm drehen");
-		  airarms.turnTower();		  
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Greifer drehen");
-		  airarms.grabTurn();		  
-		  try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  
-		  System.out.println("Arm vorn");
-		  airarms.turnArm();		  
-		  try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		  
 		  
 		  System.out.println("Durchlauf fertig");
-//		  
-//		  		  
-//		  //Fahre den Arm hoch
-//		  airarms.armUp();
-//		  
-//		  try {
-//			Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		  
-//		  //Schlieﬂe den Greifer
-//		  airarms.grabClose();
-//		  
-//		  try {
-//			Thread.sleep(500);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		  
-//		  //÷ffne den Greifer
-//		  airarms.grabOpen();
-//		  
-//		  try {
-//			Thread.sleep(500);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		  				  
-//		  //Fahre den Arm runter
-//		  airarms.armDown();
-//	  
-//		  try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		//Drehe den Arm
-//		airarms.turnArm();
-//		
-//		  try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		  
-//		//Drehe den Turm  
-//		airarms.turnTower();
-//		
-//		  try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//
-	  }
+
+			}
 	  
 	  }, 1000);
+  
   }
  
+		  
+		  
+//		  System.out.println("Arm runter");
+//		  airarms.armDown();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer zu");
+//		  airarms.grabClose();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm hoch");
+//		  airarms.armUp();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm einfahren");
+//		  airarms.turnArm();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Turm drehen");
+//		  airarms.turnTower();
+//		  try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer drehen");
+//		  airarms.grabTurn();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm ausfahren");
+//		  airarms.turnArm();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm runter");
+//		  airarms.armDown();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer loslassen");		  
+//		  airarms.grabOpen();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm hoch");
+//		  airarms.armUp();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm einfahren");		  
+//		  airarms.turnArm();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Turm drehen");
+//		  airarms.turnTower();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer drehen");
+//		  airarms.grabTurn();		  
+//		  try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm vorn");
+//		  airarms.turnArm();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		  
+		  
+
 
 	
 	// --------------------Szenarios------------------------------

@@ -63,7 +63,8 @@ public class QualityStation {
 	public void startTower() {
 		if (!getTowerStatus()) {
 			try {
-				tower.forward();
+				tower.backward();
+				towerStatus = !towerStatus;
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -75,6 +76,7 @@ public class QualityStation {
 		if (getTowerStatus()) {
 			try {
 				tower.stop(false);
+				towerStatus = !towerStatus;
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

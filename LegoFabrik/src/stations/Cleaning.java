@@ -28,9 +28,9 @@ public class Cleaning {
 		liftLine.setSpeed(liftLaneSpeed);
 		
 		if(direction) {
-			liftLine.forward();
-		}else {
 			liftLine.backward();
+		}else {
+			liftLine.forward();
 		}
 		
 	}
