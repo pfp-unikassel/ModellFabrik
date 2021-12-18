@@ -13,10 +13,10 @@ public class Airarms { // DEFAULT: Schalter rechts rechts rechts links
 	private boolean armPosition = true; // true ist ausgefahren
 	private boolean armStatus = true; // true is up false down
 
-	private boolean towerPosition = false; // to lane rigth one
+	private boolean towerPosition = true; // to lane rigth one
 
-	private int turnDegree = -750;  // default 750
-	private int towerTurnDegree =- 100; //default 100
+	private int turnDegree = -900;  // default 750
+	private int towerTurnDegree = -200; //default 100
 	private Steuerung s;
 
 	RMIRegulatedMotor moveArm;
@@ -234,7 +234,7 @@ public class Airarms { // DEFAULT: Schalter rechts rechts rechts links
 		
 		System.out.println("In runAirArms");
 		
-		turnArm();                 // einfarhen / tower drehen / ausfahren / arm runter/ grab schlieﬂen / arm up / arm einfahren / turm drehen / arm ausfahren / grab drehen / runter / aufmachen 
+		turnArm();                 // einfahren / tower drehen / ausfahren / arm runter/ grab schlieﬂen / arm up / arm einfahren / turm drehen / arm ausfahren / grab drehen / runter / aufmachen 
 
 		turnTower();
 		

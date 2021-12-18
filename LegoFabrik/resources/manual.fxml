@@ -47,7 +47,7 @@
                         </Label>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Rotier Tisch:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -61,7 +61,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zur Produktion :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band auf Tisch:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -75,7 +75,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Lager :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zum Lager:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -89,7 +89,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="91.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Band auf Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band zu Produktion/Heber:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -103,7 +103,7 @@
                         </HBox>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Rotier Tisch :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Band bei Ausgabe:">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -274,7 +274,7 @@
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Line>
-                        <Label text="Aufzug :" underline="true">
+                        <Label text="Aufzug / Auskippen :" underline="true">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -287,7 +287,7 @@
                         </Label>
                         <HBox layoutX="10.0" layoutY="734.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Links Up/Down :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Up/Down :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -297,20 +297,6 @@
                               </Label>
                               <Button fx:id="liftBack14" mnemonicParsing="false" onMousePressed="#liftBackButtonPressed14" onMouseReleased="#liftBackButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
                               <Button fx:id="liftVor14" mnemonicParsing="false" onMousePressed="#liftVorButtonPressed14" onMouseReleased="#liftVorButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
-                           </children>
-                        </HBox>
-                        <HBox layoutX="10.0" layoutY="704.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
-                           <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text="Rechts Up/Down :">
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding>
-                              </Label>
-                              <Button fx:id="liftBack13" mnemonicParsing="false" onMousePressed="#liftBackButtonPressed13" onMouseReleased="#liftBackButtonReleased13" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
-                              <Button fx:id="liftVor13" mnemonicParsing="false" onMousePressed="#liftVorButtonPressed13" onMouseReleased="#liftVorButtonReleased13" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="674.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
@@ -467,7 +453,7 @@
                         </Label>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text=" Schalter 1 :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Schalter 1 :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -481,7 +467,7 @@
                         </HBox>
                         <HBox prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text=" Schalter 2 :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Schalter 2 :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -495,7 +481,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="1102.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text=" Schalter 3 :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Schalter 3 :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -509,7 +495,7 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="1132.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text=" Schalter 4 :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Schalter 4 :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
@@ -521,9 +507,23 @@
                               <Button fx:id="airarmsVor14" mnemonicParsing="false" onMousePressed="#airarmsVorButtonPressed14" onMouseReleased="#airarmsVorButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>
+                        <HBox layoutX="10.0" layoutY="1132.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
+                           <children>
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Schalter 5 :">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                              <Button fx:id="airamsBack14" mnemonicParsing="false" onMousePressed="#airarmsBackButtonPressed14" onMouseReleased="#airarmsBackButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
+                              <Button fx:id="airarmsVor14" mnemonicParsing="false" onMousePressed="#airarmsVorButtonPressed14" onMouseReleased="#airarmsVorButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
+                           </children>
+                        </HBox>                        
                         <HBox layoutX="10.0" layoutY="1162.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="163.0" text=" Tower 1 :">
+                              <Label prefHeight="26.0" prefWidth="163.0" text="Tower 1 :">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

@@ -129,12 +129,12 @@ public class Sensordeamon extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			//System.out.println("Sensordeamon fired");
 			
 			if (Sensorarray1[0] == 1) { // wenn schalter gedrueckt wurde dann
 
 				s.b1061Fired();
-				waitSek(4);
+				waitSek(1);
 				Sensorarray1[0] = 0;
 				s.resetSensorStatus();
 
@@ -142,7 +142,7 @@ public class Sensordeamon extends Thread {
 			if (Sensorarray2[0] == 1) {
 				s.b1053Fired();
 				s.sendMessage("LF");
-				waitSek(5);
+				waitSek(1);
 				Sensorarray2[0] = 0;
 				s.resetSensorStatus();
 
@@ -150,7 +150,7 @@ public class Sensordeamon extends Thread {
 			if (Sensorarray3[0] == 1) {
 				s.b1054Fired();
 				s.sendMessage("TF");
-				waitSek(5);
+				waitSek(1);
 				Sensorarray3[0] = 0;
 				s.resetSensorStatus();
 			}
@@ -205,12 +205,12 @@ public class Sensordeamon extends Thread {
 					//waitSek(5);  // TODO: maybe turn line to sensor slow
 					try {
 						//System.out.println("Im sleeping now");
-						Thread.sleep(500);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					waitSek(6);
+					waitSek(1);
 					s.resetSensorStatus();
 
 				}
@@ -227,14 +227,14 @@ public class Sensordeamon extends Thread {
 			//NEU
 			if (Sensorarray7[0] == 1) {
 				s.b1051Fired();
-				waitSek(2);
+				waitSek(1);
 				Sensorarray7[0] = 0;
 				s.resetSensorStatus();
 			}
 				
 			if (Sensorarray8[0] == 1) {
 				s.b1052Fired();
-				waitSek(2);
+				waitSek(1);
 				Sensorarray8[0] = 0;
 				s.resetSensorStatus();
 			}
@@ -266,7 +266,7 @@ public class Sensordeamon extends Thread {
 	public void waitSek(int sekunden) {
 
 		try {
-			sleep(sekunden * 100);
+			sleep(sekunden * 50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -274,7 +274,8 @@ public class Sensordeamon extends Thread {
 	}
 
 	public int filterIds(int[] filterArray) {
-
+		//wird aktuell nicht mehr benutzt
+		
 		/** Filtert int Array mit 5 werten und gibt den heufigsten wieder
 		 * wird bei der verwendung der RFID sensoren gebraucht
 		 */

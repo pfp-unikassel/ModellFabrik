@@ -649,42 +649,10 @@ public class ManualController implements Initializable {
 		}
 	}
 
-	// -------------------------------------------------------------------- lift
-	// right up down
-	public void liftVorButtonPressed13() {
-		try {
-			s.getLift().getHebenRechts().forward();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void liftVorButtonReleased13() {
-		try {
-			s.getLift().getHebenRechts().stop(false);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void liftBackButtonPressed13() {
-		try {
-			s.getLift().getHebenRechts().backward();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void liftBackButtonReleased13() {
-		try {
-			s.getLift().getHebenRechts().stop(false);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
 	// -------------------------------------------------------------------- lift
-	// left up down
+	// up down
 	public void liftVorButtonPressed14() {
 		try {
 			s.getLift().getHebenLinks().forward();
@@ -890,7 +858,7 @@ public class ManualController implements Initializable {
 	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Schalter 1
 	public void airarmsVorButtonPressed1() {
 		try {
 			s.getAirarms().getMoveArm().forward();
@@ -927,7 +895,7 @@ public class ManualController implements Initializable {
 	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Schalter 2
 	public void airarmsVorButtonPressed12() {
 		try {
 			s.getAirarms().getVerticalArm().forward();
@@ -963,7 +931,7 @@ public class ManualController implements Initializable {
 	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Schalter 3
 	public void airarmsVorButtonPressed13() {
 		try {
 			s.getAirarms().getTurnGrab().forward();
@@ -999,7 +967,7 @@ public class ManualController implements Initializable {
 	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Schalter 4
 	public void airarmsVorButtonPressed14() {
 		try {
 			s.getAirarms().getOpenCloseGrab().forward();
@@ -1033,9 +1001,44 @@ public class ManualController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	// --------------------------------------------------------------------
+	// Airarms Schalter 5 TODO
+	public void airarmsVorButtonPressed17() {
+		try {
+			s.getAirarms().getOpenCloseGrab().forward();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void airarmsVorButtonReleased17() {
+		try {
+			s.getAirarms().getOpenCloseGrab().stop(false);
+			System.out.println(s.getAirarms().getOpenCloseGrab().getTachoCount());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void airarmsBackButtonPressed17() {
+		try {
+			s.getAirarms().getOpenCloseGrab().backward();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void airarmsBackButtonReleased17() {
+		try {
+			s.getAirarms().getOpenCloseGrab().stop(false);
+			System.out.println(s.getAirarms().getOpenCloseGrab().getTachoCount());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Dreharm
 	public void airarmsVorButtonPressed15() {
 		try {
 			s.getAirarms().getTurnArm1().forward();
@@ -1071,7 +1074,7 @@ public class ManualController implements Initializable {
 	}
 
 	// --------------------------------------------------------------------
-	// Airarms
+	// Airarms Dreharm
 	public void airarmsVorButtonPressed16() {
 		try {
 			s.getAirarms().getTurnArm2().forward();

@@ -54,7 +54,7 @@ public class Steuerung {
 
 	static RMIRegulatedMotor b101a;
 	static RMIRegulatedMotor b101b;
-	static RMIRegulatedMotor b101c;
+	//static RMIRegulatedMotor b101c;
 	static RMIRegulatedMotor b101d;
 
 	static RMIRegulatedMotor b102a;
@@ -142,7 +142,7 @@ public class Steuerung {
 	private Sensordeamon sensordeamon;
 	static Car car;
 	static Transport transport;
-
+	
 	static BrickConfig config;
 
 	private boolean b1053Status = false; // set True if button fires
@@ -198,7 +198,7 @@ public class Steuerung {
 
 		fillStation = new FillStation(this, b102a);
 		chargier = new Chargier(this, b103a, b103d, b103b, b102d, b102c);
-		lift = new Lift(this, b101a, b101b, b101c, b101d, b105a);
+		lift = new Lift(this, b101a, b101b, b101d, b105a);
 		cleaner = new Cleaning(this, b105b, b105c);
 		quality = new Quality(this, b104c, b104b, b104d);
 		qualitystation = new QualityStation(this, b109a, b109b, b109c, b109d);
@@ -292,12 +292,12 @@ public class Steuerung {
 		}
 		b101a = b101.createRegulatedMotor("A", 'M');
 		b101b = b101.createRegulatedMotor("B", 'M');
-		b101c = b101.createRegulatedMotor("C", 'M');
+		//b101c = b101.createRegulatedMotor("C", 'M');
 		b101d = b101.createRegulatedMotor("D", 'M');
 
 		openMotorPorts.add(b101a);
 		openMotorPorts.add(b101b);
-		openMotorPorts.add(b101c);
+		//openMotorPorts.add(b101c);
 		openMotorPorts.add(b101d);
 
 		bricks.add(b101);
@@ -1450,10 +1450,210 @@ public class Steuerung {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		}, 1000);
 	}
+	
+	
+  public void testRun() { //Testprogramm zum Bugfixen, ersetzt temporär Szenario 2 
+  //Aktuell: Test für Pneumatik //Gehe von Standartstellung aus: rehchts, rechts, rechts, links 
+  new java.util.Timer().schedule(new java.util.TimerTask() {
+	  @Override public void run() { 
+		  //Default: rechts, rechts, rechts, links (Turm 2 in Ausgangspos = Turm bei Bällen.)
+
+		  //1 = airarms.turnArm();
+		  //2 = airarms.armDown(); airarms.armUp();
+		  //3 = airarms.grabTurn(); 
+		  //4 = airarms.grabOpen(); airarms.grabClose();
+		  
+ 	  qualitystation.startTower();
+		  try {
+				Thread.sleep(100000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		  qualitystation.stopTower();
+		  
+		  
+//		  
+//		  try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		  
+//		  qualitystation.takeBallToBad();
+//
+//		  try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		  
+//		  qualitystation.takeBallToGood();
+		  
+//			  System.out.println("Arm runter");
+//			  airarms.armDown();
+//			  try {
+//				  Thread.sleep(500);
+//			  } catch (InterruptedException e) {
+//				  // TODO Auto-generated catch block
+//				  e.printStackTrace();
+//			  }
+//
+//			  System.out.println("Arm hoch");
+//			  airarms.armUp();
+//			  try {
+//				  Thread.sleep(500);
+//			  } catch (InterruptedException e) {
+//				  // TODO Auto-generated catch block
+//				  e.printStackTrace();
+//			  }
+//
+
+		  System.out.println("Durchlauf fertig");
+
+			}
+	  
+	  }, 1000);
+  
+  }
+ 
+		  
+		  
+//		  System.out.println("Arm runter");
+//		  airarms.armDown();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer zu");
+//		  airarms.grabClose();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm hoch");
+//		  airarms.armUp();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm einfahren");
+//		  airarms.turnArm();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Turm drehen");
+//		  airarms.turnTower();
+//		  try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer drehen");
+//		  airarms.grabTurn();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm ausfahren");
+//		  airarms.turnArm();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm runter");
+//		  airarms.armDown();
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer loslassen");		  
+//		  airarms.grabOpen();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm hoch");
+//		  airarms.armUp();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm einfahren");		  
+//		  airarms.turnArm();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Turm drehen");
+//		  airarms.turnTower();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Greifer drehen");
+//		  airarms.grabTurn();		  
+//		  try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  
+//		  System.out.println("Arm vorn");
+//		  airarms.turnArm();		  
+//		  try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		  
+		  
+
+
 	
 	// --------------------Szenarios------------------------------
 
@@ -1481,7 +1681,7 @@ public class Steuerung {
 					chargier.startLineToTable(false);
 					chargier.startTableLine(true);
 
-					// wait till Table Button is pushed, test maybe Ui freezes
+					// wait till Table Button is pushed
 					System.out.println("Warte Sensorschleife 01");
 					while (!b1054Status) {
 						// System.out.println("Warte Sensorschleife 01");
@@ -1493,13 +1693,11 @@ public class Steuerung {
 					chargier.stopTableLine();
 					
 					//Drehen Richtung Produktion start
-					
-					//Aufzeichnen, wie viele Umdrehungen getan werden
-							
+												
 					chargier.rotateTable(true);
 					while(!b1052Status) {
-						System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(10);
+						//System.out.println("In der neuen Knopfschleife 1");
+						Thread.sleep(1);
 					}
 					//Stoppen des Drehens
 					chargier.stopRotateTable();
@@ -1513,7 +1711,7 @@ public class Steuerung {
 					
 					System.out.println("Warte in Sensorschleife 02");
 					while (!b1053Status) {// wait on lift button
-						Thread.sleep(100);
+						Thread.sleep(1);
 					}
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
@@ -1603,7 +1801,7 @@ public class Steuerung {
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-			 runExport(); //TODO: Test me
+			 testRun(); 
 		 	}
 		 }, 1000);
 

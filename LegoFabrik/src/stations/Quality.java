@@ -57,7 +57,7 @@ public class Quality {
 	}
 
 	public void openGate() {
-		if (!gateStatus) { // if gate is close open if allready open stay open
+		if (!gateStatus) { // if gate is close open if already open stay open
 
 			gateStatus = true;
 
@@ -127,13 +127,12 @@ public class Quality {
 	}
 
 	public void startLine(boolean direction) throws RemoteException {
-
 		line.setSpeed(lineSpeed);
 
 		if (direction) {
-			line.forward();
-		} else {
 			line.backward();
+		} else {
+			line.forward();
 		}
 
 	}
