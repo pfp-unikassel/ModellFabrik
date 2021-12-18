@@ -75,7 +75,7 @@ public class BrickConfig { // TODO: make a Brickconfig object in steuerung
 
 	}
 
-	public void readDefaultIps() {
+//	public void readDefaultIps() {
 //		File f = new File(path+"BrickDefaultconfig.txt");
 //
 //		try (BufferedReader br = new BufferedReader(new FileReader(f))) {
@@ -91,7 +91,7 @@ public class BrickConfig { // TODO: make a Brickconfig object in steuerung
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-	}
+//	}
 
 	public ArrayList<String> getDefaultBrickips() {
 		return defaultBrickips;

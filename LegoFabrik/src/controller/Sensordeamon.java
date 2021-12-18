@@ -274,7 +274,8 @@ public class Sensordeamon extends Thread {
 	}
 
 	public int filterIds(int[] filterArray) {
-
+		//wird aktuell nicht mehr benutzt
+		
 		/** Filtert int Array mit 5 werten und gibt den heufigsten wieder
 		 * wird bei der verwendung der RFID sensoren gebraucht
 		 */

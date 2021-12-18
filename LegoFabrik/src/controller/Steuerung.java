@@ -142,7 +142,7 @@ public class Steuerung {
 	private Sensordeamon sensordeamon;
 	static Car car;
 	static Transport transport;
-
+	
 	static BrickConfig config;
 
 	private boolean b1053Status = false; // set True if button fires
@@ -1466,9 +1466,9 @@ public class Steuerung {
 		  //3 = airarms.grabTurn(); 
 		  //4 = airarms.grabOpen(); airarms.grabClose();
 		  
-		  qualitystation.startTower();
+ 	  qualitystation.startTower();
 		  try {
-				Thread.sleep(10000);
+				Thread.sleep(100000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1477,7 +1477,44 @@ public class Steuerung {
 		  qualitystation.stopTower();
 		  
 		  
+//		  
+//		  try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		  
+//		  qualitystation.takeBallToBad();
+//
+//		  try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		  
+//		  qualitystation.takeBallToGood();
 		  
+//			  System.out.println("Arm runter");
+//			  airarms.armDown();
+//			  try {
+//				  Thread.sleep(500);
+//			  } catch (InterruptedException e) {
+//				  // TODO Auto-generated catch block
+//				  e.printStackTrace();
+//			  }
+//
+//			  System.out.println("Arm hoch");
+//			  airarms.armUp();
+//			  try {
+//				  Thread.sleep(500);
+//			  } catch (InterruptedException e) {
+//				  // TODO Auto-generated catch block
+//				  e.printStackTrace();
+//			  }
+//
+
 		  System.out.println("Durchlauf fertig");
 
 			}

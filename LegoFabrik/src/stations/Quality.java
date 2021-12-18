@@ -127,13 +127,12 @@ public class Quality {
 	}
 
 	public void startLine(boolean direction) throws RemoteException {
-
 		line.setSpeed(lineSpeed);
 
 		if (direction) {
-			line.forward();
-		} else {
 			line.backward();
+		} else {
+			line.forward();
 		}
 
 	}
