@@ -231,7 +231,7 @@ public class Steuerung {
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b102, b103, b104, b107, b109);
+		sensordeamon = new Sensordeamon(this, b102, b103, b104);
 		sensordeamon.start();
 	}
 
