@@ -8,10 +8,8 @@ import lejos.remote.ev3.RMIRegulatedMotor;
 public class Stock {
 
 	RMIRegulatedMotor laneToStock1;
-	RMIRegulatedMotor laneToStock2;
 
 	RMIRegulatedMotor elevatorHorizontal1;
-	RMIRegulatedMotor elevatorHorizontal2;
 	RMIRegulatedMotor elevatorVertical1;
 	RMIRegulatedMotor elevatorVertical2;
 
@@ -47,24 +45,19 @@ public class Stock {
 	 * 
 	 * */
 	
-	public Stock(Steuerung s, RMIRegulatedMotor laneToStock1, RMIRegulatedMotor laneToStock2,
-			RMIRegulatedMotor elevatorHorizontal1, RMIRegulatedMotor elevatorHorizontal2,
-			RMIRegulatedMotor elevatorVertical1, RMIRegulatedMotor elevatorVertical2, RMIRegulatedMotor stockPlace1,
-			RMIRegulatedMotor stockPlace2, RMIRegulatedMotor stockPlace3, RMIRegulatedMotor stockPlace4) {
+	public Stock(Steuerung s, RMIRegulatedMotor laneToStock1,
+			RMIRegulatedMotor elevatorHorizontal1, RMIRegulatedMotor elevatorVertical1, RMIRegulatedMotor elevatorVertical2, 
+			RMIRegulatedMotor stockPlace1, RMIRegulatedMotor stockPlace2, RMIRegulatedMotor stockPlace3, RMIRegulatedMotor stockPlace4) {
 
 		this.s = s;
 		this.stockPlace1 = stockPlace1;
 		this.stockPlace2 = stockPlace2;
 		this.stockPlace3 = stockPlace3;
 		this.stockPlace4 = stockPlace4;
-
 		this.laneToStock1 = laneToStock1;
-		this.laneToStock2 = laneToStock2;
 		this.elevatorVertical1 = elevatorVertical1;
 		this.elevatorVertical2 = elevatorVertical2;
-
 		this.elevatorHorizontal1 = elevatorHorizontal1;
-		this.elevatorHorizontal2 = elevatorHorizontal2;
 
 	}
 
@@ -152,7 +145,6 @@ public class Stock {
 
 		try {
 			laneToStock1.setSpeed(getLineSpeed());
-			laneToStock2.setSpeed(getLineSpeed());
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -160,7 +152,6 @@ public class Stock {
 
 		try {
 			laneToStock1.rotate(degree, true);
-			laneToStock2.rotate(-degree, instantReturn);
 			bandPosition += degree;
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -227,16 +218,13 @@ public class Stock {
 	public void startLineToStock(boolean direction) throws RemoteException {
 
 		laneToStock1.setSpeed(getLineSpeed());
-		laneToStock2.setSpeed(getLineSpeed());
 
 		if (direction) {
 			laneToStock1.forward();
-			laneToStock2.backward();
 			// laneToStock1.rotate(2000,true);
 			// laneToStock2.rotate(-2000,false);
 		} else {
 			laneToStock1.backward();
-			laneToStock2.forward();
 			// laneToStock1.rotate(-2000,true);
 			// laneToStock2.rotate(2000,false);
 		}
@@ -247,7 +235,6 @@ public class Stock {
 
 		laneToStock1.stop(false); // false he waits for the motor to stop until
 									// it really finishes
-		laneToStock2.stop(false);
 	}
 
 	public void elevatorUp(boolean instantReturn) throws RemoteException {
@@ -287,10 +274,8 @@ public class Stock {
 			// nothing is allready left
 		} else {
 			elevatorHorizontal1.setSpeed(elevatorHorizontalSpeed);
-			elevatorHorizontal2.setSpeed(elevatorHorizontalSpeed);
 
 			elevatorHorizontal1.rotate(-horizontalRotationDegree, true);
-			elevatorHorizontal2.rotate(horizontalRotationDegree, instantReturn);
 			setElevatorPositionHorizontal('l');
 		}
 	}
@@ -301,10 +286,8 @@ public class Stock {
 			// nothing is allready right
 		} else {
 			elevatorHorizontal1.setSpeed(elevatorHorizontalSpeed);
-			elevatorHorizontal2.setSpeed(elevatorHorizontalSpeed);
 
 			elevatorHorizontal1.rotate(horizontalRotationDegree, true);
-			elevatorHorizontal2.rotate(-horizontalRotationDegree, instantReturn);
 			setElevatorPositionHorizontal('r');
 		}
 	}
@@ -602,14 +585,6 @@ public class Stock {
 		this.laneToStock1 = laneToStock1;
 	}
 
-	public RMIRegulatedMotor getLaneToStock2() {
-		return laneToStock2;
-	}
-
-	public void setLaneToStock2(RMIRegulatedMotor laneToStock2) {
-		this.laneToStock2 = laneToStock2;
-	}
-
 	public RMIRegulatedMotor getElevatorHorizontal1() {
 		return elevatorHorizontal1;
 	}
@@ -617,15 +592,7 @@ public class Stock {
 	public void setElevatorHorizontal1(RMIRegulatedMotor elevatorHorizontal1) {
 		this.elevatorHorizontal1 = elevatorHorizontal1;
 	}
-
-	public RMIRegulatedMotor getElevatorHorizontal2() {
-		return elevatorHorizontal2;
-	}
-
-	public void setElevatorHorizontal2(RMIRegulatedMotor elevatorHorizontal2) {
-		this.elevatorHorizontal2 = elevatorHorizontal2;
-	}
-
+	
 	public RMIRegulatedMotor getElevatorVertical1() {
 		return elevatorVertical1;
 	}

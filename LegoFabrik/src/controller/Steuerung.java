@@ -1,5 +1,4 @@
 package controller;
-
 /**
  *  wird vom Controller des Ui's initialisiert.
  *  Steuerung ist das Hauptprogramm welches alle anderen subprogramme verbindet und steuert.
@@ -34,7 +33,6 @@ import stations.Deliverylane;
 import stations.FillStation;
 
 public class Steuerung {
-
 	RemoteEV3 b101;
 	RemoteEV3 b102;
 	RemoteEV3 b103;
@@ -50,11 +48,9 @@ public class Steuerung {
 	RemoteEV3 b113;
 	RemoteEV3 b114;
 	RemoteEV3 b115;
-	// RemoteEV3 b120;
 
 	static RMIRegulatedMotor b101a;
 	static RMIRegulatedMotor b101b;
-	//static RMIRegulatedMotor b101c;
 	static RMIRegulatedMotor b101d;
 
 	static RMIRegulatedMotor b102a;
@@ -120,7 +116,7 @@ public class Steuerung {
 	static RMIRegulatedMotor b114d;
 
 	static RMIRegulatedMotor b115a;
-	static RMIRegulatedMotor b115b; // C1FC0F8A
+	static RMIRegulatedMotor b115b;
 	static RMIRegulatedMotor b115c;
 	static RMIRegulatedMotor b115d;
 	
@@ -172,19 +168,14 @@ public class Steuerung {
 	// }
 
 	public void start(Controller c1) {
-
 		/**
 		 *   holt ips aus Datei
 		 * @param Controller des main UI
 		 */
-
 		c = c1;
-
 		config = new BrickConfig(this);
 		getBrickIpsFromConfig();
-
 	}
-
 	// ------------init--------------------------------------------------
 
 	public void connectBricks() {
@@ -205,14 +196,12 @@ public class Steuerung {
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
 		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
 		deliverylane = new Deliverylane(this, b110a, b110b, b110c, b110d, b108c);
-		stock = new Stock(this, b112a, b112d, b113a, b113b, b112c, b112b, b111a, b111b, b111c, b111d);
+		stock = new Stock(this, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
 		transport = new Transport(this, b115a, b115b, b115c, b115d);
 
 		startSensordeamon();
-
 		updatePowerLevel();
 		startDigitilTwin();
-
 	}
 
 
@@ -222,12 +211,10 @@ public class Steuerung {
 		sendPowerLevels(); // sends brick powerlevel to dig twin
 	}
 	public void disconnectBricks() { /* */
-
 		reset();
 		closeSensordeamon();
 		closePorts();
 		System.out.println("DISCONNECTED");
-
 	}
 
 	private void startSensordeamon() {
@@ -236,13 +223,11 @@ public class Steuerung {
 	}
 
 	private void closeSensordeamon() {
-
 		sensordeamon.setStoper(true);
 	}
 
 	private void reset() {
 		// TODO add every reset method from every station
-
 	}
 	
 	public void initAll() {

@@ -45,9 +45,9 @@ public class Compressor {
 				try {
 
 					m1.forward(); // TODO:2 for 2 back
-					m2.forward();
+					m2.backward();
 					m3.backward();
-					m4.backward();
+					m4.forward();
 
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
