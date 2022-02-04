@@ -8,24 +8,19 @@ import lejos.remote.ev3.RMIRegulatedMotor;
 public class Stock {
 
 	RMIRegulatedMotor laneToStock1;
-
 	RMIRegulatedMotor elevatorHorizontal1;
 	RMIRegulatedMotor elevatorVertical1;
 	RMIRegulatedMotor elevatorVertical2;
-
 	RMIRegulatedMotor stockPlace1;
 	RMIRegulatedMotor stockPlace2;
 	RMIRegulatedMotor stockPlace3;
 	RMIRegulatedMotor stockPlace4;
-
 	private Steuerung s;
 	private boolean stock1 = true; // topleft false = empty
 	private boolean stock2 = true; // topright
 	private boolean stock3 = false; // downleft
 	private boolean stock4 = false; // downright
-
 	private int bandPosition = 0; // True is startposition, ready to take box from store on line
-
 	private char elevatorPositionHorizontal = 'l'; // l = left r = right
 	private char elevatorPositionVertical = 'd'; // d = down u= up
 
@@ -38,17 +33,13 @@ public class Stock {
 	private int lineSpeed = 300;
 
 	
-	/*
-	 * TODO: Förderband Aufzug bewegen damit die Stifte Richtung Lagerslot nicht mit Kiste
+	/* TODO: Förderband Aufzug bewegen damit die Stifte Richtung Lagerslot nicht mit Kiste
 	 * verklemmen können.
-	 * 
-	 * 
 	 * */
 	
 	public Stock(Steuerung s, RMIRegulatedMotor laneToStock1,
 			RMIRegulatedMotor elevatorHorizontal1, RMIRegulatedMotor elevatorVertical1, RMIRegulatedMotor elevatorVertical2, 
 			RMIRegulatedMotor stockPlace1, RMIRegulatedMotor stockPlace2, RMIRegulatedMotor stockPlace3, RMIRegulatedMotor stockPlace4) {
-
 		this.s = s;
 		this.stockPlace1 = stockPlace1;
 		this.stockPlace2 = stockPlace2;
@@ -58,22 +49,17 @@ public class Stock {
 		this.elevatorVertical1 = elevatorVertical1;
 		this.elevatorVertical2 = elevatorVertical2;
 		this.elevatorHorizontal1 = elevatorHorizontal1;
-
 	}
 
 	public void pushBoxFromElevatorToStore(boolean instantReturn) { // have to make sure box is on elevator
-
-		rotateLineToStock(1550 - storeLineRotateDegree, instantReturn); // Rotation 1550 - 350o from before is a 360°
-																		// turn, so it ends where it starts
+		rotateLineToStock(1550 - storeLineRotateDegree, instantReturn); // Rotation 1550 - 350o from before is a 360° turn, so it ends where it starts
 	}
 
 	public void pushBoxFromElevatorToLine(boolean instantReturn) { // have to make sure Box is on elevator
-
 		rotateLineToStock(-1550 + storeLineRotateDegree, instantReturn);
 	}
 
 	public void pushBoxFromStock(int stock, boolean instantReturn) throws RemoteException, InterruptedException {
-
 		switch (stock) {
 		case 1:
 			if (isStock1() == true) {
@@ -85,7 +71,6 @@ public class Stock {
 				// stopLaneToStock();
 				elevatorDown(false);
 				setStock1(false);
-
 			}
 			break;
 		case 2:
@@ -128,21 +113,16 @@ public class Stock {
 			break;
 		}
 	}
-
+	
 	public void placeBoxFromStoreOnElevatorline(boolean instantReturn) {
-
 		rotateLineToStock(-storeLineRotateDegree, instantReturn);
-
 	}
 
 	public void placeBoxFromLineOnElevatorline(boolean instantReturn) {
-
 		rotateLineToStock(storeLineRotateDegree, instantReturn);
-
 	}
 
 	public void rotateLineToStock(int degree, boolean instantReturn) {
-
 		try {
 			laneToStock1.setSpeed(getLineSpeed());
 		} catch (RemoteException e1) {
@@ -164,7 +144,6 @@ public class Stock {
 	}
 
 	public void pushStock1(boolean instantReturn) throws RemoteException {
-
 		if (isStock1()) {
 			stockPlace1.setSpeed(180);
 			stockPlace1.rotate(-stockRotationDegree, false);
@@ -177,7 +156,6 @@ public class Stock {
 	}
 
 	public void pushStock2(boolean instantReturn) throws RemoteException {
-
 		if (isStock2()) {
 			stockPlace2.setSpeed(180);
 			stockPlace2.rotate(-stockRotationDegree, false);
@@ -190,7 +168,6 @@ public class Stock {
 	}
 
 	public void pushStock3(boolean instantReturn) throws RemoteException {
-
 		if (isStock3()) {
 			stockPlace3.setSpeed(180);
 			stockPlace3.rotate(-stockRotationDegree, false);
@@ -216,9 +193,7 @@ public class Stock {
 	}
 
 	public void startLineToStock(boolean direction) throws RemoteException {
-
 		laneToStock1.setSpeed(getLineSpeed());
-
 		if (direction) {
 			laneToStock1.forward();
 			// laneToStock1.rotate(2000,true);
@@ -228,60 +203,45 @@ public class Stock {
 			// laneToStock1.rotate(-2000,true);
 			// laneToStock2.rotate(2000,false);
 		}
-
 	}
 
 	public void stopLaneToStock() throws RemoteException {
-
-		laneToStock1.stop(false); // false he waits for the motor to stop until
-									// it really finishes
+		laneToStock1.stop(false); // false he waits for the motor to stop until  it really finishes
 	}
 
 	public void elevatorUp(boolean instantReturn) throws RemoteException {
-
 		if (getElevatorPositionVertical() == 'u') {
 			// its allready up
 		} else {
 			elevatorVertical1.setSpeed(elevatorVerticalSpeed);
 			elevatorVertical2.setSpeed(elevatorVerticalSpeed);
-
-			elevatorVertical1.rotate(11520, true); // move both at the same time
-													// 11520
-													// and wait for second
+			elevatorVertical1.rotate(11520, true); // move both at the same time 11520 and wait for second
 			elevatorVertical2.rotate(-11520, instantReturn);
 			setElevatorPositionVertical('u');
 		}
-
 	}
 
 	public void elevatorDown(boolean instantReturn) throws RemoteException {
-
 		if (getElevatorPositionVertical() == 'u') {
 			elevatorVertical1.setSpeed(elevatorVerticalSpeed);
 			elevatorVertical2.setSpeed(elevatorVerticalSpeed);
-
-			elevatorVertical1.rotate(-11520, true); // move both at the same
-													// time
-													// and wait for second
+			elevatorVertical1.rotate(-11520, true); // move both at the same time and wait for second
 			elevatorVertical2.rotate(11520, instantReturn);
 			setElevatorPositionVertical('d');
 		}
 	}
 
 	public void elevatorToLeft(boolean instantReturn) throws RemoteException {
-
 		if (getElevatorPositionHorizontal() == 'l') {
 			// nothing is allready left
 		} else {
 			elevatorHorizontal1.setSpeed(elevatorHorizontalSpeed);
-
 			elevatorHorizontal1.rotate(-horizontalRotationDegree, true);
 			setElevatorPositionHorizontal('l');
 		}
 	}
 
 	public void elevatorToRight(boolean instantReturn) throws RemoteException {
-
 		if (getElevatorPositionHorizontal() == 'r') {
 			// nothing is allready right
 		} else {
@@ -293,7 +253,6 @@ public class Stock {
 	}
 
 	public void reset() {
-
 		try {
 			elevatorDown(true);
 			elevatorToLeft(true);
@@ -304,7 +263,6 @@ public class Stock {
 	}
 
 	public void storeBox(boolean instantReturn) throws RemoteException, InterruptedException {
-
 		if (isStock1() == false) {
 			storeIn1(instantReturn);
 		} else {
@@ -321,9 +279,7 @@ public class Stock {
 					}
 				}
 			}
-
 		}
-
 	}
 
 	public void PushBox(boolean instantReturn) throws RemoteException, InterruptedException {
@@ -344,9 +300,7 @@ public class Stock {
 					}
 				}
 			}
-
 		}
-
 	}
 
 	private void storeIn1(boolean instantReturn) throws RemoteException, InterruptedException {
@@ -359,7 +313,6 @@ public class Stock {
 			setStock1(true);
 			s.sendMessage("L1");
 		}
-
 	}
 
 	private void storeIn2(boolean instantReturn) throws RemoteException, InterruptedException {
@@ -374,7 +327,6 @@ public class Stock {
 			setStock2(true);
 			s.sendMessage("L2");
 		}
-
 	}
 
 	private void storeIn3(boolean instantReturn) throws RemoteException, InterruptedException {
@@ -385,11 +337,9 @@ public class Stock {
 			setStock3(true);
 			s.sendMessage("L3");
 		}
-
 	}
 
 	private void storeIn4(boolean instantReturn) throws RemoteException, InterruptedException {
-
 		if (isStock4() == false) {
 			placeBoxFromLineOnElevatorline(false);
 			elevatorToRight(false);
@@ -402,7 +352,6 @@ public class Stock {
 	}
 
 	public void printElevatorPosition() {
-
 		if (getElevatorPositionHorizontal() == 'l') {
 			if (getElevatorPositionVertical() == 'u') {
 				System.out.println("Elevator is UP/LEFT");
@@ -415,12 +364,10 @@ public class Stock {
 			} else {
 				System.out.println("Elevator is Up/RIGHT");
 			}
-
 		}
 	}
 
 	public void takeBoxOnElevator() throws InterruptedException, RemoteException {
-
 		startLineToStock(true); // Change to degree later
 		Thread.sleep(1500);
 		stopLaneToStock();
@@ -452,7 +399,6 @@ public class Stock {
 	public boolean isStock1() {
 		return stock1;
 	}
-
 	public void setStock1(boolean stock1) {
 		this.stock1 = stock1;
 	}
@@ -608,5 +554,4 @@ public class Stock {
 	public void setElevatorVertical2(RMIRegulatedMotor elevatorVertical2) {
 		this.elevatorVertical2 = elevatorVertical2;
 	}
-
 }

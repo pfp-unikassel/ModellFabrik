@@ -21,6 +21,8 @@ public class Sensordeamon extends Thread {
 	private RemoteEV3 b107;
 	private RemoteEV3 b113;
 
+	//In dieser Funktion heiﬂen die Bricks eigentlich anders!
+	//TODO Brick Nummern richtig, jedoch auch in der Steuerung dann ‰ndern
 	public Sensordeamon(Steuerung s, RemoteEV3 b105, RemoteEV3 b107, RemoteEV3 b113) { // ad
 		setDaemon(true); // makes this thread a deamon, closes itself after the main thread
 		this.b105 = b105; // turntable
@@ -80,18 +82,33 @@ public class Sensordeamon extends Thread {
 				s.b1053Fired();
 				s.sendMessage("LF");
 				Sensorarray2[0] = 0;
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				s.resetSensorStatus();
 			}
 			if (Sensorarray3[0] == 1) {
 				s.b1054Fired();
 				s.sendMessage("TF");
 				Sensorarray3[0] = 0;
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				s.resetSensorStatus();
 			}
 			if (Sensorarray4[0] == 1) { // counter sensor
 				s.b1072Fired();
 				s.sendMessage("CF");
 				Sensorarray4[0] = 0;
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				s.resetSensorStatus();
 			}
 
@@ -138,21 +155,31 @@ public class Sensordeamon extends Thread {
 					s.resetSensorStatus();
 				}
 			}
-
 			if (Sensorarray6[0] == 1) {
 				s.b1131Fired(true);
+			//	System.out.println("Fired Kompressor Sensor");
 				Sensorarray6[0] = 0;
 			} else {
 				s.b1131Fired(false);
 			}
 			if (Sensorarray7[0] == 1) {
 				s.b1051Fired();
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				Sensorarray7[0] = 0;
 				s.resetSensorStatus();
 			}
 			if (Sensorarray8[0] == 1) {
 				s.b1052Fired();
 				Sensorarray8[0] = 0;
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				s.resetSensorStatus();
 			}
 			
