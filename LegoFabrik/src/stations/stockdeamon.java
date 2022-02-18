@@ -13,7 +13,7 @@ public class stockdeamon extends Thread {
 	public stockdeamon(Steuerung s, RemoteEV3 b112) {
 		setDaemon(true); // makes this thread a deamon, closes itself after the main thread
 		this.s = s;
-		this.b112 = b112;
+		this.b112 = b112; //
 	}
 	@Override
 	public void run() {

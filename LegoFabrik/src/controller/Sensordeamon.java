@@ -13,7 +13,6 @@ import lejos.remote.ev3.RemoteEV3;
 import lejos.robotics.Color;
 
 public class Sensordeamon extends Thread {
-
 	private Steuerung s;
 	private int counter = 0;
 	private boolean stoper = false;
