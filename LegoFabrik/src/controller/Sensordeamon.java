@@ -1,6 +1,6 @@
 package controller;
 /**
- *  Der Sensordeamon ist ein eigener Thread welche die Sensoren der Bricks abfragt und die Werte and die Steuerung weitergibt.
+ *  Der Sensordeamon ist ein eigener Thread welche die Sensoren der Bricks abfragt und die Werte an die Steuerung weitergibt.
  *  Er schliesst sich automatisch beim beenden
  *  Er initialisiert die Sensoren der Bricks als RMISampleProvider, denn man kann sonst nur 4 (Bug in Lego Libary)
  *  normale Sensoren benutzen.

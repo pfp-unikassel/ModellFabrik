@@ -187,7 +187,7 @@ public class Steuerung {
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
 		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
 		deliverylane = new Deliverylane(this, b110a, b110b, b110c, b110d, b108c);
-		stock = new Stock(this, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
+		stock = new Stock(this, b112, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
 		//transport = new Transport(this, b115a, b115b, b115c, b115d);
 		startSensordeamon();
 		updatePowerLevel();
@@ -1526,7 +1526,16 @@ public class Steuerung {
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-			 testRun(); 
+			 //testRun();
+			 try {
+				stock.home();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 	}
 		 }, 1000);
 	}
