@@ -15,7 +15,7 @@ import lejos.robotics.Color;
 public class Sensordeamon extends Thread {
 	private Steuerung s;
 	private int counter = 0;
-	private boolean stoper = false;
+	private boolean stopper = false;
 	private RemoteEV3 b105;
 	private RemoteEV3 b107;
 	private RemoteEV3 b113;
@@ -24,9 +24,9 @@ public class Sensordeamon extends Thread {
 	//TODO Brick Nummern richtig, jedoch auch in der Steuerung dann ändern
 	public Sensordeamon(Steuerung s, RemoteEV3 b105, RemoteEV3 b107, RemoteEV3 b113) { // ad
 		setDaemon(true); // makes this thread a deamon, closes itself after the main thread
-		this.b105 = b105; // turntable
-		this.b107 = b107;
-		this.b113 = b113;
+		this.b105 = b105; // eigentlich 102
+		this.b107 = b107; // eigentlich 104
+		this.b113 = b113; // eigentlich 107
 		this.s = s;
 	}
 
@@ -39,14 +39,13 @@ public class Sensordeamon extends Thread {
 		 * die Sensoren abfragt und wenn diese ausloesen sender er dies and die Steuerung
 		 * Startet außderdem Ui thread welcher das UI updated
 		 */
-		RMISampleProvider b1053 = b105.createSampleProvider("S3", "lejos.hardware.sensor.EV3TouchSensor", null); // drehtisch
-		RMISampleProvider b1054 = b105.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift
+		RMISampleProvider b1053 = b105.createSampleProvider("S3", "lejos.hardware.sensor.EV3TouchSensor", null); // endstop auf drehtisch
+		RMISampleProvider b1054 = b105.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift endstop
 		RMISampleProvider b1072 = b107.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // counter
 		RMISampleProvider b1131 = b113.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // kompressor
-		RMISampleProvider b1073 = b107.createSampleProvider("S3", "lejos.hardware.sensor.EV3ColorSensor", "ColorID");
-		RMISampleProvider b1051 = b105.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // lift1
-		RMISampleProvider b1052 = b105.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // lift2
-
+		RMISampleProvider b1073 = b107.createSampleProvider("S3", "lejos.hardware.sensor.EV3ColorSensor", "ColorID"); //Farbsensor qa_1
+		RMISampleProvider b1051 = b105.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // drehttisch endstop to storage lane
+		RMISampleProvider b1052 = b105.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // drehtisch endstop to lift lane
 		s.addToSensorList(b1053);
 		s.addToSensorList(b1054);
 		s.addToSensorList(b1051);
@@ -55,7 +54,7 @@ public class Sensordeamon extends Thread {
 		s.addToSensorList(b1131);
 		s.addToSensorList(b1073);
 		
-		float[] Sensorarray2 = new float[5];
+		float[] Sensorarray1 = new float[5];
 		float[] Sensorarray3 = new float[5];
 		float[] Sensorarray4 = new float[5];
 		float[] Sensorarray5 = new float[5];
@@ -63,24 +62,23 @@ public class Sensordeamon extends Thread {
 		float[] Sensorarray7 = new float[5];
 		float[] Sensorarray8 = new float[5];
 		
-		while (!stoper) { // kontrolliere jederzeit ob einer der Sensoren etwas erkennt		
+		while (!stopper) { // kontrolliere jederzeit ob einer der Sensoren etwas erkennt		
 			counter++;
 			try {
-				Sensorarray2 = b1053.fetchSample();
+				Sensorarray1 = b1053.fetchSample();
 				Sensorarray3 = b1054.fetchSample();
 				Sensorarray4 = b1072.fetchSample();
 				Sensorarray5 = b1073.fetchSample();
 				Sensorarray6 = b1131.fetchSample();
 				Sensorarray7 = b1051.fetchSample();
 				Sensorarray8 = b1052.fetchSample();
-				
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			if (Sensorarray2[0] == 1) {
+			if (Sensorarray1[0] == 1) {
 				s.b1053Fired();
 				s.sendMessage("LF");
-				Sensorarray2[0] = 0;
+				Sensorarray1[0] = 0;
 				try {
 					sleep(100);
 				} catch (InterruptedException e) {
@@ -181,15 +179,12 @@ public class Sensordeamon extends Thread {
 				}
 				s.resetSensorStatus();
 			}
-			
 			try {
 				sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
-			// -------------UI
-			// changes--------------------------------------------------------------------------------------------
+			
 			/**
 			 * ruft die Labelupdate Methode jedesmal in einem Platformthread auf
 			 * Ruft die Update Powerlevel nur bei jedem 100 durchlauf auf
@@ -198,26 +193,18 @@ public class Sensordeamon extends Thread {
 			Platform.runLater( // rows this in Ui Thread Q, maybe to much actions
 					() -> {
 						s.updateLabelInController();
-
 						if (counter == 50000) { // ad counter++
 							counter = 0;
 							s.updatePowerLevel(); // counter Wert 100: alle 5000 nanosekunden sendet er hier ein paket zu jedem brick
 						}
 					});
-
-			// -------------UI
-			// changes----------------------------------------------------------------------------------------------
 		}
 	}
 
-
-
-	public boolean isStoper() {
-		return stoper;
+	public boolean isstopper() {
+		return stopper;
 	}
-
-	public void setStoper(boolean stoper) {
-		this.stoper = stoper;
+	public void setstopper(boolean stopper) {
+		this.stopper = stopper;
 	}
-
 }

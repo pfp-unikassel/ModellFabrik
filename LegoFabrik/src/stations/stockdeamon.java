@@ -11,6 +11,7 @@ public class stockdeamon extends Thread {
 	private int counter = 0;
 	private boolean stopper = false;
 	public stockdeamon(Steuerung s, RemoteEV3 b112) {
+		System.out.println("Stockdeamon erstellt");
 		setDaemon(true); // makes this thread a deamon, closes itself after the main thread
 		this.s = s;
 		this.b112 = b112; //

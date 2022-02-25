@@ -269,7 +269,6 @@ public class Chargier {
 	}
 
 	public void touchLiftfired() {
-
 		System.out.println("Lift Sensor fired");
 	}
 

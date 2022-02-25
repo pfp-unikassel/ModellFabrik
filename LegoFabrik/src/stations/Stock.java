@@ -46,6 +46,7 @@ public class Stock {
 		this.elevatorVerticalleft = elevatorVerticalleft;
 		this.elevatorVerticalright = elevatorVerticalright;
 		this.elevatorHorizontal = elevatorHorizontal;
+		this.b112 = b112;
 	}
 
 	public void pushBoxFromElevatorToStore(boolean instantReturn) { // have to make sure box is on elevator

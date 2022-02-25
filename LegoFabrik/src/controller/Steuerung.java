@@ -200,7 +200,7 @@ public class Steuerung {
 		resetDigitalTwin(); // brings digital twin in start position
 		sendPowerLevels(); // sends brick powerlevel to dig twin
 	}
-	public void disconnectBricks() { /* */
+	public void disconnectBricks() {
 		reset();
 		closeSensordeamon();
 		closePorts();
@@ -213,7 +213,7 @@ public class Steuerung {
 	}
 
 	private void closeSensordeamon() {
-		sensordeamon.setStoper(true);
+		sensordeamon.setstopper(true);
 	}
 
 	private void reset() {
@@ -235,17 +235,10 @@ public class Steuerung {
 		initBrick10();
 		initBrick11();
 		initBrick12();
-		//initBrick13();
-		//initBrick14();
-		//initBrick15();
 	}
 
-	public void initBrick1() {
-		/**
-		 * initialisiert Brick1 mit der Ip aus Datei falls vorhanden und speichert ihn in der Brick liste
-		 * initialisiert Motoren des Bricks und speichert diese in der Motor Arraylist
-		 * */
-		// Brick 101
+	public void initBrick1() { 	// initialisiert Brick1 mit der Ip aus Datei falls vorhanden und speichert ihn in der Brick liste
+		 						// initialisiert Motoren des Bricks und speichert diese in der Motor Arraylist
 		try {
 			if (getBrickIps().get(0) != null) {
 				b101 = new RemoteEV3(getBrickIps().get(0));
@@ -258,13 +251,11 @@ public class Steuerung {
 			closePorts();
 			System.out.println("B1 not Found");
 		}
-		b101a = b101.createRegulatedMotor("A", 'M');
+		b101a = b101.createRegulatedMotor("A", 'M');  //Zweiter Buchstabe ist Motorgröße, M=klein, L=groß
 		b101b = b101.createRegulatedMotor("B", 'M');
-		//b101c = b101.createRegulatedMotor("C", 'M');
-		b101d = b101.createRegulatedMotor("D", 'M');
+		b101d = b101.createRegulatedMotor("D", 'L');
 		openMotorPorts.add(b101a);
 		openMotorPorts.add(b101b);
-		//openMotorPorts.add(b101c);
 		openMotorPorts.add(b101d);
 		bricks.add(b101);
 	}
@@ -356,7 +347,7 @@ public class Steuerung {
 			System.out.println("B8 not Found");
 		}
 
-		b105a = b105.createRegulatedMotor("A", 'M');
+		b105a = b105.createRegulatedMotor("A", 'L');
 		b105b = b105.createRegulatedMotor("B", 'L');
 		b105c = b105.createRegulatedMotor("C", 'M');
 		openMotorPorts.add(b105a);
@@ -476,7 +467,7 @@ public class Steuerung {
 			System.out.println("B10 not Found");
 		}
 
-		b110a = b110.createRegulatedMotor("A", 'M');
+		b110a = b110.createRegulatedMotor("A", 'L');
 		b110b = b110.createRegulatedMotor("B", 'M');
 		b110c = b110.createRegulatedMotor("C", 'M');
 		b110d = b110.createRegulatedMotor("D", 'M');
@@ -526,9 +517,9 @@ public class Steuerung {
 		}
 
 		b112a = b112.createRegulatedMotor("A", 'L');
-		b112b = b112.createRegulatedMotor("B", 'L');
-		b112c = b112.createRegulatedMotor("C", 'L');
-		b112d = b112.createRegulatedMotor("D", 'L');
+		b112b = b112.createRegulatedMotor("B", 'M');
+		b112c = b112.createRegulatedMotor("C", 'M');
+		b112d = b112.createRegulatedMotor("D", 'M');
 		openMotorPorts.add(b112a);
 		openMotorPorts.add(b112b);
 		openMotorPorts.add(b112c);
