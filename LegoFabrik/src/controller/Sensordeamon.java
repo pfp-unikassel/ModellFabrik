@@ -14,19 +14,18 @@ import lejos.robotics.Color;
 
 public class Sensordeamon extends Thread {
 	private Steuerung s;
-	private int counter = 0;
+	private int i = 0;
 	private boolean stopper = false;
-	private RemoteEV3 b105;
+	private RemoteEV3 b102;
+	private RemoteEV3 b104;
 	private RemoteEV3 b107;
-	private RemoteEV3 b113;
-
-	//In dieser Funktion heißen die Bricks eigentlich anders!
-	//TODO Brick Nummern richtig, jedoch auch in der Steuerung dann ändern
-	public Sensordeamon(Steuerung s, RemoteEV3 b105, RemoteEV3 b107, RemoteEV3 b113) { // ad
+	private RemoteEV3 b112;
+	public Sensordeamon(Steuerung s, RemoteEV3 b102, RemoteEV3 b104, RemoteEV3 b107, RemoteEV3 b112) { // ad
 		setDaemon(true); // makes this thread a deamon, closes itself after the main thread
-		this.b105 = b105; // eigentlich 102
-		this.b107 = b107; // eigentlich 104
-		this.b113 = b113; // eigentlich 107
+		this.b102 = b102;
+		this.b104 = b104;
+		this.b107 = b107;
+		this.b112 = b112;
 		this.s = s;
 	}
 
@@ -39,106 +38,89 @@ public class Sensordeamon extends Thread {
 		 * die Sensoren abfragt und wenn diese ausloesen sender er dies and die Steuerung
 		 * Startet außderdem Ui thread welcher das UI updated
 		 */
-		RMISampleProvider b1053 = b105.createSampleProvider("S3", "lejos.hardware.sensor.EV3TouchSensor", null); // endstop auf drehtisch
-		RMISampleProvider b1054 = b105.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift endstop
-		RMISampleProvider b1072 = b107.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // counter
-		RMISampleProvider b1131 = b113.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // kompressor
-		RMISampleProvider b1073 = b107.createSampleProvider("S3", "lejos.hardware.sensor.EV3ColorSensor", "ColorID"); //Farbsensor qa_1
-		RMISampleProvider b1051 = b105.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // drehttisch endstop to storage lane
-		RMISampleProvider b1052 = b105.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // drehtisch endstop to lift lane
-		s.addToSensorList(b1053);
-		s.addToSensorList(b1054);
-		s.addToSensorList(b1051);
-		s.addToSensorList(b1052);
-		s.addToSensorList(b1072);
-		s.addToSensorList(b1131);
-		s.addToSensorList(b1073);
+		RMISampleProvider turntable_endstop = b102.createSampleProvider("S3", "lejos.hardware.sensor.EV3TouchSensor", null); // endstop auf drehtisch
+		RMISampleProvider lift_lane_endstop = b102.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); // lift endstop
+		RMISampleProvider counter = b104.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // counter
+		RMISampleProvider compressor_sensor = b107.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // kompressor
+		RMISampleProvider qa_1_color = b104.createSampleProvider("S3", "lejos.hardware.sensor.EV3ColorSensor", "ColorID"); //Farbsensor qa_1
+		RMISampleProvider endstop_to_storage = b102.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); // drehttisch endstop to storage lane
+		RMISampleProvider endstop_to_lift = b102.createSampleProvider("S2", "lejos.hardware.sensor.EV3TouchSensor", null); // drehtisch endstop to lift lane
+		RMISampleProvider storagelift_stop_right = b112.createSampleProvider("S1", "lejos.hardware.sensor.EV3TouchSensor", null); //
+		RMISampleProvider storagelift_stop_left = b112.createSampleProvider("S4", "lejos.hardware.sensor.EV3TouchSensor", null); //
+		s.addToSensorList(turntable_endstop);
+		s.addToSensorList(lift_lane_endstop);
+		s.addToSensorList(endstop_to_storage);
+		s.addToSensorList(endstop_to_lift);
+		s.addToSensorList(counter);
+		s.addToSensorList(compressor_sensor);
+		s.addToSensorList(qa_1_color);
+		s.addToSensorList(storagelift_stop_right);
+		s.addToSensorList(storagelift_stop_left);
 		
-		float[] Sensorarray1 = new float[5];
-		float[] Sensorarray3 = new float[5];
-		float[] Sensorarray4 = new float[5];
-		float[] Sensorarray5 = new float[5];
-		float[] Sensorarray6 = new float[5];
-		float[] Sensorarray7 = new float[5];
-		float[] Sensorarray8 = new float[5];
+		float[] turntable_endstop_array = new float[5];
+		float[] lift_lane_endstop_array = new float[5];
+		float[] counter_array = new float[5];
+		float[] qa_1_color_array = new float[5];
+		float[] compressor_sensor_array = new float[5];
+		float[] endstop_to_storage_array = new float[5];
+		float[] endstop_to_lift_array = new float[5];
+		float[] storagelift_stop_right_array = new float[5];
+		float[] storagelift_stop_left_array = new float[5];
 		
 		while (!stopper) { // kontrolliere jederzeit ob einer der Sensoren etwas erkennt		
-			counter++;
+			i++;
 			try {
-				Sensorarray1 = b1053.fetchSample();
-				Sensorarray3 = b1054.fetchSample();
-				Sensorarray4 = b1072.fetchSample();
-				Sensorarray5 = b1073.fetchSample();
-				Sensorarray6 = b1131.fetchSample();
-				Sensorarray7 = b1051.fetchSample();
-				Sensorarray8 = b1052.fetchSample();
+				turntable_endstop_array = turntable_endstop.fetchSample();
+				lift_lane_endstop_array = lift_lane_endstop.fetchSample();
+				counter_array = counter.fetchSample();
+				qa_1_color_array = qa_1_color.fetchSample();
+				compressor_sensor_array = compressor_sensor.fetchSample();
+				endstop_to_storage_array = endstop_to_storage.fetchSample();
+				endstop_to_lift_array = endstop_to_lift.fetchSample();
+				storagelift_stop_right_array = storagelift_stop_right.fetchSample();
+				storagelift_stop_left_array  = storagelift_stop_left.fetchSample();
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			if (Sensorarray1[0] == 1) {
-				s.b1053Fired();
-				s.sendMessage("LF");
-				Sensorarray1[0] = 0;
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				s.resetSensorStatus();
+			if (turntable_endstop_array[0] == 1) {
+				s.turntable_endstopFired();
 			}
-			if (Sensorarray3[0] == 1) {
-				s.b1054Fired();
-				s.sendMessage("TF");
-				Sensorarray3[0] = 0;
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				s.resetSensorStatus();
+			if (lift_lane_endstop_array[0] == 1) {
+				s.lift_lane_endstopFired();
 			}
-			if (Sensorarray4[0] == 1) { // counter sensor
-				s.b1072Fired();
-				s.sendMessage("CF");
-				Sensorarray4[0] = 0;
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				s.resetSensorStatus();
+			if (counter_array[0] == 1) { // Zähl-Sensor
+				s.counterFired(true);
 			}
-
-			if (Sensorarray5[0] != -1) {
-				int coloIndex = (int) Sensorarray5[0];
+			if (counter_array[0] == 0) { // Zähl-Sensor
+				s.counterFired(false);
+			}
+			if (qa_1_color_array[0] != -1) {
+				int colorIndex = (int) qa_1_color_array[0];
 				String colorString = "";
-				switch (coloIndex) {
-
+				switch (colorIndex) {
 				case Color.BLACK:
 					colorString = "BLACK";
-// 				System.out.println("black");
-//					s.sendMessage("S0");  bring it back in after the Line is yellow/ not black anymore
 					break;
 				case Color.BLUE:
 					colorString = "BLUE";
-					System.out.println("					blue");
+					System.out.println("blue");
 					break;
 				case Color.GREEN:
 					colorString = "GREEN";
-					System.out.println("			green");
+					System.out.println("green");
 					break;
 				case Color.YELLOW: 
 					colorString = "YELLOW";
-					System.out.println("				yellow");
+					System.out.println("yellow");
 					break;
 				case Color.RED:
 					colorString = "RED";
-					System.out.println("		red");
+					System.out.println("red");
 					s.sendMessage("R0");
 					break;
 				case Color.WHITE:
 					colorString = "WHITE";
-					System.out.println("	white");
+					System.out.println("white");
 					s.sendMessage("W1");
 					break;
 				case Color.BROWN:
@@ -146,42 +128,31 @@ public class Sensordeamon extends Thread {
 					System.out.println("brown");
 					break;
 				}
-				s.b1073Fired(colorString);
-
-				if (colorString != "BLACK") {
-					s.resetSensorStatus();
-				}
+				s.qa_1_colorFired(colorString);
 			}
-			if (Sensorarray6[0] == 1) {
-				s.b1131Fired(true);
-			//	System.out.println("Fired Kompressor Sensor");
-				Sensorarray6[0] = 0;
+			if (compressor_sensor_array[0] == 1) {
+				s.compressor_sensorFired(true);
 			} else {
-				s.b1131Fired(false);
+				s.compressor_sensorFired(false);
 			}
-			if (Sensorarray7[0] == 1) {
-				s.b1051Fired();
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				Sensorarray7[0] = 0;
-				s.resetSensorStatus();
+			if (endstop_to_storage_array[0] == 1) {
+				s.endstop_to_storageFired();
 			}
-			if (Sensorarray8[0] == 1) {
-				s.b1052Fired();
-				Sensorarray8[0] = 0;
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				s.resetSensorStatus();
+			if (endstop_to_lift_array[0] == 1) {
+				s.endstop_to_liftFired();
 			}
+			if (storagelift_stop_right_array[0] == 1 ) {
+				s.storagelift_stop_rightFired();
+			}
+			if (storagelift_stop_left_array[0] == 1 ) {
+				s.storagelift_stop_leftFired();
+			}
+			
+			
 			try {
-				sleep(100);
-			} catch (InterruptedException e) {
+				sleep(50);
+			} 
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			
@@ -193,9 +164,9 @@ public class Sensordeamon extends Thread {
 			Platform.runLater( // rows this in Ui Thread Q, maybe to much actions
 					() -> {
 						s.updateLabelInController();
-						if (counter == 50000) { // ad counter++
-							counter = 0;
-							s.updatePowerLevel(); // counter Wert 100: alle 5000 nanosekunden sendet er hier ein paket zu jedem brick
+						if (i == 50000) { // ad i++
+							i = 0;
+							s.updatePowerLevel(); // i Wert 100: alle 5000 nanosekunden sendet er hier ein paket zu jedem brick
 						}
 					});
 		}

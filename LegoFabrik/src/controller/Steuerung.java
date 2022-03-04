@@ -138,12 +138,11 @@ public class Steuerung {
 	static Transport transport;
 	static BrickConfig config;
 
-	private boolean b1053Status = false; // set True if button fires
-	private boolean b1054Status = false;
-	private boolean b1061Status = false;
-	private boolean b1072Status = false;
-	private boolean b1051Status = false;
-	private boolean b1052Status = false;
+	private boolean turntable_endstopStatus = false; // set True if button fires
+	private boolean lift_lane_endstopStatus = false;
+	private boolean counterStatus = false;
+	private boolean endstop_to_storageStatus = false;
+	private boolean endstop_to_liftStatus = false;
 
 	private Controller c;
 	private static LegoClient legoClient;
@@ -187,7 +186,7 @@ public class Steuerung {
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
 		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
 		deliverylane = new Deliverylane(this, b110a, b110b, b110c, b110d, b108c);
-		stock = new Stock(this, b112, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
+		stock = new Stock(this, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
 		//transport = new Transport(this, b115a, b115b, b115c, b115d);
 		startSensordeamon();
 		updatePowerLevel();
@@ -208,7 +207,7 @@ public class Steuerung {
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b102, b104, b107);
+		sensordeamon = new Sensordeamon(this, b102, b104, b107, b112);
 		sensordeamon.start();
 	}
 
@@ -285,7 +284,6 @@ public class Steuerung {
 	}
 
 	public void initBrick3() {
-
 		try {
 			if (getBrickIps().get(2) != null) {
 				b103 = new RemoteEV3(getBrickIps().get(2));
@@ -296,10 +294,8 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B6 not Found");
-
+			System.out.println("B3 not Found");
 		}
-
 		b103a = b103.createRegulatedMotor("A", 'L'); // Laufband zum Drehtisch
 		b103b = b103.createRegulatedMotor("B", 'L'); // Laufband vom Drehtisch
 		b103d = b103.createRegulatedMotor("D", 'L'); // Laufband zur  Kippvorrichtung
@@ -320,9 +316,8 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B7 not Found");
+			System.out.println("B4 not Found");
 		}
-
 		b104b = b104.createRegulatedMotor("B", 'M');
 		b104c = b104.createRegulatedMotor("C", 'L');
 		b104d = b104.createRegulatedMotor("D", 'L');
@@ -333,7 +328,6 @@ public class Steuerung {
 	}
 
 	public void initBrick5() {
-		// Brick 108
 		try {
 			if (getBrickIps().get(4) != null) {
 				b105 = new RemoteEV3(getBrickIps().get(4));
@@ -344,9 +338,8 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B8 not Found");
+			System.out.println("B5 not Found");
 		}
-
 		b105a = b105.createRegulatedMotor("A", 'L');
 		b105b = b105.createRegulatedMotor("B", 'L');
 		b105c = b105.createRegulatedMotor("C", 'M');
@@ -357,7 +350,6 @@ public class Steuerung {
 	}
 
 	public void initBrick6() {
-		// Brick 111
 		try {
 			if (getBrickIps().get(5) != null) {
 				b106 = new RemoteEV3(getBrickIps().get(5));
@@ -368,9 +360,8 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B11 not Found");
+			System.out.println("B6 not Found");
 		}
-
 		b106a = b106.createRegulatedMotor("A", 'M');
 		b106b = b106.createRegulatedMotor("B", 'M');
 		b106c = b106.createRegulatedMotor("C", 'M');
@@ -793,44 +784,60 @@ public class Steuerung {
 
 	// --------------------------------------------------------
 
-	public void b1053Fired() { // lift schalter
-		chargier.touchLiftfired();
-		b1053Status = true;
+	public void turntable_endstopFired() {
+		if (turntable_endstopStatus == false) {
+			chargier.touchLiftfired();
+			turntable_endstopStatus = true;
+			sendMessage("LF");
+		}
 	}
 
-	public void b1054Fired() { // drehtischschalter
-		//Programm ablauf wartet auf diesen boolean Dreht tisch  schalter
-		chargier.touchTablefired();
-		b1054Status = true;
+	public void lift_lane_endstopFired() {
+		if (lift_lane_endstopStatus == false) {
+			chargier.touchTablefired();
+			lift_lane_endstopStatus = true;
+			sendMessage("TF");
+		}
 	}
 	
-	public void b1051Fired() { // drehtischschalter Richtung Lager
+	public void endstop_to_storageFired() { // drehtischschalter Richtung Lager
 		chargier.touchTable1fired();
-		b1051Status = true;
+		endstop_to_storageStatus = true;
 	}
 
-	public void b1052Fired() { // drehtischschalter Richtung Rüttelplatte
+	public void endstop_to_liftFired() { // drehtischschalter Richtung Rüttelplatte
 		chargier.touchTable2fired();
-		b1052Status = true;
+		endstop_to_liftStatus = true;
 	}
 
-	public void b1061Fired() { // ultraschall sensor
-		//Programm ablauf wartet auf diesen boolean: Ultraschall Sensor
-		chargier.schrankefired();
-		b1061Status = true;
-	}
 
-	public void b1072Fired() {
-		//zählt bälle
-		quality.counterSensorFired();
-		b1072Status = true;
+	public void counterFired(boolean fired) { //zählt bälle
+		if (fired == true && counterStatus == false) {
+			quality.counterSensorFired();
+			counterStatus = true;
+			sendMessage("CF");
+		}
+		if (fired == false) {
+			counterStatus = false;
+		}
 	}
+	
+	public void storagelift_stop_rightFired () {
+		System.out.println("Stock: Endstop Rechts getriggert");
+		stock.setendstopright(true);
+	}
+	
+	public void storagelift_stop_leftFired () {
+		System.out.println("Stock: Endstop Links getriggert");
+		stock.setendstopleft(true);
+	}
+	
 
-	public void b1073Fired(String colorString) {
+	public void qa_1_colorFired(String colorString) {
 		quality.colorSensorFired(colorString);
 	}
 
-	public void b1131Fired(boolean button) {
+	public void compressor_sensorFired(boolean button) {
 		compressor.pressureButtonfired(button);
 	}
 
@@ -856,16 +863,6 @@ public class Steuerung {
 		this.szenario = szenario;
 	}
 
-	public void resetSensorStatus() {
-		b1053Status = false;
-		b1054Status = false;
-		b1061Status = false;
-		b1072Status = false;
-		//TODO noch Variablenname ändern
-		b1051Status = false;
-		b1052Status = false;
-		quality.resetColorString();
-	}
 
 	// -------------------Getter-Stations---------------------------------------------
 
@@ -987,7 +984,8 @@ public class Steuerung {
 						chargier.startLineToTable(false);
 						chargier.startTableLine(true);
 						// wait till Table Button is pushed, test maybe Ui freezes
-						while (!b1054Status) {
+						lift_lane_endstopStatus = false;
+						while (!lift_lane_endstopStatus) {
 							System.out.println("hänge in schleife 1");
 						}
 						//Hier die Sensoren resetten
@@ -996,15 +994,19 @@ public class Steuerung {
 						chargier.turnTable(660, false);
 						chargier.startLineToLifter(false);
 						chargier.startTableLine(false);
-						while (!b1053Status) {
-							System.out.println("hänge in schleife 2");	
+						turntable_endstopStatus = false;
+						while (!turntable_endstopStatus) {
+							System.out.println("hänge in schleife 2");
+							Thread.sleep(50);
 						}
 						chargier.stopLineToLifter();
 						chargier.stopTableLine();
 						chargier.startLineToLifter(true);
 						chargier.startTableLine(true);
-						while (!b1054Status) { // wait table button pushed
+						lift_lane_endstopStatus = false;
+						while (!lift_lane_endstopStatus) { // wait table button pushed
 							System.out.println("hänge in schleife 3");
+							Thread.sleep(50);
 						}
 						chargier.stopLineToLifter();
 						chargier.stopTableLine();
@@ -1432,18 +1434,20 @@ public class Steuerung {
 					chargier.startTableLine(true);
 					// wait till Table Button is pushed
 					System.out.println("Warte Sensorschleife 01");
-					while (!b1054Status) {
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) {
 						// System.out.println("Warte Sensorschleife 01");
-						Thread.sleep(100);
+						Thread.sleep(50);
 					}
 					System.out.println("Sensorschleife 01 verlassen.");
 					chargier.stopLineToTable();
 					chargier.stopTableLine();
 					//Drehen Richtung Produktion start						
 					chargier.rotateTable(true);
-					while(!b1052Status) {
+					endstop_to_liftStatus = false;
+					while(!endstop_to_liftStatus) {
 						//System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(1);
+						Thread.sleep(50);
 					}
 					//Stoppen des Drehens
 					chargier.stopRotateTable();
@@ -1454,8 +1458,9 @@ public class Steuerung {
 					//Thread.sleep(500);
 					chargier.startTableLine(false);
 					System.out.println("Warte in Sensorschleife 02");
-					while (!b1053Status) {// wait on lift button
-						Thread.sleep(1);
+					turntable_endstopStatus = false;
+					while (!turntable_endstopStatus) {// wait on lift button
+						Thread.sleep(50);
 					}
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
@@ -1469,17 +1474,19 @@ public class Steuerung {
 					quality.startCounterLine(false);
 					quality.startLine(true);
 					System.out.println("Warte in Sensorschleife 03");
-					while (!b1054Status) { // wait table button pushed
-						Thread.sleep(100);
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) { // wait table button pushed
+						Thread.sleep(50);
 					}
 					
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
 					//Tisch rotiert in Richtung Lager
 					chargier.rotateTable(false);
-					while(!b1051Status) {
+					endstop_to_storageStatus = false;
+					while(!endstop_to_storageStatus) {
 						System.out.println("In der neuen Knopfschleife 2");
-						Thread.sleep(100);
+						Thread.sleep(50);
 					}
 					
 					chargier.stopRotateTable();
@@ -1578,10 +1585,12 @@ public class Steuerung {
 					}, 1000);
 
 					// wait till Table Button is pushed, test maybe Ui freezes
-					while (!b1054Status) {
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) {
 						System.out.print("");
+						Thread.sleep(50);
 						// System.out.println("hänge in schleife 1");
-						// System.out.println(b1054Status);
+						// System.out.println(lift_lane_endstopStatus);
 					}
 //					chargier.stopLineToStorer();
 
@@ -1593,7 +1602,8 @@ public class Steuerung {
 					//chargier.turnToLift(false);
 					
 					chargier.rotateTable(true);
-					while(!b1052Status) {
+					endstop_to_liftStatus = false;
+					while(!endstop_to_liftStatus) {
 						System.out.println("In der neuen Knopfschleife 1");
 						Thread.sleep(10);
 					}
@@ -1606,10 +1616,9 @@ public class Steuerung {
 
 					chargier.startLineToLifter(false);
 					chargier.startTableLine(false);
-
-					while (!b1053Status) {
-						System.out.print("");
-						// System.out.println("hänge in schleife 2");
+					turntable_endstopStatus = false;
+					while (!turntable_endstopStatus) {
+						Thread.sleep(50);
 					}
 
 					chargier.stopLineToLifter();
@@ -1623,7 +1632,8 @@ public class Steuerung {
 								//chargier.turnToStock(false);
 								//Tisch rotiert in Richtung Lager
 								chargier.rotateTable(false);
-								while(!b1051Status) {
+								endstop_to_storageStatus = false;
+								while(!endstop_to_storageStatus) {
 									System.out.println("In der neuen Knopfschleife 2");
 									Thread.sleep(100);
 								}
@@ -1637,9 +1647,11 @@ public class Steuerung {
 								
 								chargier.startLineToStore(true); // auf Tisch
 								chargier.startTableLine(true);
-								while (!b1054Status) { // wait table button
+								lift_lane_endstopStatus = false;
+								while (!lift_lane_endstopStatus) { // wait table button
 										System.out.print("");				// pushed
 									// System.out.println("hänge in schleife 3");
+										Thread.sleep(50);
 								}
 								chargier.stopLineToStorer();
 								chargier.stopTableLine();
@@ -1659,8 +1671,10 @@ public class Steuerung {
 								chargier.startTableLine(true);
 								// wait till Table Button is pushed, test maybe
 								// Ui freezes
-								while (!b1054Status) {
+								lift_lane_endstopStatus = false;
+								while (!lift_lane_endstopStatus) {
 									System.out.println("hänge in schleife 1");
+									Thread.sleep(50);
 								}
 
 								chargier.stopLineToLifter();
@@ -1701,7 +1715,7 @@ public class Steuerung {
 					// quality.startCounterLine(false);
 					// quality.startLine(true);
 					//
-					// while (!b1054Status) { // wait table button pushed
+					// while (!lift_lane_endstopStatus) { // wait table button pushed
 					// System.out.println("hänge in schleife 3");
 					// }
 					//

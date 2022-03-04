@@ -286,11 +286,6 @@ public class Chargier {
 		System.out.println("Table Rüttelplatte Sensor fired");
 	}
 
-	public void schrankefired() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void setTablePosition(int tablePosition) {
 		this.tablePosition = tablePosition;
 	}

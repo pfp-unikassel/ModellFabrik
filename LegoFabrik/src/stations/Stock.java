@@ -3,7 +3,6 @@ package stations;
 import java.rmi.RemoteException;
 import controller.Steuerung;
 import lejos.remote.ev3.RMIRegulatedMotor;
-import lejos.remote.ev3.RemoteEV3;
 
 public class Stock {
 
@@ -15,9 +14,7 @@ public class Stock {
 	RMIRegulatedMotor stockPlace2;
 	RMIRegulatedMotor stockPlace3;
 	RMIRegulatedMotor stockPlace4;
-	private RemoteEV3 b112;
 	private Steuerung s;
-	private stockdeamon stockdeamon;
 	private boolean stock1 = true; // topleft false = empty
 	private boolean stock2 = true; // topright
 	private boolean stock3 = false; // downleft
@@ -31,10 +28,10 @@ public class Stock {
 	private int stockRotationDegree = 140; // motor turn degree from push mechanism
 	private int horizontalRotationDegree = 600; // Elevator motor turndegree
 	private int lineSpeed = 300;
-	public boolean endstopleft = false;
-	public boolean endstopright = false;	
+	private boolean endstopleft = false;
+	private boolean endstopright = false;	
 	
-	public Stock(Steuerung s, RemoteEV3 b112,  RMIRegulatedMotor laneToStock1,
+	public Stock(Steuerung s,  RMIRegulatedMotor laneToStock1,
 			RMIRegulatedMotor elevatorHorizontal, RMIRegulatedMotor elevatorVerticalleft, RMIRegulatedMotor elevatorVerticalright, 
 			RMIRegulatedMotor stockPlace1, RMIRegulatedMotor stockPlace2, RMIRegulatedMotor stockPlace3, RMIRegulatedMotor stockPlace4) {
 		this.s = s;
@@ -46,7 +43,6 @@ public class Stock {
 		this.elevatorVerticalleft = elevatorVerticalleft;
 		this.elevatorVerticalright = elevatorVerticalright;
 		this.elevatorHorizontal = elevatorHorizontal;
-		this.b112 = b112;
 	}
 
 	public void pushBoxFromElevatorToStore(boolean instantReturn) { // have to make sure box is on elevator
@@ -58,22 +54,21 @@ public class Stock {
 	}
 
 	public void home () throws RemoteException, InterruptedException { //Nutzt endstops um in definierte position zu kommen
-		stockdeamon = new stockdeamon (s, b112); //erschaffe deamon für endstops
 		endstopleft = false;
 		endstopright = false;
-		stockdeamon.start(); //starte deamon
-		while (endstopleft == false && endstopright== false) {
+		while (endstopleft == false || endstopright== false) {
+			System.out.println(endstopright);
 			if (endstopleft == false) {
-				elevatorVerticalleft.rotate(9, true);		
+				elevatorVerticalleft.rotate(90, true);		
 			}
 			if (endstopright == false) {
-				elevatorVerticalright.rotate(9, false);		
+				elevatorVerticalright.rotate(90, false);		
 			}
 		}
 		elevatorPositionVertical = 'd';
-		elevatorVerticalleft.rotate(-90, true);
-		elevatorVerticalright.rotate(-90, false);
-	
+		elevatorVerticalleft.rotate(-360, true);
+		elevatorVerticalright.rotate(-360, false);
+		System.out.println("exit while schleife");
 	}
 	
 	public void pushBoxFromStock(int stock, boolean instantReturn) throws RemoteException, InterruptedException {
@@ -526,5 +521,11 @@ public class Stock {
 	}
 	public void setelevatorVerticalright(RMIRegulatedMotor elevatorVerticalright) {
 		this.elevatorVerticalright = elevatorVerticalright;
+	}
+	public void setendstopleft(boolean endstopleft) {
+		this.endstopleft = endstopleft;
+	}
+	public void setendstopright(boolean endstopright) {
+		this.endstopright = endstopright;
 	}
 }
