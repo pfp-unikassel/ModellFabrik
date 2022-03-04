@@ -85,13 +85,9 @@ public class Controller implements Initializable {
 	public Steuerung s;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) { // gets
-																		// startet
-																		// with
-																		// programm
+	public void initialize(URL location, ResourceBundle resources) { // gets stared with progran
 
 		s = new Steuerung(this);
-
 		brickLabels = new ArrayList<>();
 		addBrickLabeltoList();
 		paused = false;

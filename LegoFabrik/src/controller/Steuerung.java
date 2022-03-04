@@ -1,5 +1,4 @@
 package controller;
-
 /**
  *  wird vom Controller des Ui's initialisiert.
  *  Steuerung ist das Hauptprogramm welches alle anderen subprogramme verbindet und steuert.
@@ -34,7 +33,6 @@ import stations.Deliverylane;
 import stations.FillStation;
 
 public class Steuerung {
-
 	RemoteEV3 b101;
 	RemoteEV3 b102;
 	RemoteEV3 b103;
@@ -50,11 +48,9 @@ public class Steuerung {
 	RemoteEV3 b113;
 	RemoteEV3 b114;
 	RemoteEV3 b115;
-	// RemoteEV3 b120;
 
 	static RMIRegulatedMotor b101a;
 	static RMIRegulatedMotor b101b;
-	//static RMIRegulatedMotor b101c;
 	static RMIRegulatedMotor b101d;
 
 	static RMIRegulatedMotor b102a;
@@ -111,18 +107,16 @@ public class Steuerung {
 	static RMIRegulatedMotor b112c;
 	static RMIRegulatedMotor b112d;
 
-	static RMIRegulatedMotor b113a;
-	static RMIRegulatedMotor b113b;
-	
-	static RMIRegulatedMotor b114a;
-	static RMIRegulatedMotor b114b;
-	static RMIRegulatedMotor b114c;
-	static RMIRegulatedMotor b114d;
 
-	static RMIRegulatedMotor b115a;
-	static RMIRegulatedMotor b115b; // C1FC0F8A
-	static RMIRegulatedMotor b115c;
-	static RMIRegulatedMotor b115d;
+//	static RMIRegulatedMotor b114a;
+//	static RMIRegulatedMotor b114b;
+//	static RMIRegulatedMotor b114c;
+//	static RMIRegulatedMotor b114d;
+//
+//	static RMIRegulatedMotor b115a;
+//	static RMIRegulatedMotor b115b;
+//	static RMIRegulatedMotor b115c;
+//	static RMIRegulatedMotor b115d;
 	
 	static ArrayList<RMIRegulatedMotor> openMotorPorts = new ArrayList<>(); // all
 	static ArrayList<RMISampleProvider> openSensorPorts = new ArrayList<>();
@@ -142,17 +136,13 @@ public class Steuerung {
 	private Sensordeamon sensordeamon;
 	static Car car;
 	static Transport transport;
-	
 	static BrickConfig config;
 
-	private boolean b1053Status = false; // set True if button fires
-	private boolean b1054Status = false;
-	private boolean b1061Status = false;
-	private boolean b1072Status = false;
-	
-	//Neu
-	private boolean b1051Status = false;
-	private boolean b1052Status = false;
+	private boolean turntable_endstopStatus = false; // set True if button fires
+	private boolean lift_lane_endstopStatus = false;
+	private boolean counterStatus = false;
+	private boolean endstop_to_storageStatus = false;
+	private boolean endstop_to_liftStatus = false;
 
 	private Controller c;
 	private static LegoClient legoClient;
@@ -172,27 +162,18 @@ public class Steuerung {
 	// }
 
 	public void start(Controller c1) {
-
 		/**
 		 *   holt ips aus Datei
 		 * @param Controller des main UI
 		 */
-
 		c = c1;
-
 		config = new BrickConfig(this);
 		getBrickIpsFromConfig();
-
 	}
-
 	// ------------init--------------------------------------------------
 
 	public void connectBricks() {
-		/**
-		 * initialisiert jede Station
-		 * startet den Sensor deamon
-		 * laedt akkustaende
-		 * */
+		// initialisiert jede Station, startet den Sensor deamon, laedt akkustaende
 		initAll();  // init every brick
 		System.out.println("Connected");
 
@@ -205,14 +186,11 @@ public class Steuerung {
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
 		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
 		deliverylane = new Deliverylane(this, b110a, b110b, b110c, b110d, b108c);
-		stock = new Stock(this, b112a, b112d, b113a, b113b, b112c, b112b, b111a, b111b, b111c, b111d);
-		transport = new Transport(this, b115a, b115b, b115c, b115d);
-
+		stock = new Stock(this, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
+		//transport = new Transport(this, b115a, b115b, b115c, b115d);
 		startSensordeamon();
-
 		updatePowerLevel();
 		startDigitilTwin();
-
 	}
 
 
@@ -221,38 +199,29 @@ public class Steuerung {
 		resetDigitalTwin(); // brings digital twin in start position
 		sendPowerLevels(); // sends brick powerlevel to dig twin
 	}
-	public void disconnectBricks() { /* */
-
+	public void disconnectBricks() {
 		reset();
 		closeSensordeamon();
 		closePorts();
 		System.out.println("DISCONNECTED");
-
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b102, b103, b104, b107, b109);
+		sensordeamon = new Sensordeamon(this, b102, b104, b107, b112);
 		sensordeamon.start();
 	}
 
 	private void closeSensordeamon() {
-
-		sensordeamon.setStoper(true);
+		sensordeamon.setstopper(true);
 	}
 
 	private void reset() {
 		// TODO add every reset method from every station
-
 	}
 	
 	public void initAll() {
-		/**
-		 *  Initialisiert
-		 *  alle Bricks wenn ip in Datei steht wird diese genommen, wenn nicht
-		 *  die im code definierte
-		 */
+		// Initialisiert alle Bricks wenn ip in Datei steht wird diese genommen, wenn nicht die im code definierte
 		System.out.println("init All");
-
 		initBrick1();
 		initBrick2();
 		initBrick3();
@@ -263,21 +232,12 @@ public class Steuerung {
 		initBrick8();
 		initBrick9();
 		initBrick10();
-		
 		initBrick11();
 		initBrick12();
-		initBrick13();
-//		initBrick14();
-		// initBrick15();
-
 	}
 
-	public void initBrick1() {
-		/**
-		 * initialisiert Brick1 mit der Ip aus Datei falls vorhanden und speichert ihn in der Brick liste
-		 * initialisiert Motoren des Bricks und speichert diese in der Motor Arraylist
-		 * */
-		// Brick 101
+	public void initBrick1() { 	// initialisiert Brick1 mit der Ip aus Datei falls vorhanden und speichert ihn in der Brick liste
+		 						// initialisiert Motoren des Bricks und speichert diese in der Motor Arraylist
 		try {
 			if (getBrickIps().get(0) != null) {
 				b101 = new RemoteEV3(getBrickIps().get(0));
@@ -290,16 +250,12 @@ public class Steuerung {
 			closePorts();
 			System.out.println("B1 not Found");
 		}
-		b101a = b101.createRegulatedMotor("A", 'M');
+		b101a = b101.createRegulatedMotor("A", 'M');  //Zweiter Buchstabe ist Motorgröße, M=klein, L=groß
 		b101b = b101.createRegulatedMotor("B", 'M');
-		//b101c = b101.createRegulatedMotor("C", 'M');
-		b101d = b101.createRegulatedMotor("D", 'M');
-
+		b101d = b101.createRegulatedMotor("D", 'L');
 		openMotorPorts.add(b101a);
 		openMotorPorts.add(b101b);
-		//openMotorPorts.add(b101c);
 		openMotorPorts.add(b101d);
-
 		bricks.add(b101);
 	}
 
@@ -321,16 +277,13 @@ public class Steuerung {
 		b102a = b102.createRegulatedMotor("A", 'L'); // Motor Fillstation
 		b102c = b102.createRegulatedMotor("C", 'L'); // Motor Drehtisch
 		b102d = b102.createRegulatedMotor("D", 'L'); // Motor Räder Drehtisch
-
 		openMotorPorts.add(b102a);
 		openMotorPorts.add(b102c);
 		openMotorPorts.add(b102d);
-
 		bricks.add(b102);
 	}
 
 	public void initBrick3() {
-
 		try {
 			if (getBrickIps().get(2) != null) {
 				b103 = new RemoteEV3(getBrickIps().get(2));
@@ -341,19 +294,14 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B6 not Found");
-
+			System.out.println("B3 not Found");
 		}
-
 		b103a = b103.createRegulatedMotor("A", 'L'); // Laufband zum Drehtisch
 		b103b = b103.createRegulatedMotor("B", 'L'); // Laufband vom Drehtisch
-		b103d = b103.createRegulatedMotor("D", 'L'); // Laufband zur
-														// Kippvorrichtung)
-
+		b103d = b103.createRegulatedMotor("D", 'L'); // Laufband zur  Kippvorrichtung
 		openMotorPorts.add(b103a);
 		openMotorPorts.add(b103b);
 		openMotorPorts.add(b103d);
-
 		bricks.add(b103);
 	}
 
@@ -368,23 +316,18 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B7 not Found");
-
+			System.out.println("B4 not Found");
 		}
-
 		b104b = b104.createRegulatedMotor("B", 'M');
 		b104c = b104.createRegulatedMotor("C", 'L');
 		b104d = b104.createRegulatedMotor("D", 'L');
-
 		openMotorPorts.add(b104b);
 		openMotorPorts.add(b104c);
 		openMotorPorts.add(b104d);
-
 		bricks.add(b104);
 	}
 
 	public void initBrick5() {
-		// Brick 108
 		try {
 			if (getBrickIps().get(4) != null) {
 				b105 = new RemoteEV3(getBrickIps().get(4));
@@ -395,23 +338,18 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B8 not Found");
-
+			System.out.println("B5 not Found");
 		}
-
-		b105a = b105.createRegulatedMotor("A", 'M');
+		b105a = b105.createRegulatedMotor("A", 'L');
 		b105b = b105.createRegulatedMotor("B", 'L');
 		b105c = b105.createRegulatedMotor("C", 'M');
-
 		openMotorPorts.add(b105a);
 		openMotorPorts.add(b105b);
 		openMotorPorts.add(b105c);
-
 		bricks.add(b105);
 	}
 
 	public void initBrick6() {
-		// Brick 111
 		try {
 			if (getBrickIps().get(5) != null) {
 				b106 = new RemoteEV3(getBrickIps().get(5));
@@ -422,54 +360,44 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B11 not Found");
-
+			System.out.println("B6 not Found");
 		}
-
 		b106a = b106.createRegulatedMotor("A", 'M');
 		b106b = b106.createRegulatedMotor("B", 'M');
 		b106c = b106.createRegulatedMotor("C", 'M');
 		b106d = b106.createRegulatedMotor("D", 'M');
-
 		openMotorPorts.add(b106a);
 		openMotorPorts.add(b106b);
 		openMotorPorts.add(b106c);
 		openMotorPorts.add(b106d);
-
 		bricks.add(b106);
 	}
 
 	public void initBrick7() {
-		// Brick 113
 		try {
 			if (getBrickIps().get(6) != null) {
 				b107 = new RemoteEV3(getBrickIps().get(6));
 			} else
-				b107 = new RemoteEV3("192.168.0.107"); //TODO change to 7 chh: WARUM 7?
+				b107 = new RemoteEV3("192.168.0.107");
 			getPowerLevel(b107);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B13 not Found");
-
+			System.out.println("B07 not Found");
 		}
-
 		b107a = b107.createRegulatedMotor("A", 'L');
 		b107b = b107.createRegulatedMotor("B", 'L');
 		b107c = b107.createRegulatedMotor("C", 'L');
 		b107d = b107.createRegulatedMotor("D", 'L');
-
 		openMotorPorts.add(b107a);
 		openMotorPorts.add(b107b);
 		openMotorPorts.add(b107c);
 		openMotorPorts.add(b107d);
-
 		bricks.add(b107);
 	}
 
 	public void initBrick8() {
-		// Brick 114
 		try {
 			if (getBrickIps().get(7) != null) {
 				b108 = new RemoteEV3(getBrickIps().get(7));
@@ -480,23 +408,19 @@ public class Steuerung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
-			System.out.println("B14 not Found");
-
+			System.out.println("B08 not Found");
 		}
 
 		b108a = b108.createRegulatedMotor("A", 'M');
 		b108b = b108.createRegulatedMotor("B", 'M');
 		b108c = b108.createRegulatedMotor("C", 'L');
-
 		openMotorPorts.add(b108a);
 		openMotorPorts.add(b108b);
 		openMotorPorts.add(b108c);
-
 		bricks.add(b108);
 	}
 
 	public void initBrick9() {
-		// Brick 115
 		try {
 			if (getBrickIps().get(8) != null) {
 				b109 = new RemoteEV3(getBrickIps().get(8));
@@ -508,24 +432,19 @@ public class Steuerung {
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B9 not Found");
-
 		}
-
 		b109a = b109.createRegulatedMotor("A", 'M');
 		b109b = b109.createRegulatedMotor("B", 'M');
 		b109c = b109.createRegulatedMotor("C", 'M');
 		b109d = b109.createRegulatedMotor("D", 'M');
-
 		openMotorPorts.add(b109a);
 		openMotorPorts.add(b109b);
 		openMotorPorts.add(b109c);
 		openMotorPorts.add(b109d);
-
 		bricks.add(b109);
 	}
 
 	public void initBrick10() {
-		// Brick 116
 		try {
 			if (getBrickIps().get(9) != null) {
 				b110 = new RemoteEV3(getBrickIps().get(9));
@@ -537,24 +456,20 @@ public class Steuerung {
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B10 not Found");
-
 		}
 
-		b110a = b110.createRegulatedMotor("A", 'M');
+		b110a = b110.createRegulatedMotor("A", 'L');
 		b110b = b110.createRegulatedMotor("B", 'M');
 		b110c = b110.createRegulatedMotor("C", 'M');
 		b110d = b110.createRegulatedMotor("D", 'M');
-
 		openMotorPorts.add(b110a);
 		openMotorPorts.add(b110b);
 		openMotorPorts.add(b110c);
 		openMotorPorts.add(b110d);
-
 		bricks.add(b110);
 	}
 
 	public void initBrick11() {
-		// Brick 117
 		try {
 			if (getBrickIps().get(10) != null) {
 				b111 = new RemoteEV3(getBrickIps().get(10));
@@ -565,24 +480,20 @@ public class Steuerung {
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B11 not Found");
-
 		}
 
 		b111a = b111.createRegulatedMotor("A", 'L');
 		b111b = b111.createRegulatedMotor("B", 'L');
 		b111c = b111.createRegulatedMotor("C", 'L');
 		b111d = b111.createRegulatedMotor("D", 'L');
-
 		openMotorPorts.add(b111a);
 		openMotorPorts.add(b111b);
 		openMotorPorts.add(b111c);
 		openMotorPorts.add(b111d);
-
 		bricks.add(b111);
 	}
 
 	public void initBrick12() {
-		// Brick 118
 		try {
 			if (getBrickIps().get(11) != null) {
 				b112 = new RemoteEV3(getBrickIps().get(11));
@@ -594,127 +505,84 @@ public class Steuerung {
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B12 not Found");
-
 		}
 
 		b112a = b112.createRegulatedMotor("A", 'L');
-		b112b = b112.createRegulatedMotor("B", 'L');
-		b112c = b112.createRegulatedMotor("C", 'L');
-		b112d = b112.createRegulatedMotor("D", 'L');
-
+		b112b = b112.createRegulatedMotor("B", 'M');
+		b112c = b112.createRegulatedMotor("C", 'M');
+		b112d = b112.createRegulatedMotor("D", 'M');
 		openMotorPorts.add(b112a);
 		openMotorPorts.add(b112b);
 		openMotorPorts.add(b112c);
 		openMotorPorts.add(b112d);
-
 		bricks.add(b112);
 	}
 
-	public void initBrick13() {
-		// Brick 119
-		try {
-			if (getBrickIps().get(12) != null) {
-				b113 = new RemoteEV3(getBrickIps().get(12));
-			} else
-				b113 = new RemoteEV3("192.168.0.113");
-			getPowerLevel(b113);
-		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			closePorts();
-			System.out.println("B13 not Found");
-
-		}
-
-		b113a = b113.createRegulatedMotor("A", 'L');
-		b113b = b113.createRegulatedMotor("B", 'L');
-
-		openMotorPorts.add(b113a);
-		openMotorPorts.add(b113b);
-
-		bricks.add(b113);
-	}
-	
-	public void initBrick14() {
-		// Brick 114
-		try {
-			if (getBrickIps().get(14) != null) {
-				b114 = new RemoteEV3(getBrickIps().get(14));
-			} else
-				b114 = new RemoteEV3("192.168.0.114");
-			getPowerLevel(b114);
-		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			closePorts();
-			System.out.println("B14 not Found");
-
-		}
-
-		b114a = b114.createRegulatedMotor("A", 'L');
-		b114b = b114.createRegulatedMotor("B", 'M');
-		b114c = b114.createRegulatedMotor("C", 'M');
-		
-		openMotorPorts.add(b114a);
-		openMotorPorts.add(b114b);
-		openMotorPorts.add(b114c);
-
-		bricks.add(b114);
-	}
-
-	public void initBrick15() {
-		// Brick 115
-		try {
-			if (getBrickIps().get(15) != null) {
-				b115 = new RemoteEV3(getBrickIps().get(15));
-			} else
-				b115 = new RemoteEV3("192.168.0.115");
-			getPowerLevel(b115);
-		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			closePorts();
-			System.out.println("B15 not Found");
-
-		}
-
-		b115a = b115.createRegulatedMotor("A", 'L');
-		b115b = b115.createRegulatedMotor("B", 'L');
-		b115c = b115.createRegulatedMotor("C", 'L');
-		b115d = b115.createRegulatedMotor("D", 'L');
-		
-		openMotorPorts.add(b115a);
-		openMotorPorts.add(b115b);
-		openMotorPorts.add(b115c);
-		openMotorPorts.add(b115d);
-		
-		bricks.add(b115);
-	}
+//	public void initBrick14() {
+//		// Brick 114
+//		try {
+//			if (getBrickIps().get(14) != null) {
+//				b114 = new RemoteEV3(getBrickIps().get(14));
+//			} else
+//				b114 = new RemoteEV3("192.168.0.114");
+//			getPowerLevel(b114);
+//		} catch (RemoteException | MalformedURLException | NotBoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			closePorts();
+//			System.out.println("B14 not Found");
+//		}
+//
+//		b114a = b114.createRegulatedMotor("A", 'L');
+//		b114b = b114.createRegulatedMotor("B", 'M');
+//		b114c = b114.createRegulatedMotor("C", 'M');
+//		openMotorPorts.add(b114a);
+//		openMotorPorts.add(b114b);
+//		openMotorPorts.add(b114c);
+//		bricks.add(b114);
+//	}
+//
+//	public void initBrick15() {
+//		// Brick 115
+//		try {
+//			if (getBrickIps().get(15) != null) {
+//				b115 = new RemoteEV3(getBrickIps().get(15));
+//			} else
+//				b115 = new RemoteEV3("192.168.0.115");
+//			getPowerLevel(b115);
+//		} catch (RemoteException | MalformedURLException | NotBoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			closePorts();
+//			System.out.println("B15 not Found");
+//		}
+//
+//		b115a = b115.createRegulatedMotor("A", 'L');
+//		b115b = b115.createRegulatedMotor("B", 'L');
+//		b115c = b115.createRegulatedMotor("C", 'L');
+//		b115d = b115.createRegulatedMotor("D", 'L');
+//		openMotorPorts.add(b115a);
+//		openMotorPorts.add(b115b);
+//		openMotorPorts.add(b115c);
+//		openMotorPorts.add(b115d);
+//		bricks.add(b115);
+//	}
 	
 	public void addToSensorList(RMISampleProvider s) {
-
 		openSensorPorts.add(s);
 	}
 
 	public ArrayList<RMISampleProvider> getSensorList() {
-
 		return openSensorPorts;
 	}
 
 	public ArrayList<RemoteEV3> getBrickList() {
-
 		return bricks;
 	}
 
 	public void closePorts() {
-		/**
-		 * schliesst
-		 * alle Motorports/Sensorports der Bricks aus der Liste muss bei
-		 * jedem programm Ende gemacht werden
-		 */
-
-		for (RMIRegulatedMotor temp : openMotorPorts) { // close every open
-														// Motor
+		 //schließt alle Motorports/Sensorports der Bricks aus der Liste muss bei jedem programm Ende gemacht werden
+		for (RMIRegulatedMotor temp : openMotorPorts) { // close every open Motor
 			try {
 				// System.out.println("Closing " + temp.toString());
 				temp.close();
@@ -726,9 +594,7 @@ public class Steuerung {
 				e.printStackTrace();
 			}
 		}
-
-		for (RMISampleProvider temp1 : openSensorPorts) { // close every sensor
-															// in Sensorlist
+		for (RMISampleProvider temp1 : openSensorPorts) { // close every sensor in Sensorlist
 			try {				
 				// System.out.println("Closing " + temp1.toString());
 				temp1.close();
@@ -748,16 +614,12 @@ public class Steuerung {
 	// ---Communication interactions---------------------------------
 
 	public void setOnline() {
-		/**
-		 *  sorgt dafuer das Nachrichten an den Zwilling geschickt werden
-		 * */
+		 // sorgt dafuer das Nachrichten an den Zwilling geschickt werden
 		setTwinConnection(true);
 	}
 
 	public void setOffline() {
-		/**
-		 *  sorgt dafuer das keine Nachrichten an den Zwilling geschickt werden
-		 * */
+		//sorgt dafuer das keine Nachrichten an den Zwilling geschickt werden
 		setTwinConnection(false);
 	}
 
@@ -770,15 +632,12 @@ public class Steuerung {
 		/**
 		 *  Speichert brick ips in Datai
 		 * */
-		
 		config.setBrickips(brickIps);
 		config.writeIps();
 	}
 
 	public void changeBrickIps(ArrayList<String> newBrickIps) {
-		/**
-		 *  tauscht alte gegen neue ips aus
-		 * */
+		//tauscht alte gegen neue ips aus
 		brickIps = newBrickIps;
 		saveBrickIps();
 	}
@@ -787,11 +646,8 @@ public class Steuerung {
 		return config.getDefaultBrickips();
 	}
 
-	public void createLegoClient(String ip, int port) { // ip and port can be null in this case default values will be
-														// used
-
+	public void createLegoClient(String ip, int port) { // ip and port can be null in this case default values will be used
 		legoClient = new LegoClient(ip, port);
-
 	}
 
 	public void deleteLegoClient() {
@@ -807,7 +663,6 @@ public class Steuerung {
 	}
 
 	public boolean isConnected() {
-
 		return twinConnection;
 	}
 
@@ -816,32 +671,23 @@ public class Steuerung {
 	}
 
 	public void sendPowerLevels() {
-
-		/**
-		 *  holt akkustand vom Brick und Name von Brick und sendet sie dem Zwilling
-		 * */
+		//  holt akkustand vom Brick und Name von Brick und sendet sie dem Zwilling
 		String message, brickName;
 		String powerLevel;
 		char[] c = new char[5];
-
 		for (lejos.remote.ev3.RemoteEV3 b : getBrickList()) {
-
 			// int akkustand = b.getPower().getVoltageMilliVolt();
 			//
 			// powerLevel = String.valueOf(b.getPower().getVoltageMilliVolt());
 			// // int in String
 			// powerLevel.getChars(0, 4, c, 0); // get first 4 chars
 			brickName = b.getName();
-
 			message = ("B1" + brickName + "-" + b.getPower().getVoltageMilliVolt()); // message
 																						// looks
 																						// like:
 																						// B100XXX
-
 			sendMessage(message);
-
 		}
-
 	}
 
 	public void resetDigitalTwin() {
@@ -849,9 +695,7 @@ public class Steuerung {
 	}
 
 	public void sendMessage(String message) {
-
 		/**sendet Nachricht an den Zwilling, Ip und Port sind in der Methode hardcoded
-		 *  
 		 *  @param Message as String
 		 * */
 		if (false) {    //true einsetzen, wenn digitaler Zwilling benutzt werden soll
@@ -860,13 +704,9 @@ public class Steuerung {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
-
 					legoClient = new LegoClient("192.168.0.114", 33333);
-
 					lastRecivedMessage = legoClient.sendMessage(message); // sendMessage always returns the answer
-
 					//System.out.print("Nachricht wurde gesendet!");
-					
 					// if(lastRecivedMessage == null && sendErrorCounter >
 					// numberOfSendTrys) { // try again
 					// sendErrorCounter++;
@@ -884,7 +724,6 @@ public class Steuerung {
 				}
 			}, 10);
 		}
-
 	}
 }
 
@@ -896,42 +735,31 @@ public class Steuerung {
 		 *  @return  Akkustand als mV float, 7V = 7000mv
 		 */
 		if (brick != null) {
-
 			System.out.println(brick.getName() + " hat noch " + brick.getPower().getVoltageMilliVolt() + "V Akku");
-
 			return brick.getPower().getVoltageMilliVolt();
-
 		} else
 			return 0;
-
 		// TODO: PoverLevel in % umrechnen, wenn unter wert x dann alarm
 	}
 
 	public float getPowerUse(RemoteEV3 brick) {
-
 		/**
 		 * @param RemoteEV3 legobrick
 		 *  @return momentanen akku verbrauch in mV
 		 */
 		if (brick != null) {
-
-			System.out.println(brick.getName() + " verbraucht " + brick.getPower().getBatteryCurrent() + "Amp/s Akku"); // TODO:
-
+			System.out.println(brick.getName() + " verbraucht " + brick.getPower().getBatteryCurrent() + "Amp/s Akku");
 			return brick.getPower().getBatteryCurrent();
-
 		} else
 			return 0;
-
 	}
 
 	public float getMotorPowerUse(RemoteEV3 brick) {
-
 		/**
 		 * @param lego Brick
 		 * @return  Motor verbrauch float in mV
 		 */
 		if (brick != null) {
-
 			System.out.println(
 					brick.getName() + " Motoren verbrauchen " + brick.getPower().getMotorCurrent() + "Amp/s Akku");
 			return brick.getPower().getMotorCurrent();
@@ -939,84 +767,81 @@ public class Steuerung {
 			return 0;
 		}
 
-		// TODO: PoverLevel in % umrechnen, wenn unter wert x dann alarm
+		// TODO: PowerLevel in % umrechnen, wenn unter wert x dann alarm
 	}
 
 	public void updatePowerLevel() {
-		/**
-		 *  updated powerlevel anzeige im controller
-		 */
-
+		// updated powerlevel anzeige im controller
 		c.updatePowerLevel();
-
 	}
 
+	
 	// --------------Controller interactions----------------------
-
 	public void updateLabelInController() {
-		/**
-		 * @param laesst
-		 *            den Controller alle Labels updaten
-		 */
+		 // @param laesst den Controller alle Labels updaten
 		c.updateLabels();
 	}
 
 	// --------------------------------------------------------
 
-	public void b1053Fired() { // lift schalter
-		chargier.touchLiftfired();
-		b1053Status = true;
+	public void turntable_endstopFired() {
+		if (turntable_endstopStatus == false) {
+			chargier.touchLiftfired();
+			turntable_endstopStatus = true;
+			sendMessage("LF");
+		}
 	}
 
-	public void b1054Fired() { // drehtischschalter
-		/**
-		 * Programm ablauf wartet auf diesen boolean
-		 * Dreht tisch  schalter
-		 */
-		chargier.touchTablefired();
-		b1054Status = true;
+	public void lift_lane_endstopFired() {
+		if (lift_lane_endstopStatus == false) {
+			chargier.touchTablefired();
+			lift_lane_endstopStatus = true;
+			sendMessage("TF");
+		}
 	}
 	
-	
-	public void b1051Fired() { // drehtischschalter Richtung Lager
+	public void endstop_to_storageFired() { // drehtischschalter Richtung Lager
 		chargier.touchTable1fired();
-		b1051Status = true;
+		endstop_to_storageStatus = true;
 	}
 
-	public void b1052Fired() { // drehtischschalter Richtung Rüttelplatte
+	public void endstop_to_liftFired() { // drehtischschalter Richtung Rüttelplatte
 		chargier.touchTable2fired();
-		b1052Status = true;
+		endstop_to_liftStatus = true;
 	}
 
-	public void b1061Fired() { // ultraschall sensor
-		/**
-		 * Programm ablauf wartet auf diesen boolean
-		 * Ultraschall Sensor
-		 */
-		chargier.schrankefired();
-		b1061Status = true;
+
+	public void counterFired(boolean fired) { //zählt bälle
+		if (fired == true && counterStatus == false) {
+			quality.counterSensorFired();
+			counterStatus = true;
+			sendMessage("CF");
+		}
+		if (fired == false) {
+			counterStatus = false;
+		}
 	}
-
-	public void b1072Fired() {
-		/**
-		 * zaehlt bälle
-		 */
-		quality.counterSensorFired();
-		b1072Status = true;
+	
+	public void storagelift_stop_rightFired () {
+		System.out.println("Stock: Endstop Rechts getriggert");
+		stock.setendstopright(true);
 	}
+	
+	public void storagelift_stop_leftFired () {
+		System.out.println("Stock: Endstop Links getriggert");
+		stock.setendstopleft(true);
+	}
+	
 
-	public void b1073Fired(String colorString) {
-
+	public void qa_1_colorFired(String colorString) {
 		quality.colorSensorFired(colorString);
 	}
 
-	public void b1131Fired(boolean button) {
-
+	public void compressor_sensorFired(boolean button) {
 		compressor.pressureButtonfired(button);
 	}
 
 	public void b1151Fired(String colorString) {
-
 		qualitystation.colorSensorFired(colorString);
 	}
 
@@ -1028,7 +853,6 @@ public class Steuerung {
 		 */
 		// QualityStation arm is stalled boolean true stalled, false nicht
 		// qulityStation.setArmIsStalled(armIsStalled);
-
 	}
 
 	public int getSzenario() {
@@ -1039,20 +863,6 @@ public class Steuerung {
 		this.szenario = szenario;
 	}
 
-	public void resetSensorStatus() {
-		b1053Status = false;
-		b1054Status = false;
-		b1061Status = false;
-		b1072Status = false;
-		
-		
-		//TODO noch Variablenname ändern
-		
-		b1051Status = false;
-		b1052Status = false;
-		
-		quality.resetColorString();
-	}
 
 	// -------------------Getter-Stations---------------------------------------------
 
@@ -1144,10 +954,7 @@ public class Steuerung {
 	// stations------------------------------
 
 	public void runDelivery() {
-
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+		//runs Station standart ablauf in seperaten thread
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
@@ -1164,15 +971,10 @@ public class Steuerung {
 				}
 			}
 		}, 1000);
-		
-
 	}
 
 	public void runChargier(boolean mode) { // True starts false stops
-
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+		 // runs Station standart ablauf in seperaten thread
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
@@ -1181,48 +983,40 @@ public class Steuerung {
 						chargier.resetTable(true);
 						chargier.startLineToTable(false);
 						chargier.startTableLine(true);
-
-						// wait till Table Button is pushed, test maybe Ui
-						// freezes
-						while (!b1054Status) {
+						// wait till Table Button is pushed, test maybe Ui freezes
+						lift_lane_endstopStatus = false;
+						while (!lift_lane_endstopStatus) {
 							System.out.println("hänge in schleife 1");
 						}
 						//Hier die Sensoren resetten
 						chargier.stopLineToTable();
 						chargier.stopTableLine();
 						chargier.turnTable(660, false);
-
 						chargier.startLineToLifter(false);
 						chargier.startTableLine(false);
-
-						while (!b1053Status) {
-							System.out.println("hänge in schleife 2");	
+						turntable_endstopStatus = false;
+						while (!turntable_endstopStatus) {
+							System.out.println("hänge in schleife 2");
+							Thread.sleep(50);
 						}
-						
 						chargier.stopLineToLifter();
 						chargier.stopTableLine();
 						chargier.startLineToLifter(true);
 						chargier.startTableLine(true);
-
-						while (!b1054Status) { // wait table button pushed
+						lift_lane_endstopStatus = false;
+						while (!lift_lane_endstopStatus) { // wait table button pushed
 							System.out.println("hänge in schleife 3");
+							Thread.sleep(50);
 						}
-
 						chargier.stopLineToLifter();
 						chargier.stopTableLine();
-
 						chargier.turnTable(-1320, false);
-
 						chargier.startLineToStore(false); // maybe falls
 						chargier.startTableLine(false);
-
 						Thread.sleep(3000);
 						chargier.stopTableLine();
 						chargier.stopLineToStorer();
-
-						chargier.resetTable(true); // turns 660 to much repair
-													// later
-
+						chargier.resetTable(true); // turns 660 to much repair later
 					} else {
 						chargier.stop();
 					}
@@ -1238,11 +1032,7 @@ public class Steuerung {
 		}, 1000);
 	}
 
-	public void runCleaner(boolean mode) {
-
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runCleaner(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			try {
 				cleaner.startLiftLine(true);
@@ -1261,10 +1051,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runShaker(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runShaker(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			try {
 				lift.startShaker();
@@ -1282,10 +1069,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runLift(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runLift(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
@@ -1298,10 +1082,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runQuality(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runQuality(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			try {
 				quality.startCounterLine(false);
@@ -1320,10 +1101,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runAirarms(boolean mode) {
-		/**
-		 * runs Station standart ablauf braucht seperaten thread
-		 */
+	public void runAirarms(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			airarms.runAirArms();
 		} else {
@@ -1331,10 +1109,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runStock(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runStock(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
@@ -1356,10 +1131,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runDelivery(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runDelivery(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
@@ -1386,10 +1158,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runGates(boolean mode) {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runGates(boolean mode) { //runs Station standart ablauf in seperaten thread
 		if (mode == true) {
 			deliverylane.openGateB();
 			deliverylane.openEquallyGate();
@@ -1398,10 +1167,7 @@ public class Steuerung {
 		}
 	}
 
-	public void runCar() {
-		/**
-		 * runs Station standart ablauf in seperaten thread
-		 */
+	public void runCar() { //runs Station standart ablauf in seperaten thread
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
@@ -1418,9 +1184,7 @@ public class Steuerung {
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
-				
 				// TODO exceptions anpassen damit die jvm sich nicht mehr beschwert
-				
 				airarms.runAirArms();  //TODO: einkommentieren nachdem der rest funktioniert
 				try {
 					deliverylane.startLineToEnd(false);
@@ -1460,7 +1224,6 @@ public class Steuerung {
   new java.util.Timer().schedule(new java.util.TimerTask() {
 	  @Override public void run() { 
 		  //Default: rechts, rechts, rechts, links (Turm 2 in Ausgangspos = Turm bei Bällen.)
-
 		  //1 = airarms.turnArm();
 		  //2 = airarms.armDown(); airarms.armUp();
 		  //3 = airarms.grabTurn(); 
@@ -1514,16 +1277,10 @@ public class Steuerung {
 //				  e.printStackTrace();
 //			  }
 //
-
 		  System.out.println("Durchlauf fertig");
-
 			}
-	  
 	  }, 1000);
-  
   }
- 
-		  
 		  
 //		  System.out.println("Arm runter");
 //		  airarms.armDown();
@@ -1651,9 +1408,6 @@ public class Steuerung {
 //			e.printStackTrace();
 //		}
 		  
-		  
-
-
 	
 	// --------------------Szenarios------------------------------
 
@@ -1669,8 +1423,6 @@ public class Steuerung {
 		sendMessage("ST");
 		sendPowerLevels();
 		sendMessage("CA"); // Send everytime 1 new Container gets delivered, not
-						
-
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
@@ -1680,102 +1432,81 @@ public class Steuerung {
 					chargier.resetTable(true);
 					chargier.startLineToTable(false);
 					chargier.startTableLine(true);
-
 					// wait till Table Button is pushed
 					System.out.println("Warte Sensorschleife 01");
-					while (!b1054Status) {
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) {
 						// System.out.println("Warte Sensorschleife 01");
-						Thread.sleep(100);
+						Thread.sleep(50);
 					}
-					
 					System.out.println("Sensorschleife 01 verlassen.");
 					chargier.stopLineToTable();
 					chargier.stopTableLine();
-					
-					//Drehen Richtung Produktion start
-												
+					//Drehen Richtung Produktion start						
 					chargier.rotateTable(true);
-					while(!b1052Status) {
+					endstop_to_liftStatus = false;
+					while(!endstop_to_liftStatus) {
 						//System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(1);
+						Thread.sleep(50);
 					}
 					//Stoppen des Drehens
 					chargier.stopRotateTable();
 					System.out.println("Jezt muss der Tisch stoppen!");
 					Thread.sleep(100);
 					//System.out.println("Speed " + speed);
-					
 					chargier.startLineToLifter(false);
 					//Thread.sleep(500);
 					chargier.startTableLine(false);
-					
 					System.out.println("Warte in Sensorschleife 02");
-					while (!b1053Status) {// wait on lift button
-						Thread.sleep(1);
+					turntable_endstopStatus = false;
+					while (!turntable_endstopStatus) {// wait on lift button
+						Thread.sleep(50);
 					}
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
-
 					lift.startShaker();
 					lift.start(false); // wait until it finished
 					lift.stopShaker();
-
 					cleaner.startCleaner(true);
 					cleaner.startLiftLine(true); 
-
 					chargier.startLineToLifter(true);
 					chargier.startTableLine(true);
-
 					quality.startCounterLine(false);
 					quality.startLine(true);
-
 					System.out.println("Warte in Sensorschleife 03");
-					while (!b1054Status) { // wait table button pushed
-						Thread.sleep(100);
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) { // wait table button pushed
+						Thread.sleep(50);
 					}
 					
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
-					
 					//Tisch rotiert in Richtung Lager
 					chargier.rotateTable(false);
-					
-					while(!b1051Status) {
+					endstop_to_storageStatus = false;
+					while(!endstop_to_storageStatus) {
 						System.out.println("In der neuen Knopfschleife 2");
-						Thread.sleep(100);
+						Thread.sleep(50);
 					}
 					
 					chargier.stopRotateTable();
 					System.out.println("Jezt muss der Tisch stoppen!");
-					
 					Thread.sleep(1000);
-					
 					chargier.startLineToStore(false); 
 					chargier.startTableLine(false);
-
 					Thread.sleep(3000);
-					
 					stock.storeBox(false);
-					
 					chargier.stopTableLine();
 					chargier.stopLineToStorer();
-
-					chargier.turnTableToWheel(false);
-										
+					chargier.turnTableToWheel(false);						
 					Thread.sleep(10000); // wait 10 sec
-			
 					cleaner.stopLiftLine();
 					cleaner.stop();
-					//
 					Thread.sleep(10000); // wait 10 sec
-					//
 					quality.stopCounterLine();
 					quality.stopLine();
-
 					System.out.println("N/IO: " + quality.getBadBalls() + "  IO: " + quality.getGoodBalls());
-
 					//System.out.println("Speed: " + speed);
-					
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1785,30 +1516,29 @@ public class Steuerung {
 				}
 			}
 		}, 1000);
-
 	}
 
-	public void startSzenario2() {
-
-		/**
-		 * turn table to lift
-		 * 
-		 */
+	public void startSzenario2() { // turn table to lift
 		setSzenario(2);
 		// runExport();
-		
-		
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-			 testRun(); 
+			 //testRun();
+			 try {
+				stock.home();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 	}
 		 }, 1000);
-
 	}
 
 	public void startSzenario3() {
-
 		/**
 		 *   Volle Kiste steht auf dem Band und Leere im Lager
 		 *   
@@ -1820,7 +1550,6 @@ public class Steuerung {
 		setSzenario(3);
 		// c.updateLabels();
 		// sendMessage("ST");
-
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
@@ -1856,10 +1585,12 @@ public class Steuerung {
 					}, 1000);
 
 					// wait till Table Button is pushed, test maybe Ui freezes
-					while (!b1054Status) {
+					lift_lane_endstopStatus = false;
+					while (!lift_lane_endstopStatus) {
 						System.out.print("");
+						Thread.sleep(50);
 						// System.out.println("hänge in schleife 1");
-						// System.out.println(b1054Status);
+						// System.out.println(lift_lane_endstopStatus);
 					}
 //					chargier.stopLineToStorer();
 
@@ -1871,7 +1602,8 @@ public class Steuerung {
 					//chargier.turnToLift(false);
 					
 					chargier.rotateTable(true);
-					while(!b1052Status) {
+					endstop_to_liftStatus = false;
+					while(!endstop_to_liftStatus) {
 						System.out.println("In der neuen Knopfschleife 1");
 						Thread.sleep(10);
 					}
@@ -1881,44 +1613,32 @@ public class Steuerung {
 					Thread.sleep(100);
 					
 					//-------------------
-					
-					
+
 					chargier.startLineToLifter(false);
 					chargier.startTableLine(false);
-
-					while (!b1053Status) {
-						System.out.print("");
-						// System.out.println("hänge in schleife 2");
+					turntable_endstopStatus = false;
+					while (!turntable_endstopStatus) {
+						Thread.sleep(50);
 					}
 
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
 
-					new java.util.Timer().schedule(new java.util.TimerTask() { // neuer
-																				// thread
-																				// da
-																				// simultan
-																				// unsauber
+					new java.util.Timer().schedule(new java.util.TimerTask() { // neuer thread da simultan unsauber
 						@Override
 						public void run() {
 							try {
-								
-								
 								//AB HIER NEU----------
-								
 								//chargier.turnToStock(false);
-								
 								//Tisch rotiert in Richtung Lager
 								chargier.rotateTable(false);
-								
-								while(!b1051Status) {
+								endstop_to_storageStatus = false;
+								while(!endstop_to_storageStatus) {
 									System.out.println("In der neuen Knopfschleife 2");
 									Thread.sleep(100);
 								}
-								
 								chargier.stopRotateTable();
 								System.out.println("Jezt muss der Tisch stoppen!");
-								
 								Thread.sleep(1000);
 								
 								//---------------------
@@ -1927,38 +1647,34 @@ public class Steuerung {
 								
 								chargier.startLineToStore(true); // auf Tisch
 								chargier.startTableLine(true);
-
-								while (!b1054Status) { // wait table button
+								lift_lane_endstopStatus = false;
+								while (!lift_lane_endstopStatus) { // wait table button
 										System.out.print("");				// pushed
-									// System.out.println("hänge in schleife
-									// 3");
+									// System.out.println("hänge in schleife 3");
+										Thread.sleep(50);
 								}
 								chargier.stopLineToStorer();
 								chargier.stopTableLine();
 								
-								
 								//Hier noch checken ob 
 								//chargier.turnTableToWheel(false); ??
-								
 								chargier.turnToCar(false);
-								
 								//das hier gebraucht wird. 
-								
-								
 								
 								chargier.startTableLine(false);
 								chargier.startLineToTable(true);
 								Thread.sleep(2000);
 								chargier.stopLineToTable();
 								chargier.stopTableLine();
-
 								chargier.turnToLift(false);
 								chargier.startLineToLifter(true);
 								chargier.startTableLine(true);
 								// wait till Table Button is pushed, test maybe
 								// Ui freezes
-								while (!b1054Status) {
+								lift_lane_endstopStatus = false;
+								while (!lift_lane_endstopStatus) {
 									System.out.println("hänge in schleife 1");
+									Thread.sleep(50);
 								}
 
 								chargier.stopLineToLifter();
@@ -1969,12 +1685,9 @@ public class Steuerung {
 								chargier.startLineToStore(false); // maybe falls
 								chargier.startTableLine(false);
 								Thread.sleep(2000);
-
 								stock.storeBox(false);
-
 								chargier.stopTableLine();
 								chargier.stopLineToStorer();
-
 								chargier.resetTable(false); // turns 660 to much
 															// repair later
 
@@ -1991,7 +1704,6 @@ public class Steuerung {
 					lift.startShaker();
 					lift.start(false); // wait until it finished
 					lift.stopShaker();
-
 					cleaner.startCleaner(true); // TODO: maybe falls = andere
 												// richtung
 					cleaner.startLiftLine(true); // TODO: maybe falls = andere
@@ -2003,7 +1715,7 @@ public class Steuerung {
 					// quality.startCounterLine(false);
 					// quality.startLine(true);
 					//
-					// while (!b1054Status) { // wait table button pushed
+					// while (!lift_lane_endstopStatus) { // wait table button pushed
 					// System.out.println("hänge in schleife 3");
 					// }
 					//
@@ -2042,7 +1754,6 @@ public class Steuerung {
 				}
 			}
 		}, 1000);
-
 	}
 
 	public static Car getCar() {
@@ -2052,5 +1763,4 @@ public class Steuerung {
 	public static void setCar(Car car) {
 		Steuerung.car = car;
 	}
-
 }

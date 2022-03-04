@@ -269,7 +269,6 @@ public class Chargier {
 	}
 
 	public void touchLiftfired() {
-
 		System.out.println("Lift Sensor fired");
 	}
 
@@ -285,11 +284,6 @@ public class Chargier {
 	}
 	public void touchTable2fired() {
 		System.out.println("Table Rüttelplatte Sensor fired");
-	}
-
-	public void schrankefired() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setTablePosition(int tablePosition) {
