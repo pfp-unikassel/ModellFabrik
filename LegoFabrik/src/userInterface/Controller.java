@@ -153,13 +153,13 @@ public class Controller implements Initializable {
 					root2 = loader2.load();
 
 					Stage stage2 = new Stage();
-					stage2.setTitle("Manuel Control");
+					stage2.setTitle("Manual Control");
 					stage2.setScene(new Scene(root2, 600, 650));
 					stage2.setUserData(s);
 					stage2.show();
 
-					ManualController manuelController = loader2.<ManualController>getController();
-					manuelController.start();
+					ManualController manualController = loader2.<ManualController>getController();
+					manualController.start();
 					// Hide this current window (if this is what you want)
 					// ((Node)(event.getSource())).getScene().getWindow().hide();
 				} catch (IOException e) {

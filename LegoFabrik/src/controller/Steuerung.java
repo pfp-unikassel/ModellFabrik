@@ -207,7 +207,7 @@ public class Steuerung {
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b102, b104, b107, b112);
+		sensordeamon = new Sensordeamon(this, b101, b102, b104, b107, b112);
 		sensordeamon.start();
 	}
 
@@ -786,7 +786,7 @@ public class Steuerung {
 
 	public void turntable_endstopFired() {
 		if (turntable_endstopStatus == false) {
-			chargier.touchLiftfired();
+			chargier.turntable_endstopFired();
 			turntable_endstopStatus = true;
 			sendMessage("LF");
 		}
@@ -794,19 +794,19 @@ public class Steuerung {
 
 	public void lift_lane_endstopFired() {
 		if (lift_lane_endstopStatus == false) {
-			chargier.touchTablefired();
+			chargier.lift_lane_endstopFired();
 			lift_lane_endstopStatus = true;
 			sendMessage("TF");
 		}
 	}
 	
 	public void endstop_to_storageFired() { // drehtischschalter Richtung Lager
-		chargier.touchTable1fired();
+		chargier.endstop_to_storageFired();
 		endstop_to_storageStatus = true;
 	}
 
 	public void endstop_to_liftFired() { // drehtischschalter Richtung Rüttelplatte
-		chargier.touchTable2fired();
+		chargier.endstop_to_liftFired();
 		endstop_to_liftStatus = true;
 	}
 
@@ -823,16 +823,17 @@ public class Steuerung {
 	}
 	
 	public void storagelift_stop_rightFired () {
-		System.out.println("Stock: Endstop Rechts getriggert");
-		stock.setendstopright(true);
+		stock.setendstopright();
 	}
 	
 	public void storagelift_stop_leftFired () {
-		System.out.println("Stock: Endstop Links getriggert");
-		stock.setendstopleft(true);
+		stock.setendstopleft();
+	}
+
+	public void storagelift_stop_horizontalFired () {
+		stock.setendstophorizontal();
 	}
 	
-
 	public void qa_1_colorFired(String colorString) {
 		quality.colorSensorFired(colorString);
 	}
@@ -844,6 +845,16 @@ public class Steuerung {
 	public void b1151Fired(String colorString) {
 		qualitystation.colorSensorFired(colorString);
 	}
+	public void lift_grabber_leftFired () {
+		lift.lift_grabber_leftFired();
+	}
+	public void lift_grabber_rightFired () {
+		lift.lift_grabber_rightFired();
+	}
+	public void lift_hingeFired () {
+		lift.lift_hingeFired();
+	}
+	
 
 	public void armIsStalled(boolean armIsStalled) {
 		/**
@@ -1432,36 +1443,31 @@ public class Steuerung {
 					chargier.resetTable(true);
 					chargier.startLineToTable(false);
 					chargier.startTableLine(true);
-					// wait till Table Button is pushed
-					System.out.println("Warte Sensorschleife 01");
-					lift_lane_endstopStatus = false;
-					while (!lift_lane_endstopStatus) {
-						// System.out.println("Warte Sensorschleife 01");
-						Thread.sleep(50);
+					turntable_endstopStatus = false;
+					System.out.println("Warten bis Endstop auf Drehtisch gedrückt");
+					while (!turntable_endstopStatus) { //Warten bis Endstop auf Drehtisch gedrückt
+						Thread.sleep(10);
 					}
-					System.out.println("Sensorschleife 01 verlassen.");
+					System.out.println("gedrückt");
 					chargier.stopLineToTable();
-					chargier.stopTableLine();
-					//Drehen Richtung Produktion start						
+					chargier.stopTableLine();					
 					chargier.rotateTable(true);
 					endstop_to_liftStatus = false;
-					while(!endstop_to_liftStatus) {
-						//System.out.println("In der neuen Knopfschleife 1");
-						Thread.sleep(50);
+					System.out.println("Warten bis Drehtisch zum Lift gedreht");
+					while(!endstop_to_liftStatus) { //Warten bis Drehtisch zum Lift gedreht
+						Thread.sleep(10);
 					}
-					//Stoppen des Drehens
 					chargier.stopRotateTable();
-					System.out.println("Jezt muss der Tisch stoppen!");
+					System.out.println("gedrückt");
 					Thread.sleep(100);
-					//System.out.println("Speed " + speed);
 					chargier.startLineToLifter(false);
-					//Thread.sleep(500);
 					chargier.startTableLine(false);
-					System.out.println("Warte in Sensorschleife 02");
-					turntable_endstopStatus = false;
-					while (!turntable_endstopStatus) {// wait on lift button
-						Thread.sleep(50);
+					lift_lane_endstopStatus = false;
+					System.out.println("Warten bis Endstop an Lift gedrückt");
+					while (!lift_lane_endstopStatus) {// Warten bis Endstop an Lift gedrückt
+						Thread.sleep(10);
 					}
+					System.out.println("gedrückt");
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
 					lift.startShaker();
@@ -1473,25 +1479,24 @@ public class Steuerung {
 					chargier.startTableLine(true);
 					quality.startCounterLine(false);
 					quality.startLine(true);
-					System.out.println("Warte in Sensorschleife 03");
-					lift_lane_endstopStatus = false;
-					while (!lift_lane_endstopStatus) { // wait table button pushed
-						Thread.sleep(50);
+					turntable_endstopStatus = false;
+					System.out.println("Warten bis Endstop auf Drehtisch gedrückt");
+					while (!turntable_endstopStatus) {//Warten bis Endstop auf Drehtisch gedrückt
+						Thread.sleep(10);
 					}
-					
+					System.out.println("gedrückt");
 					chargier.stopLineToLifter();
 					chargier.stopTableLine();
 					//Tisch rotiert in Richtung Lager
 					chargier.rotateTable(false);
 					endstop_to_storageStatus = false;
-					while(!endstop_to_storageStatus) {
-						System.out.println("In der neuen Knopfschleife 2");
-						Thread.sleep(50);
+					System.out.println("Warten bis Drehtisch zum Storage gedreht");
+					while(!endstop_to_storageStatus) {//Warten bis Drehtisch zum Storage gedreht
+						Thread.sleep(10);
 					}
-					
+					System.out.println("gedrückt");
 					chargier.stopRotateTable();
-					System.out.println("Jezt muss der Tisch stoppen!");
-					Thread.sleep(1000);
+					Thread.sleep(200);
 					chargier.startLineToStore(false); 
 					chargier.startTableLine(false);
 					Thread.sleep(3000);
@@ -1525,15 +1530,18 @@ public class Steuerung {
 		 @Override
 		 public void run() {
 			 //testRun();
+			 //runQuality(true); 
 			 try {
 				stock.home();
+				chargier.home();
+				lift.home();
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		 	}
 		 }, 1000);
 	}

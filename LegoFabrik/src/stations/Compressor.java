@@ -53,6 +53,10 @@ public class Compressor {
 			m2.stop(true);
 			m3.stop(true);
 			m4.stop(true);
+			m1.flt(false);
+			m2.flt(false);
+			m3.flt(false);
+			m4.flt(false);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

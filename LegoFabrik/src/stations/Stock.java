@@ -1,4 +1,7 @@
 package stations;
+//Das Föderband muss so positioniert sein das die beigen Nippel horizontal in Richtung Fabrik ausgerichtet sind
+//43 Kettenglieder, 10 Kettenglieder pro Umdrehung, 3:1 Übersetzung -> 4644° für eine vollständige Umdrehung
+
 
 import java.rmi.RemoteException;
 import controller.Steuerung;
@@ -15,21 +18,20 @@ public class Stock {
 	RMIRegulatedMotor stockPlace3;
 	RMIRegulatedMotor stockPlace4;
 	private Steuerung s;
-	private boolean stock1 = true; // topleft false = empty
-	private boolean stock2 = true; // topright
-	private boolean stock3 = false; // downleft
-	private boolean stock4 = false; // downright
-	private int bandPosition = 0; // True is startposition, ready to take box from store on line
-	private char elevatorPositionHorizontal = 'l'; // l = left r = right
+	private boolean stock1 = false; // topright false = empty
+	private boolean stock2 = false; // topleft
+	private boolean stock3 = true; // downright
+	private boolean stock4 = true; // downleft
+	private char elevatorPositionHorizontal = 'r'; // l = left r = right
 	private char elevatorPositionVertical = 'd'; // d = down u= up
-	private int elevatorHorizontalSpeed = 300;
-	private int elevatorVerticalSpeed = 720;
-	private int storeLineRotateDegree = 550; // motor turn degree from line on Elevator to get Box from store or in store
-	private int stockRotationDegree = 140; // motor turn degree from push mechanism
+	private int elevatorHorizontalSpeed = 100;
+	private int elevatorVerticalSpeed = 600;
+	private int stockRotationDegree = 945; // motor turn degree from push mechanism
 	private int horizontalRotationDegree = 600; // Elevator motor turndegree
-	private int lineSpeed = 300;
+	private int lineSpeed = 900;
 	private boolean endstopleft = false;
-	private boolean endstopright = false;	
+	private boolean endstopright = false;
+	private boolean endstophorizontal = false;	
 	
 	public Stock(Steuerung s,  RMIRegulatedMotor laneToStock1,
 			RMIRegulatedMotor elevatorHorizontal, RMIRegulatedMotor elevatorVerticalleft, RMIRegulatedMotor elevatorVerticalright, 
@@ -46,29 +48,46 @@ public class Stock {
 	}
 
 	public void pushBoxFromElevatorToStore(boolean instantReturn) { // have to make sure box is on elevator
-		rotateLineToStock(1550 - storeLineRotateDegree, instantReturn); // Rotation 1550 - 350o from before is a 360° turn, so it ends where it starts
+		rotateLineToStock(-7560, instantReturn); //Rest von Line to elevator + eine Umdrehung, 43 kettenglieder, 3:1 Übersetzung
 	}
 
 	public void pushBoxFromElevatorToLine(boolean instantReturn) { // have to make sure Box is on elevator
-		rotateLineToStock(-1550 + storeLineRotateDegree, instantReturn);
+		rotateLineToStock(5292, instantReturn); //Rest von push BoxtoStock, zusätzlich ganze Umdrehung
 	}
 
 	public void home () throws RemoteException, InterruptedException { //Nutzt endstops um in definierte position zu kommen
 		endstopleft = false;
 		endstopright = false;
+		elevatorVerticalleft.setSpeed(300);
+		elevatorVerticalright.setSpeed(300);
+		elevatorVerticalleft.forward();
+		elevatorVerticalright.forward();
 		while (endstopleft == false || endstopright== false) {
-			System.out.println(endstopright);
-			if (endstopleft == false) {
-				elevatorVerticalleft.rotate(90, true);		
+			if (endstopleft == true) {
+				elevatorVerticalleft.stop(true);
 			}
-			if (endstopright == false) {
-				elevatorVerticalright.rotate(90, false);		
+			if (endstopright == true) {
+				elevatorVerticalright.stop(true);
 			}
+			Thread.sleep(10);
 		}
 		elevatorPositionVertical = 'd';
 		elevatorVerticalleft.rotate(-360, true);
-		elevatorVerticalright.rotate(-360, false);
-		System.out.println("exit while schleife");
+		elevatorVerticalright.rotate(-360, false);		
+		endstophorizontal = false;
+		elevatorHorizontal.setSpeed(elevatorHorizontalSpeed);
+		elevatorHorizontal.forward();
+		while (endstophorizontal == false) {
+			Thread.sleep(5);
+		}
+		elevatorHorizontal.stop(true);
+		elevatorHorizontal.rotate(-670, false); //Zurück zur rechten Position
+		elevatorPositionHorizontal = 'r';
+		elevatorHorizontal.flt(false); //Motoren ausschalten
+		elevatorVerticalleft.flt(false);
+		elevatorVerticalright.flt(false);
+		elevatorVerticalleft.setSpeed(elevatorVerticalSpeed);
+		elevatorVerticalright.setSpeed(elevatorVerticalSpeed);
 	}
 	
 	public void pushBoxFromStock(int stock, boolean instantReturn) throws RemoteException, InterruptedException {
@@ -76,11 +95,9 @@ public class Stock {
 		case 1:
 			if (isStock1() == true) {
 				elevatorUp(false);
+				rotateLineToStock(2268, false); //pin bereit machen die Box herauszuziehen, -21*108°
 				pushStock1(false);
 				placeBoxFromStoreOnElevatorline(false);
-				// startLineToStock(false); // Change to degree later
-				// Thread.sleep(2000);// 2000
-				// stopLaneToStock();
 				elevatorDown(false);
 				setStock1(false);
 			}
@@ -89,11 +106,9 @@ public class Stock {
 			if (isStock2() == true) {
 				elevatorToRight(instantReturn);
 				elevatorUp(false);
+				rotateLineToStock(2268, false); //pin bereit machen die Box herauszuziehen, -21*108°
 				pushStock2(false);
 				placeBoxFromStoreOnElevatorline(false);
-				// startLineToStock(false); // Change to degree later
-				// Thread.sleep(2000);
-				// stopLaneToStock();
 				elevatorToLeft(instantReturn);
 				elevatorDown(false);
 				setStock2(false);
@@ -102,21 +117,17 @@ public class Stock {
 		case 3:
 			if (isStock3() == true) {
 				pushStock3(false);
+				rotateLineToStock(2268, false); //pin bereit machen die Box herauszuziehen, -21*108°
 				placeBoxFromStoreOnElevatorline(false);
-				// startLineToStock(false); // Change to degree later
-				// Thread.sleep(2000);
-				// stopLaneToStock();
 				setStock3(false);
 			}
 			break;
 		case 4:
 			if (isStock4() == true) {
 				elevatorToRight(false);
+				rotateLineToStock(2268, false); //pin bereit machen die Box herauszuziehen, -21*108°
 				pushStock4(false);
 				placeBoxFromStoreOnElevatorline(false);
-				// startLineToStock(false); // Change to degree later
-				// Thread.sleep(2000);
-				// stopLaneToStock();
 				elevatorToLeft(false);
 				setStock4(false);
 			}
@@ -127,11 +138,11 @@ public class Stock {
 	}
 	
 	public void placeBoxFromStoreOnElevatorline(boolean instantReturn) {
-		rotateLineToStock(-storeLineRotateDegree, instantReturn);
+		rotateLineToStock(1728, instantReturn); //-16 Kettenglieder*108°
 	}
 
 	public void placeBoxFromLineOnElevatorline(boolean instantReturn) {
-		rotateLineToStock(storeLineRotateDegree, instantReturn);
+		rotateLineToStock(-1728, instantReturn); //16 Kettenglieder*108°
 	}
 
 	public void rotateLineToStock(int degree, boolean instantReturn) {
@@ -141,22 +152,18 @@ public class Stock {
 			e1.printStackTrace();
 		}
 		try {
-			laneToStock1.rotate(degree, true);
+			laneToStock1.rotate(degree, false);
 
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void resetElevatorLinePosition(boolean instantReturn) {
-		rotateLineToStock(-bandPosition, instantReturn);
-	}
-
 	public void pushStock1(boolean instantReturn) throws RemoteException {
 		if (isStock1()) {
 			stockPlace1.setSpeed(180);
-			stockPlace1.rotate(-stockRotationDegree, false);
-			stockPlace1.rotate(stockRotationDegree, instantReturn);
+			stockPlace1.rotate(stockRotationDegree, false);
+			stockPlace1.rotate(-stockRotationDegree, instantReturn);
 			setStock1(false);
 			s.sendMessage("U1");
 		} else {
@@ -167,8 +174,8 @@ public class Stock {
 	public void pushStock2(boolean instantReturn) throws RemoteException {
 		if (isStock2()) {
 			stockPlace2.setSpeed(180);
-			stockPlace2.rotate(-stockRotationDegree, false);
-			stockPlace2.rotate(stockRotationDegree, instantReturn);
+			stockPlace2.rotate(stockRotationDegree, false);
+			stockPlace2.rotate(-stockRotationDegree, instantReturn);
 			setStock2(false);
 			s.sendMessage("U2");
 		} else {
@@ -179,8 +186,8 @@ public class Stock {
 	public void pushStock3(boolean instantReturn) throws RemoteException {
 		if (isStock3()) {
 			stockPlace3.setSpeed(180);
-			stockPlace3.rotate(-stockRotationDegree, false);
-			stockPlace3.rotate(stockRotationDegree, instantReturn);
+			stockPlace3.rotate(stockRotationDegree, false);
+			stockPlace3.rotate(-stockRotationDegree, instantReturn);
 			setStock3(false);
 			s.sendMessage("U3");
 		} else {
@@ -192,8 +199,8 @@ public class Stock {
 
 		if (isStock4()) {
 			stockPlace4.setSpeed(180);
-			stockPlace4.rotate(-stockRotationDegree, false);
-			stockPlace4.rotate(stockRotationDegree, instantReturn);
+			stockPlace4.rotate(stockRotationDegree, false);
+			stockPlace4.rotate(-stockRotationDegree, instantReturn);
 			setStock4(false);
 			s.sendMessage("U4");
 		} else {
@@ -224,8 +231,8 @@ public class Stock {
 		} else {
 			elevatorVerticalleft.setSpeed(elevatorVerticalSpeed);
 			elevatorVerticalright.setSpeed(elevatorVerticalSpeed);
-			elevatorVerticalleft.rotate(-11520, true); // move both at the same time 11520 and wait for second
-			elevatorVerticalright.rotate(-11520, instantReturn);
+			elevatorVerticalleft.rotate(-10440, true); // move both at the same time 11520 and wait for second
+			elevatorVerticalright.rotate(-10440, instantReturn);
 			setElevatorPositionVertical('u');
 		}
 	}
@@ -234,8 +241,8 @@ public class Stock {
 		if (getElevatorPositionVertical() == 'u') {
 			elevatorVerticalleft.setSpeed(elevatorVerticalSpeed);
 			elevatorVerticalright.setSpeed(elevatorVerticalSpeed);
-			elevatorVerticalleft.rotate(11520, true); // move both at the same time and wait for second
-			elevatorVerticalright.rotate(11520, instantReturn);
+			elevatorVerticalleft.rotate(10440, true); // move both at the same time and wait for second
+			elevatorVerticalright.rotate(10440, instantReturn);
 			setElevatorPositionVertical('d');
 		}
 	}
@@ -245,7 +252,7 @@ public class Stock {
 			// nothing is allready left
 		} else {
 			elevatorHorizontal.setSpeed(elevatorHorizontalSpeed);
-			elevatorHorizontal.rotate(-horizontalRotationDegree, true);
+			elevatorHorizontal.rotate(horizontalRotationDegree, true);
 			setElevatorPositionHorizontal('l');
 		}
 	}
@@ -256,7 +263,7 @@ public class Stock {
 		} else {
 			elevatorHorizontal.setSpeed(elevatorHorizontalSpeed);
 
-			elevatorHorizontal.rotate(horizontalRotationDegree, true);
+			elevatorHorizontal.rotate(-horizontalRotationDegree, true);
 			setElevatorPositionHorizontal('r');
 		}
 	}
@@ -456,12 +463,6 @@ public class Stock {
 	public void setElevatorVerticalSpeed(int elevatorVerticalSpeed) {
 		this.elevatorVerticalSpeed = elevatorVerticalSpeed;
 	}
-	public int getStoreLineRotateDegree() {
-		return storeLineRotateDegree;
-	}
-	public void setStoreLineRotateDegree(int storeLineRotateDegree) {
-		this.storeLineRotateDegree = storeLineRotateDegree;
-	}
 	public int getStockRotationDegree() {
 		return stockRotationDegree;
 	}
@@ -504,28 +505,31 @@ public class Stock {
 	public void setLaneToStock1(RMIRegulatedMotor laneToStock1) {
 		this.laneToStock1 = laneToStock1;
 	}
-	public RMIRegulatedMotor getelevatorHorizontal() {
+	public RMIRegulatedMotor getElevatorHorizontal() {
 		return elevatorHorizontal;
 	}
 	public void setelevatorHorizontal(RMIRegulatedMotor elevatorHorizontal) {
 		this.elevatorHorizontal = elevatorHorizontal;
 	}
-	public RMIRegulatedMotor getelevatorVerticalleft() {
+	public RMIRegulatedMotor getElevatorVerticalleft() {
 		return elevatorVerticalleft;
 	}
 	public void setelevatorVerticalleft(RMIRegulatedMotor elevatorVerticalleft) {
 		this.elevatorVerticalleft = elevatorVerticalleft;
 	}
-	public RMIRegulatedMotor getelevatorVerticalright() {
+	public RMIRegulatedMotor getElevatorVerticalright() {
 		return elevatorVerticalright;
 	}
 	public void setelevatorVerticalright(RMIRegulatedMotor elevatorVerticalright) {
 		this.elevatorVerticalright = elevatorVerticalright;
 	}
-	public void setendstopleft(boolean endstopleft) {
-		this.endstopleft = endstopleft;
+	public void setendstopleft() {
+		this.endstopleft = true;
 	}
-	public void setendstopright(boolean endstopright) {
-		this.endstopright = endstopright;
+	public void setendstopright() {
+		this.endstopright = true;
+	}
+	public void setendstophorizontal() {
+		this.endstophorizontal = true;
 	}
 }

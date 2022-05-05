@@ -24,10 +24,10 @@ public class Quality {
 	private int countedBalls = 0;
 	private int goodBalls = 0;
 	private int badBalls = 0;
-	private String colorString = "BLACK";
-	private String ioColor = "WHITE";
+	private String colorString = "NONE";
+	private String ioColor = "RED";
 	private Timer timer = null;
-	private String oldcolor = "BLACK";
+	private String oldcolor = "NONE";
 
 	private Steuerung s1;
 
@@ -45,8 +45,8 @@ public class Quality {
 			gateStatus = false;
 			try {
 				this.gate.setSpeed(gateSpeed);
-				System.out.println("close Gate");
-				gate.rotate(40); // maybe +40 dont know what open and close is
+				//System.out.println("close Gate");
+				gate.rotate(60); // maybe +40 dont know what open and close is
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -62,16 +62,16 @@ public class Quality {
 					@Override
 					public void run() {
 						try {
-							gate.rotate(-40);
+							gate.rotate(-60);
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						}					
 					}
-				}, 1500);
+				}, 900);
 				timer = new java.util.Timer();
 				timer.schedule(new java.util.TimerTask() {
 					public void run() {
-						System.out.println("timer runs ");
+						//System.out.println("timer runs ");
 						closeGate();
 					}
 				}, 1950); // time after the gate closes again 1950
@@ -125,20 +125,19 @@ public class Quality {
 	}
 
 	public void colorSensorFired(String colorString) {
-		oldcolor = colorString;
-		this.colorString = colorString;
-		if (oldcolor != colorString) {
-			if (colorString == ioColor) { // if ball is white close gate
+		this.colorString = colorString;		
+		if (oldcolor != colorString) {			
+			if (colorString == ioColor) {
+				//System.out.println("good Ball");
 				openGate();
 				setGoodBalls(getGoodBalls() + 1);
-			}
-			else {
-				//closeGate();
-				if (colorString != "BLACK") {
-					setBadBalls(getBadBalls() + 1);
 				}
-			}
+			if (colorString == "WHITE" || colorString == "RED") {
+				setBadBalls(getBadBalls() + 1);
+				System.out.println(badBalls);
+				}
 		}
+		oldcolor = colorString;
 	}
 
 	public int getCounterLineSpeed() {

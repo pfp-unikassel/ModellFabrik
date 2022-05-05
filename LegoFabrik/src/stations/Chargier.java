@@ -7,20 +7,18 @@ import lejos.remote.ev3.RMIRegulatedMotor;
 
 public class Chargier {
 
-//	EV3UltrasonicSensor schranke;
-//	EV3TouchSensor touch;
-//	EV3TouchSensor touchEnde;
 	RMIRegulatedMotor antriebBandZumDT;
 	RMIRegulatedMotor antriebBandProd;
 	RMIRegulatedMotor antriebBandLeergut;
 	RMIRegulatedMotor antriebDrehtisch;
 	RMIRegulatedMotor drehtischRotieren;
-
+	private boolean turntable_endstopStatus = false;
+	private boolean lift_lane_endstopStatus = false;
+	private boolean endstop_to_storageStatus = false;
+	private boolean endstop_to_liftStatus = false;
 	private int tablePosition = 0;
 	private int lineSpeed = 300; // TODO: change to default speed
-	
-	private int quarterRotation = 130;
-	// private int quarterRotation = 180;
+	private int quarterRotation = 630;  //56:8 ratio => 630°
 	private static int turnTableSpeed = 100;
 	
 	private Steuerung s;
@@ -29,16 +27,12 @@ public class Chargier {
 
 			Steuerung s,RMIRegulatedMotor antriebBandZumDT, RMIRegulatedMotor antriebBandProd, RMIRegulatedMotor antriebBandLeergut,
 			RMIRegulatedMotor antriebDrehtisch, RMIRegulatedMotor drehtischRotieren) {
-
 		this.s = s;
 		this.antriebBandZumDT = antriebBandZumDT;
 		this.antriebBandProd = antriebBandProd;
 		this.antriebBandLeergut = antriebBandLeergut;
 		this.antriebDrehtisch = antriebDrehtisch;
-		this.drehtischRotieren = drehtischRotieren;
-		
-		
-		
+		this.drehtischRotieren = drehtischRotieren;	
 	}
 	//Neuer Teil Roman
 	//Drehtisch drehen
@@ -50,7 +44,6 @@ public class Chargier {
 			//Reset Tachocount at the beginning: To wheel -> 0 
 			//drehtischRotieren.resetTachoCount();
 			int beginTacho = drehtischRotieren.getTachoCount();
-			
 			drehtischRotieren.setSpeed(turnTableSpeed);
 			if (direction) {
 				drehtischRotieren.forward();			
@@ -58,8 +51,6 @@ public class Chargier {
 				drehtischRotieren.backward();
 			}
 			int endTacho = drehtischRotieren.getTachoCount();
-			
-			//alternativ auch ein reset des Tachocounts resetTachoCount()
 			System.out.println("Anfangswert Tacho: " + beginTacho + ", Endwert Tacho: " + endTacho);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -79,15 +70,13 @@ public class Chargier {
 		antriebBandZumDT.setSpeed(getLineSpeed()); 							// direction true turn forward
 		
 		if (direction) {
-			antriebBandZumDT.forward();
-			
+			antriebBandZumDT.forward();			
 		} else {
 			antriebBandZumDT.backward();
 		}
 	}
 
 	public void stopLineToTable() throws RemoteException { // start line from Table to lifer
-
 		antriebBandZumDT.stop(false);
 	}
 
@@ -106,7 +95,6 @@ public class Chargier {
 	}
 
 	public void stopTableLine() throws RemoteException { // start line from Table
-
 		antriebDrehtisch.stop(false);
 	}
 
@@ -115,7 +103,6 @@ public class Chargier {
 		int ret = drehtischRotieren.getSpeed();
 		System.out.println("Drehtischrotator Tachostand Beginn: " + drehtischRotieren.getTachoCount());
 		drehtischRotieren.rotate(degree, instantReturn); // maybe - degree depends on motor settings
-		
 		//TODO neu einfügen
 		//drehtischRotieren.getTachoCount();
 		tablePosition = tablePosition + degree;
@@ -127,7 +114,6 @@ public class Chargier {
 		if(getTablePostion() == -2 * quarterRotation) {
 			//is already in position
 		}else {
-			
 			try {
 				turnTable(-2 * quarterRotation, instantReturn); // Drehtisch steht Richtung Einspeisung
 				// turnTable(-getTablePostion()+-660, instantReturn);
@@ -148,7 +134,6 @@ public class Chargier {
 		}
 	}
 	public int turnToLift(boolean instantReturn) {
-		
 		int ret = 0;
 		
 		if(getTablePostion() == quarterRotation) {
@@ -194,41 +179,32 @@ public class Chargier {
 	
 	public void resetTable(boolean instantReturn) throws RemoteException { // turns table back to start position
 		drehtischRotieren.resetTachoCount();
-		
 		drehtischRotieren.rotate(-1 * tablePosition, instantReturn);
 		tablePosition = 0;
 		
 	}
 
-	public void startLineToLifter(boolean direction) throws RemoteException { // start line from Table to lifer if
-																				// direction true turn forward
-
+	public void startLineToLifter(boolean direction) throws RemoteException { // start line from Table to lifer if direction true turn forward
 		antriebBandProd.setSpeed(getLineSpeed());
-
 		if (direction) {
 			antriebBandProd.forward();
 		} else {
 			antriebBandProd.backward();
-
 		}
 
 	}
 
 	public void stopLineToLifter() throws RemoteException { // start line from Table to lifer
-
 		antriebBandProd.stop(false);
 	}
 
-	public void startLineToStore(boolean direction) throws RemoteException { // start line from Table to Store if
-																				// direction true turn forward
+	public void startLineToStore(boolean direction) throws RemoteException { // start line from Table to Store if direction true turn forward
 		s.sendMessage("BL");
 		antriebBandLeergut.setSpeed(getLineSpeed());
-
 		if (direction) {
 			antriebBandLeergut.forward();
 		} else {
 			antriebBandLeergut.backward();
-
 		}
 
 	}
@@ -242,18 +218,29 @@ public class Chargier {
 		}
 	}
 	public void stopLineToStorer() throws RemoteException { // stop line from Table to Store
-
 		antriebBandLeergut.stop(false);
 
 	}
 
 	public void stop() throws RemoteException { // stop all but not turntable
-
 		stopLineToLifter();
 		stopLineToStorer();
 		stopLineToTable();
 		stopTableLine();
 		resetTable(true);
+	}
+	
+	public void home() throws RemoteException, InterruptedException {
+		endstop_to_liftStatus = false;
+		drehtischRotieren.setSpeed(50);
+		drehtischRotieren.forward();
+		while (!endstop_to_liftStatus) {
+			Thread.sleep(10);
+		}
+		drehtischRotieren.stop(false);
+		drehtischRotieren.rotate(-(quarterRotation+55), false);
+		tablePosition = 0;
+		
 	}
 
 	public int getTablePostion() {
@@ -268,22 +255,22 @@ public class Chargier {
 		this.lineSpeed = lineSpeed;
 	}
 
-	public void touchLiftfired() {
-		System.out.println("Lift Sensor fired");
+	public void turntable_endstopFired() {
+		turntable_endstopStatus = true;
+		//System.out.println("Lift Sensor fired");
 	}
 
-	public void touchTablefired() {
-		System.out.println("Table Sensor fired");
-
+	public void lift_lane_endstopFired() {
+		lift_lane_endstopStatus = true;
+		//System.out.println("Table Sensor fired");
 	}
-	
-	
-	//NEU
-	public void touchTable1fired() {
-		System.out.println("Table Lager Sensor fired");
+	public void endstop_to_storageFired() {
+		endstop_to_storageStatus = true;
+		//System.out.println("Table Lager Sensor fired");
 	}
-	public void touchTable2fired() {
-		System.out.println("Table Rüttelplatte Sensor fired");
+	public void endstop_to_liftFired() {
+		endstop_to_liftStatus = true;
+		//System.out.println("Table Rüttelplatte Sensor fired");
 	}
 
 	public void setTablePosition(int tablePosition) {

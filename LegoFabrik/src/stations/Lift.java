@@ -7,65 +7,52 @@ import lejos.remote.ev3.RMIRegulatedMotor;
 
 public class Lift {
 
-	RMIRegulatedMotor hebenLinks;
-	//RMIRegulatedMotor hebenRechts;
-	RMIRegulatedMotor greifenLinks;
-	RMIRegulatedMotor greifenRechts;
+	RMIRegulatedMotor Heben;
+	RMIRegulatedMotor grabber_right;
+	RMIRegulatedMotor grabber_left;
 	RMIRegulatedMotor shaker;
 	
-	private int winkelGreifen = 450;//280
-	private int winkelHeben =  3500;     //3400;
+	private int winkelGreifen = 450;
+	private int winkelHeben =  3700;
 	private int liftSpeed = 740;
-	private int shakerSpeed = 520;//360
+	private int shakerSpeed = 1000;
 	private boolean running = false;
-		
 	private Steuerung s;
+	private boolean endstop_left = false;
+	private boolean endstop_right = false;
+	private boolean endstop_hinge = false;
 	
-	public Lift(Steuerung s,RMIRegulatedMotor greifenLinks,
-			RMIRegulatedMotor greifenRechts,
-			RMIRegulatedMotor hebenLinks, 
-			//RMIRegulatedMotor hebenRechts,
+	public Lift(Steuerung s,RMIRegulatedMotor grabber_right,
+			RMIRegulatedMotor grabber_left,
+			RMIRegulatedMotor Heben, 
 			RMIRegulatedMotor shaker) {
 		this.s = s;
-		this.greifenLinks=greifenLinks;
-		this.greifenRechts=greifenRechts;
-		this.hebenLinks=hebenLinks;
-		//this.hebenRechts=hebenRechts;
+		this.grabber_right=grabber_right;
+		this.grabber_left=grabber_left;
+		this.Heben=Heben;
 		this.shaker = shaker;
 	}
 	
 	public void startGrab(boolean instantReturn) throws RemoteException {  
 		
-		greifenLinks.rotate(winkelGreifen, true);
-		greifenRechts.rotate(winkelGreifen,false);
+		grabber_right.rotate(winkelGreifen, true);
+		grabber_left.rotate(winkelGreifen,false);
 	}
 	
 	public void releaseGrab(boolean instantReturn) throws RemoteException { 
 		
-		greifenLinks.rotate(-winkelGreifen,true);
-		greifenRechts.rotate(-winkelGreifen,false);
+		grabber_right.rotate(-winkelGreifen,true);
+		grabber_left.rotate(-winkelGreifen,false);
 	}
-	public void startLiftUp(boolean instantReturn) throws RemoteException {   // start lift/elevator and hold him up
-		
-		hebenLinks.setSpeed(liftSpeed);
-		//hebenRechts.setSpeed(liftSpeed);
-		
-		hebenLinks.rotate(-winkelHeben,instantReturn);
-		//hebenRechts.rotate(winkelHeben,instantReturn);
-		
+	public void startLiftUp(boolean instantReturn) throws RemoteException {   // start lift/elevator and hold him up	
+		Heben.setSpeed(liftSpeed);
+		Heben.rotate(-winkelHeben,instantReturn);
 	}
 	
 	public void startLiftDown(boolean instantReturn) throws RemoteException { // brings box and elevator/lift back down 
-		
-		hebenLinks.setSpeed(liftSpeed);
-		//hebenRechts.setSpeed(liftSpeed);
-		
-		hebenLinks.rotate(winkelHeben,instantReturn);
-		//hebenRechts.rotate(-winkelHeben,instantReturn);
-		
+		Heben.setSpeed(liftSpeed);
+		Heben.rotate(winkelHeben,instantReturn);	
 	}
-	
-	
 	
 	public int getliftSpeed() {
 		return liftSpeed;
@@ -76,13 +63,11 @@ public class Lift {
 	}
 	
 	public void startShaker() throws RemoteException {
-		
 		shaker.setSpeed(shakerSpeed);
 		shaker.forward();
 	}
 	
 	public void stopShaker() throws RemoteException {
-	
 		shaker.stop(true);
 	}
 	public int getShakerSpeed() {
@@ -98,21 +83,47 @@ public class Lift {
 		try {
 			setRunning(true);
 			startGrab(instantReturn);
-			
-
 			startLiftUp(instantReturn);
 			Thread.sleep(4000);			
 			startLiftDown(instantReturn);
-	
 		    releaseGrab(instantReturn);
 			setRunning(false);
-				
-			
 		} catch (RemoteException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public void home () throws RemoteException, InterruptedException {
+		endstop_left = false;
+		endstop_right = false;
+		endstop_hinge = false;
+		Heben.forward();
+		while (!endstop_hinge) {
+			Thread.sleep(10);
+		}
+		Heben.stop(true);
+		grabber_left.backward();
+		while (!endstop_left) {
+			Thread.sleep(10);
+		}
+		grabber_left.stop(true);
+		grabber_right.backward();
+		while (!endstop_right) {
+			Thread.sleep(10);
+		}
+		grabber_right.stop(true);
+
+	}
+	
+	public void lift_grabber_leftFired () {
+		endstop_left = true;
+	}
+	public void lift_grabber_rightFired () {
+		endstop_right = true;
+	}
+	public void lift_hingeFired () {
+		endstop_hinge = true;
 	}
 	
 	public boolean isRunning() {
@@ -123,36 +134,28 @@ public class Lift {
 		this.running = running;
 	}
 
-	public RMIRegulatedMotor getHebenLinks() {
-		return hebenLinks;
+	public RMIRegulatedMotor getHeben() {
+		return Heben;
 	}
 
-	public void setHebenLinks(RMIRegulatedMotor hebenLinks) {
-		this.hebenLinks = hebenLinks;
+	public void setHeben(RMIRegulatedMotor Heben) {
+		this.Heben = Heben;
 	}
 
-	//public RMIRegulatedMotor getHebenRechts() {
-	//	return hebenRechts;
-	//}
-
-	//public void setHebenRechts(RMIRegulatedMotor hebenRechts) {
-	//	this.hebenRechts = hebenRechts;
-	//}
-
-	public RMIRegulatedMotor getGreifenLinks() {
-		return greifenLinks;
+	public RMIRegulatedMotor getgrabber_right() {
+		return grabber_right;
 	}
 
-	public void setGreifenLinks(RMIRegulatedMotor greifenLinks) {
-		this.greifenLinks = greifenLinks;
+	public void setgrabber_right(RMIRegulatedMotor grabber_right) {
+		this.grabber_right = grabber_right;
 	}
 
-	public RMIRegulatedMotor getGreifenRechts() {
-		return greifenRechts;
+	public RMIRegulatedMotor getgrabber_left() {
+		return grabber_left;
 	}
 
-	public void setGreifenRechts(RMIRegulatedMotor greifenRechts) {
-		this.greifenRechts = greifenRechts;
+	public void setgrabber_left(RMIRegulatedMotor grabber_left) {
+		this.grabber_left = grabber_left;
 	}
 
 	public RMIRegulatedMotor getShaker() {
