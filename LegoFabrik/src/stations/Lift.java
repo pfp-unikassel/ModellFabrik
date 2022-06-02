@@ -34,13 +34,11 @@ public class Lift {
 	}
 	
 	public void startGrab(boolean instantReturn) throws RemoteException {  
-		
 		grabber_right.rotate(winkelGreifen, true);
 		grabber_left.rotate(winkelGreifen,false);
 	}
 	
 	public void releaseGrab(boolean instantReturn) throws RemoteException { 
-		
 		grabber_right.rotate(-winkelGreifen,true);
 		grabber_left.rotate(-winkelGreifen,false);
 	}
@@ -79,7 +77,6 @@ public class Lift {
 	}
 	
 	public void start(boolean instantReturn) {
-		
 		try {
 			setRunning(true);
 			startGrab(instantReturn);
@@ -89,7 +86,6 @@ public class Lift {
 		    releaseGrab(instantReturn);
 			setRunning(false);
 		} catch (RemoteException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -165,5 +161,4 @@ public class Lift {
 	public void setShaker(RMIRegulatedMotor shaker) {
 		this.shaker = shaker;
 	}
-
 }

@@ -379,8 +379,8 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </Label>
-                              <Button fx:id="qualityBack12" mnemonicParsing="false" onMousePressed="#qualityBackButtonPressed12" onMouseReleased="#qualityBackButtonReleased12" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
-                              <Button fx:id="qualityVor12" mnemonicParsing="false" onMousePressed="#qualityVorButtonPressed12" onMouseReleased="#qualityVorButtonReleased12" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
+                              <Button fx:id="qualityVor12" mnemonicParsing="false" onMousePressed="#qualityVorButtonPressed12" onMouseReleased="#qualityVorButtonReleased12" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
+                              <Button fx:id="qualityBack12" mnemonicParsing="false" onMousePressed="#qualityBackButtonPressed12" onMouseReleased="#qualityBackButtonReleased12" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="941.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">
@@ -393,8 +393,8 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </Label>
-                              <Button fx:id="qualityBack11" mnemonicParsing="false" onMousePressed="#qualityBackButtonPressed11" onMouseReleased="#qualityBackButtonReleased11" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
-                              <Button fx:id="qualityVor11" mnemonicParsing="false" onMousePressed="#qualityVorButtonPressed11" onMouseReleased="#qualityVorButtonReleased11" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
+                              <Button fx:id="qualityVor11" mnemonicParsing="false" onMousePressed="#qualityVorButtonPressed11" onMouseReleased="#qualityVorButtonReleased11" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
+                              <Button fx:id="qualityBack11" mnemonicParsing="false" onMousePressed="#qualityBackButtonPressed11" onMouseReleased="#qualityBackButtonReleased11" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="870.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">

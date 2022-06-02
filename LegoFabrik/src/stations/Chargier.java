@@ -23,9 +23,7 @@ public class Chargier {
 	
 	private Steuerung s;
 
-	public Chargier(
-
-			Steuerung s,RMIRegulatedMotor antriebBandZumDT, RMIRegulatedMotor antriebBandProd, RMIRegulatedMotor antriebBandLeergut,
+	public Chargier(Steuerung s,RMIRegulatedMotor antriebBandZumDT, RMIRegulatedMotor antriebBandProd, RMIRegulatedMotor antriebBandLeergut,
 			RMIRegulatedMotor antriebDrehtisch, RMIRegulatedMotor drehtischRotieren) {
 		this.s = s;
 		this.antriebBandZumDT = antriebBandZumDT;
@@ -34,8 +32,6 @@ public class Chargier {
 		this.antriebDrehtisch = antriebDrehtisch;
 		this.drehtischRotieren = drehtischRotieren;	
 	}
-	//Neuer Teil Roman
-	//Drehtisch drehen
 	
 	int tachoCountRotate = 0;
 	
@@ -68,7 +64,6 @@ public class Chargier {
 
 	public void startLineToTable(boolean direction) throws RemoteException { // start line from car to table if
 		antriebBandZumDT.setSpeed(getLineSpeed()); 							// direction true turn forward
-		
 		if (direction) {
 			antriebBandZumDT.forward();			
 		} else {
@@ -81,10 +76,8 @@ public class Chargier {
 	}
 
 	public void startTableLine(boolean direction) throws RemoteException { // start line on table
-
 		System.out.println("Start: " + antriebDrehtisch.getTachoCount());
 		antriebDrehtisch.setSpeed(getLineSpeed());
-
 		if (direction) {
 			antriebDrehtisch.forward();
 		} else {
@@ -103,7 +96,6 @@ public class Chargier {
 		int ret = drehtischRotieren.getSpeed();
 		System.out.println("Drehtischrotator Tachostand Beginn: " + drehtischRotieren.getTachoCount());
 		drehtischRotieren.rotate(degree, instantReturn); // maybe - degree depends on motor settings
-		//TODO neu einfügen
 		//drehtischRotieren.getTachoCount();
 		tablePosition = tablePosition + degree;
 		System.out.println("Drehtischrotator Tachostand Ende: " + drehtischRotieren.getTachoCount());
@@ -118,35 +110,29 @@ public class Chargier {
 				turnTable(-2 * quarterRotation, instantReturn); // Drehtisch steht Richtung Einspeisung
 				// turnTable(-getTablePostion()+-660, instantReturn);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
 	public void turnToCar(boolean instantReturn) {
-		
 		try {
 			resetTable(instantReturn);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public int turnToLift(boolean instantReturn) {
 		int ret = 0;
-		
 		if(getTablePostion() == quarterRotation) {
 			//is already in position
 			System.out.println("Im in the right position already");
 		}else {
-			
 			try {
 				ret = turnTable(quarterRotation, instantReturn); // Drehtisch steht Richtung Anlieferung
 				// hier ist ein 
 				System.out.println("Turntable returned Chargier " + ret); // chh
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -154,25 +140,15 @@ public class Chargier {
 		return ret;
 	}
 	
-//	public void turnTableToWheel(boolean instantReturn) throws RemoteException {
-//		drehtischRotieren.rotate(1 * quarterRotation, instantReturn);
-//		// resetTable(instantReturn);
-//	}
-	
-	//NEU NOCH NICHT LAUFEND
+
 	public void turnTableToWheel(boolean instantReturn) throws RemoteException {
-		
 		//int temp = (tachoCountRotate/2);
-		
 		//Theoretischer Wert, testen ob Sensoren genau genug sind
 		drehtischRotieren.rotateTo(0);
-		
 		//Alternative, Grad hardcoden und testen
 		// drehtischRotieren.rotate(30);
-		
 		//System.out.println(temp);
 		//drehtischRotieren.rotate(temp, instantReturn);
-		
 		// resetTable(instantReturn);
 	}
 	
@@ -181,7 +157,6 @@ public class Chargier {
 		drehtischRotieren.resetTachoCount();
 		drehtischRotieren.rotate(-1 * tablePosition, instantReturn);
 		tablePosition = 0;
-		
 	}
 
 	public void startLineToLifter(boolean direction) throws RemoteException { // start line from Table to lifer if direction true turn forward
@@ -191,7 +166,6 @@ public class Chargier {
 		} else {
 			antriebBandProd.backward();
 		}
-
 	}
 
 	public void stopLineToLifter() throws RemoteException { // start line from Table to lifer
@@ -206,20 +180,17 @@ public class Chargier {
 		} else {
 			antriebBandLeergut.backward();
 		}
-
 	}
 
 	public void takeBoxFromElevator(boolean instantReturn){
 		try {
 			antriebBandLeergut.rotate(720,instantReturn); 
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void stopLineToStorer() throws RemoteException { // stop line from Table to Store
 		antriebBandLeergut.stop(false);
-
 	}
 
 	public void stop() throws RemoteException { // stop all but not turntable
@@ -257,20 +228,16 @@ public class Chargier {
 
 	public void turntable_endstopFired() {
 		turntable_endstopStatus = true;
-		//System.out.println("Lift Sensor fired");
 	}
 
 	public void lift_lane_endstopFired() {
 		lift_lane_endstopStatus = true;
-		//System.out.println("Table Sensor fired");
 	}
 	public void endstop_to_storageFired() {
 		endstop_to_storageStatus = true;
-		//System.out.println("Table Lager Sensor fired");
 	}
 	public void endstop_to_liftFired() {
 		endstop_to_liftStatus = true;
-		//System.out.println("Table Rüttelplatte Sensor fired");
 	}
 
 	public void setTablePosition(int tablePosition) {

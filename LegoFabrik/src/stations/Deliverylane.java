@@ -1,7 +1,6 @@
 package stations;
 
 import java.rmi.RemoteException;
-
 import controller.Steuerung;
 import lejos.remote.ev3.RMIRegulatedMotor;
 
@@ -23,7 +22,6 @@ public class Deliverylane {
 	RMIRegulatedMotor gateC;
 	RMIRegulatedMotor gateD;
 	RMIRegulatedMotor LineToArms;
-
 	private Steuerung s;
 	
 	private int lineToArmsSpeed = 180;
@@ -43,7 +41,6 @@ public class Deliverylane {
 
 	public Deliverylane(Steuerung s,RMIRegulatedMotor lineToEnd, RMIRegulatedMotor gateB, RMIRegulatedMotor gateC,
 			RMIRegulatedMotor gateD, RMIRegulatedMotor LineToArms) {
-
 		this.s = s;
 		this.lineToEnd = lineToEnd;
 		this.gateB = gateB; // stoping boxes
@@ -63,20 +60,16 @@ public void deliverNewContainer(){ // Startpunkt für die beiden Einschieber ist 
 		// Dreht wieder auf Startpunkt zurück
 		turnLineToArms(overflow * (lineToArmsTurnDegree < 0 ? 1 : -1));
 		System.out.println(LineToArms.getTachoCount());
-		
 	} catch (RemoteException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 }
 	public void startLineToArms(boolean direction) throws RemoteException { // false is the right direction
-
 		LineToArms.setSpeed(getLineToArmsSpeed());
 		if (direction) {
 			LineToArms.forward();
 		} else {
 			LineToArms.backward();
-
 		}
 	}
 
@@ -87,51 +80,40 @@ public void deliverNewContainer(){ // Startpunkt für die beiden Einschieber ist 
 	}
 
 	public void stopLineToArms() throws RemoteException {
-
 		LineToArms.stop(true);
 	}
 
 	public void startLineToEnd(boolean direction) throws RemoteException { // false is the right direction
-
 		lineToEnd.setSpeed(getLineToEndSpeed());
 		if (direction) {
 			lineToEnd.forward();
 		} else {
 			lineToEnd.backward();
-
 		}
 	}
 
 	public void stopLineToEnd() throws RemoteException {
-
 		lineToEnd.stop(true);
 	}
 
 	public void openGateD() {
-
-		if (getGateDStatus()) {
-			// open
+		if (getGateDStatus()) { //open
 			try {
 				gateD.rotate(gateTurnDegree, true);
 				s.sendMessage("K2");
 				gateDCounter++;
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			gateDStatus = false;
 		}
 	}
 
 	public void closeGateD() {
-
-		if (!getGateDStatus()) {
-			// close
+		if (!getGateDStatus()) { //close
 			try {
 				gateD.rotate(-gateTurnDegree, true);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -139,14 +121,11 @@ public void deliverNewContainer(){ // Startpunkt für die beiden Einschieber ist 
 	}
 
 	public void openGateB() {
-
-		if (getGateBStatus()) {
-			// open
+		if (getGateBStatus()) { //open
 			try {
 				gateB.rotate(-gateTurnDegree, true);
 				gateBCounter++;
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			gateBStatus = false;
@@ -154,31 +133,23 @@ public void deliverNewContainer(){ // Startpunkt für die beiden Einschieber ist 
 	}
 
 	public void closeGateB() {
-
-		if (!getGateBStatus()) {
-			// close
-
+		if (!getGateBStatus()) { //close
 			try {
 				gateB.rotate(gateTurnDegree, true);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			gateBStatus = true;
 		}
 	}
 
 	public void openGateC() {
-
-		if (getGateCStatus()) {
-			// open
+		if (getGateCStatus()) { //open
 			try {
 				gateC.rotate(gateTurnDegree, true);
 				gateCCounter++;
 				s.sendMessage("K1");
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			gateCStatus = false;
@@ -186,22 +157,17 @@ public void deliverNewContainer(){ // Startpunkt für die beiden Einschieber ist 
 	}
 
 	public void closeGateC() {
-
-		if (!getGateCStatus()) {
-			// close
+		if (!getGateCStatus()) { //close
 			try {
 				gateC.rotate(-gateTurnDegree, true);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			gateCStatus = true;
 		}
 	}
 
 	public void openEquallyGate() {
-
 		if (gateCounter % 3 == 0) {
 			openGateC();
 		} else {

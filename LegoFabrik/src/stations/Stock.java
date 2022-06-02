@@ -212,12 +212,8 @@ public class Stock {
 		laneToStock1.setSpeed(getLineSpeed());
 		if (direction) {
 			laneToStock1.forward();
-			// laneToStock1.rotate(2000,true);
-			// laneToStock2.rotate(-2000,false);
 		} else {
 			laneToStock1.backward();
-			// laneToStock1.rotate(-2000,true);
-			// laneToStock2.rotate(2000,false);
 		}
 	}
 
@@ -228,7 +224,8 @@ public class Stock {
 	public void elevatorUp(boolean instantReturn) throws RemoteException {
 		if (getElevatorPositionVertical() == 'u') {
 			// its allready up
-		} else {
+		} 
+		else {
 			elevatorVerticalleft.setSpeed(elevatorVerticalSpeed);
 			elevatorVerticalright.setSpeed(elevatorVerticalSpeed);
 			elevatorVerticalleft.rotate(-10440, true); // move both at the same time 11520 and wait for second
@@ -249,8 +246,9 @@ public class Stock {
 
 	public void elevatorToLeft(boolean instantReturn) throws RemoteException {
 		if (getElevatorPositionHorizontal() == 'l') {
-			// nothing is allready left
-		} else {
+			// its allready left
+		} 
+		else {
 			elevatorHorizontal.setSpeed(elevatorHorizontalSpeed);
 			elevatorHorizontal.rotate(horizontalRotationDegree, true);
 			setElevatorPositionHorizontal('l');
@@ -259,10 +257,10 @@ public class Stock {
 
 	public void elevatorToRight(boolean instantReturn) throws RemoteException {
 		if (getElevatorPositionHorizontal() == 'r') {
-			// nothing is allready right
-		} else {
+			//its allready right
+		} 
+		else {
 			elevatorHorizontal.setSpeed(elevatorHorizontalSpeed);
-
 			elevatorHorizontal.rotate(-horizontalRotationDegree, true);
 			setElevatorPositionHorizontal('r');
 		}
@@ -290,7 +288,7 @@ public class Stock {
 					if (isStock4() == false) {
 						storeIn4(instantReturn);
 					} else {
-						System.out.println("Error Lager voll");
+						System.out.println("Error: Lager voll");
 					}
 				}
 			}
@@ -310,7 +308,7 @@ public class Stock {
 					if (isStock4() == true) {
 						pushBoxFromStock(4, instantReturn);
 					} else {
-						System.out.println("Error Lager leer");
+						System.out.println("Error: Lager leer");
 					}
 				}
 			}

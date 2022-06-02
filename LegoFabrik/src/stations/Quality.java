@@ -13,31 +13,59 @@ public class Quality {
 	RMIRegulatedMotor line; // TODO: rename, dont know wich lane atm
 	RMIRegulatedMotor gate; // schranke
 	RMIRegulatedMotor counterLine;
+	RMIRegulatedMotor counterGate;
 	EV3TouchSensor counter; // from Bandzaehler class
 	EV3ColorSensor s;
 	float color[];
 
-	private boolean gateStatus = false; // TODO: true us open
+	private boolean gateStatus = false; //true is open
+	private boolean counterGateStatus = false; //false: qa_1, true: qa_2
 	private int counterLineSpeed = 120;
 	private int gateSpeed = 720;
 	private int lineSpeed = 120; // 60
 	private int countedBalls = 0;
 	private int goodBalls = 0;
 	private int badBalls = 0;
+	private int storedBalls = 0;  //Good Balls stored @ Airarm
+	private int maxStoredBalls = 20; //How many Balls may be stored before switching to qa_2
 	private String colorString = "NONE";
 	private String ioColor = "RED";
 	private Timer timer = null;
 	private String oldcolor = "NONE";
-
 	private Steuerung s1;
 
-	public Quality(Steuerung s, RMIRegulatedMotor band, RMIRegulatedMotor gate, RMIRegulatedMotor counterLine) {
-
+	public Quality(Steuerung s, RMIRegulatedMotor counterGate, RMIRegulatedMotor band, RMIRegulatedMotor gate, RMIRegulatedMotor counterLine) {
 		this.s1 = s;
 		this.line = band;
 		this.gate = gate;
 		this.counterLine = counterLine;
-
+		this.counterGate= counterGate;
+	}
+	
+	public void closeCounterGate() {
+		if (counterGateStatus) { // if gate is open close if allready closed stay closed
+			counterGateStatus = false;
+			try {
+				//this.counterGate.setSpeed(gateSpeed);
+				System.out.println("close");
+				counterGate.rotate(60);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void openCounterGate() {
+		if (!counterGateStatus) {
+			counterGateStatus = true;
+			try {
+				//this.counterGate.setSpeed(gateSpeed);
+				System.out.println("open");
+				counterGate.rotate(-60);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void closeGate() {
@@ -45,8 +73,7 @@ public class Quality {
 			gateStatus = false;
 			try {
 				this.gate.setSpeed(gateSpeed);
-				//System.out.println("close Gate");
-				gate.rotate(60); // maybe +40 dont know what open and close is
+				gate.rotate(60);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -71,16 +98,14 @@ public class Quality {
 				timer = new java.util.Timer();
 				timer.schedule(new java.util.TimerTask() {
 					public void run() {
-						//System.out.println("timer runs ");
 						closeGate();
 					}
 				}, 1950); // time after the gate closes again 1950
-
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 		} else {
-			// Two white balls come in a short period of time.  The old timer to close the gate is canceled -> the gate will be kept open.
+			// Two good balls come in a short period of time.  The old timer to close the gate is canceled -> the gate will be kept open.
 			timer.cancel();
 			timer = new java.util.Timer();
 			timer.schedule(new java.util.TimerTask() {
@@ -131,6 +156,10 @@ public class Quality {
 				//System.out.println("good Ball");
 				openGate();
 				setGoodBalls(getGoodBalls() + 1);
+				if (!counterGateStatus) {
+					storedBalls++;
+				}
+				checkStoredBalls();
 				}
 			if (colorString == "WHITE" || colorString == "RED") {
 				setBadBalls(getBadBalls() + 1);
@@ -138,6 +167,15 @@ public class Quality {
 				}
 		}
 		oldcolor = colorString;
+	}
+	
+	public void checkStoredBalls() {
+		if (storedBalls >= maxStoredBalls) {
+			openCounterGate();
+		}
+		if (storedBalls < maxStoredBalls-2) {
+			closeCounterGate();
+		}
 	}
 
 	public int getCounterLineSpeed() {
@@ -169,11 +207,11 @@ public class Quality {
 	}
 
 	public void reset() {
-
 		if (gateStatus) { // closes gate if open
 			closeGate();
 		}
 		setCountedBalls(0);
+		setStoredBalls(0);
 		setGoodBalls(0);
 		setBadBalls(0);
 	}
@@ -191,7 +229,7 @@ public class Quality {
 	}
 
 	public int getBadBalls() {
-		return badBalls;
+		return (countedBalls-goodBalls);
 	}
 
 	public void setBadBalls(int badBalls) {
@@ -208,11 +246,9 @@ public class Quality {
 	}
 
 	public void stop() throws RemoteException {
-
 		stopCounterLine();
 		stopLine();
 		reset();
-
 	}
 
 	public String getIoColor() {
@@ -261,5 +297,20 @@ public class Quality {
 
 	public void setColor(float[] color) {
 		this.color = color;
+	}
+	public int getcountedBalls() {
+		return countedBalls;
+	}
+
+	public void setcountedBalls(int countedBalls) {
+		this.countedBalls = countedBalls;
+	}
+	
+	public int getStoredBalls() {
+		return storedBalls;
+	}
+
+	public void setStoredBalls(int storedBalls) {
+		this.storedBalls = storedBalls;
 	}
 }

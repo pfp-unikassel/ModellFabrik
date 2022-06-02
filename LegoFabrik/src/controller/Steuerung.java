@@ -181,7 +181,7 @@ public class Steuerung {
 		chargier = new Chargier(this, b103a, b103d, b103b, b102d, b102c);
 		lift = new Lift(this, b101a, b101b, b101d, b105a);
 		cleaner = new Cleaning(this, b105b, b105c);
-		quality = new Quality(this, b104c, b104b, b104d);
+		quality = new Quality(this, b104a, b104c, b104b, b104d);
 		qualitystation = new QualityStation(this, b109a, b109b, b109c, b109d);
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
 		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
@@ -245,7 +245,6 @@ public class Steuerung {
 				b101 = new RemoteEV3("192.168.0.101"); // hier muessen alle Brick Ips eingetragen werden
 			getPowerLevel(b101);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B1 not Found");
@@ -268,7 +267,6 @@ public class Steuerung {
 				b102 = new RemoteEV3("192.168.0.102");
 			getPowerLevel(b102);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B2 not Found");
@@ -291,7 +289,6 @@ public class Steuerung {
 				b103 = new RemoteEV3("192.168.0.103");
 			getPowerLevel(b103);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B3 not Found");
@@ -313,14 +310,15 @@ public class Steuerung {
 				b104 = new RemoteEV3("192.168.0.104");
 			getPowerLevel(b104);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B4 not Found");
 		}
+		b104a = b104.createRegulatedMotor("A", 'L');
 		b104b = b104.createRegulatedMotor("B", 'M');
 		b104c = b104.createRegulatedMotor("C", 'L');
 		b104d = b104.createRegulatedMotor("D", 'L');
+		openMotorPorts.add(b104a);
 		openMotorPorts.add(b104b);
 		openMotorPorts.add(b104c);
 		openMotorPorts.add(b104d);
@@ -335,7 +333,6 @@ public class Steuerung {
 				b105 = new RemoteEV3("192.168.0.105");
 			getPowerLevel(b105);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B5 not Found");
@@ -357,7 +354,6 @@ public class Steuerung {
 				b106 = new RemoteEV3("192.168.0.106");
 			getPowerLevel(b106);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B6 not Found");
@@ -381,7 +377,6 @@ public class Steuerung {
 				b107 = new RemoteEV3("192.168.0.107");
 			getPowerLevel(b107);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B07 not Found");
@@ -405,7 +400,6 @@ public class Steuerung {
 				b108 = new RemoteEV3("192.168.0.108");
 			getPowerLevel(b108);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B08 not Found");
@@ -428,7 +422,6 @@ public class Steuerung {
 				b109 = new RemoteEV3("192.168.0.109");
 			getPowerLevel(b109);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B9 not Found");
@@ -452,7 +445,6 @@ public class Steuerung {
 				b110 = new RemoteEV3("192.168.0.110");
 			getPowerLevel(b110);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B10 not Found");
@@ -476,7 +468,6 @@ public class Steuerung {
 			} else b111 = new RemoteEV3("192.168.0.111");
 			getPowerLevel(b111);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B11 not Found");
@@ -501,7 +492,6 @@ public class Steuerung {
 				b112 = new RemoteEV3("192.168.0.112");
 			getPowerLevel(b112);
 		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			closePorts();
 			System.out.println("B12 not Found");
@@ -527,7 +517,6 @@ public class Steuerung {
 //				b114 = new RemoteEV3("192.168.0.114");
 //			getPowerLevel(b114);
 //		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //			closePorts();
 //			System.out.println("B14 not Found");
@@ -551,7 +540,6 @@ public class Steuerung {
 //				b115 = new RemoteEV3("192.168.0.115");
 //			getPowerLevel(b115);
 //		} catch (RemoteException | MalformedURLException | NotBoundException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //			closePorts();
 //			System.out.println("B15 not Found");
@@ -589,7 +577,6 @@ public class Steuerung {
 			} catch (ConnectException e) {
 				System.out.println("Can not connect to " + temp.toString() + "\'s Brick");
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				System.out.println(temp.toString() + " could not be closed");
 				e.printStackTrace();
 			}
@@ -601,7 +588,6 @@ public class Steuerung {
 			} catch (ConnectException e) {
 				System.out.println("Can not connect to " + temp1.toString() + "\'s Brick");
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				System.out.println("Sensor port konnte nicht geschloßen werden");
 				e.printStackTrace();
 			}
@@ -977,7 +963,6 @@ public class Steuerung {
 					deliverylane.openGateB();
 					deliverylane.openEquallyGate();
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1033,10 +1018,8 @@ public class Steuerung {
 					}
 
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1049,14 +1032,12 @@ public class Steuerung {
 				cleaner.startLiftLine(true);
 				cleaner.startCleaner(true);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				cleaner.stop();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1067,14 +1048,12 @@ public class Steuerung {
 			try {
 				lift.startShaker();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				lift.stopShaker();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1099,14 +1078,12 @@ public class Steuerung {
 				quality.startCounterLine(false);
 				quality.startLine(true);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				quality.stop();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1131,7 +1108,6 @@ public class Steuerung {
 						stock.elevatorToLeft(true);
 						stock.elevatorDown(false);
 					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -1152,7 +1128,6 @@ public class Steuerung {
 						deliverylane.turnLineToArms(-1048);
 						runGates(true);
 					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -1163,7 +1138,6 @@ public class Steuerung {
 				runGates(false);
 				deliverylane.stopLineToEnd();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1202,10 +1176,8 @@ public class Steuerung {
 					 Thread.sleep(1000);
 					 
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
 				deliverylane.openEquallyGate(); // open gate c or d or none equally
@@ -1213,7 +1185,6 @@ public class Steuerung {
 				try {
 					Thread.sleep(8000);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				deliverylane.closeGates();
@@ -1222,202 +1193,12 @@ public class Steuerung {
 				try {
 					deliverylane.stopLineToEnd();
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}, 1000);
 	}
 	
-	
-  public void testRun() { //Testprogramm zum Bugfixen, ersetzt temporär Szenario 2 
-  //Aktuell: Test für Pneumatik //Gehe von Standartstellung aus: rehchts, rechts, rechts, links 
-  new java.util.Timer().schedule(new java.util.TimerTask() {
-	  @Override public void run() { 
-		  //Default: rechts, rechts, rechts, links (Turm 2 in Ausgangspos = Turm bei Bällen.)
-		  //1 = airarms.turnArm();
-		  //2 = airarms.armDown(); airarms.armUp();
-		  //3 = airarms.grabTurn(); 
-		  //4 = airarms.grabOpen(); airarms.grabClose();
-		  
- 	  qualitystation.startTower();
-		  try {
-				Thread.sleep(100000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		  qualitystation.stopTower();
-		  
-		  
-//		  
-//		  try {
-//				Thread.sleep(10000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		  
-//		  qualitystation.takeBallToBad();
-//
-//		  try {
-//				Thread.sleep(10000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		  
-//		  qualitystation.takeBallToGood();
-		  
-//			  System.out.println("Arm runter");
-//			  airarms.armDown();
-//			  try {
-//				  Thread.sleep(500);
-//			  } catch (InterruptedException e) {
-//				  // TODO Auto-generated catch block
-//				  e.printStackTrace();
-//			  }
-//
-//			  System.out.println("Arm hoch");
-//			  airarms.armUp();
-//			  try {
-//				  Thread.sleep(500);
-//			  } catch (InterruptedException e) {
-//				  // TODO Auto-generated catch block
-//				  e.printStackTrace();
-//			  }
-//
-		  System.out.println("Durchlauf fertig");
-			}
-	  }, 1000);
-  }
-		  
-//		  System.out.println("Arm runter");
-//		  airarms.armDown();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Greifer zu");
-//		  airarms.grabClose();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm hoch");
-//		  airarms.armUp();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm einfahren");
-//		  airarms.turnArm();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Turm drehen");
-//		  airarms.turnTower();
-//		  try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Greifer drehen");
-//		  airarms.grabTurn();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm ausfahren");
-//		  airarms.turnArm();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm runter");
-//		  airarms.armDown();
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Greifer loslassen");		  
-//		  airarms.grabOpen();		  
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm hoch");
-//		  airarms.armUp();		  
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm einfahren");		  
-//		  airarms.turnArm();		  
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Turm drehen");
-//		  airarms.turnTower();		  
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Greifer drehen");
-//		  airarms.grabTurn();		  
-//		  try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  
-//		  System.out.println("Arm vorn");
-//		  airarms.turnArm();		  
-//		  try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		  
 	
 	// --------------------Szenarios------------------------------
@@ -1438,7 +1219,6 @@ public class Steuerung {
 			@Override
 			public void run() {
 				try {
-
 					fillStation.loadCar();
 					chargier.resetTable(true);
 					chargier.startLineToTable(false);
@@ -1513,35 +1293,31 @@ public class Steuerung {
 					System.out.println("N/IO: " + quality.getBadBalls() + "  IO: " + quality.getGoodBalls());
 					//System.out.println("Speed: " + speed);
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}, 1000);
 	}
 
-	public void startSzenario2() { // turn table to lift
+	public void startSzenario2() {
 		setSzenario(2);
-		// runExport();
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-			 //testRun();
-			 //runQuality(true); 
-			 try {
-				stock.home();
-				chargier.home();
-				lift.home();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+
+			 airarms.turnTower();
+//			 try {
+//				stock.home();
+//				chargier.home();
+//				lift.home();
+//
+//			} catch (RemoteException e) {
+//				e.printStackTrace();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} 
 		 	}
 		 }, 1000);
 	}
@@ -1549,11 +1325,9 @@ public class Steuerung {
 	public void startSzenario3() {
 		/**
 		 *   Volle Kiste steht auf dem Band und Leere im Lager
-		 *   
 		 *   Gleichzeitiger ablauf 1&2:
-		 *   
 		 *   1: Kiste befüllt
-		 *   
+		 *   2: ?
 		 */
 		setSzenario(3);
 		// c.updateLabels();
@@ -1563,16 +1337,11 @@ public class Steuerung {
 			public void run() {
 				try {
 					chargier.resetTable(false);
-
 					fillStation.rotateWheel(360, false);
-					
 					chargier.startLineToTable(false);
 					chargier.startTableLine(true);
-
-					// positioniere leere kiste auf dem Laufband vor dem
-					// Elevator
-					// Gleichzeitiger ablauf änder es spaeter im code solange
-					// neuen Thread erstellen unsauber
+					// positioniere leere kiste auf dem Laufband vor dem Elevator
+					// Gleichzeitiger ablauf änder es spaeter im code solange neuen Thread erstellen unsauber
 					new java.util.Timer().schedule(new java.util.TimerTask() {
 						@Override
 						public void run() {
@@ -1581,12 +1350,9 @@ public class Steuerung {
 								chargier.startLineToStore(true);
 								stock.pushBoxFromElevatorToLine(false); 		// from elevator Line on Chargier
 								chargier.stopLineToStorer();
-
 							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -1596,19 +1362,13 @@ public class Steuerung {
 					lift_lane_endstopStatus = false;
 					while (!lift_lane_endstopStatus) {
 						System.out.print("");
-						Thread.sleep(50);
-						// System.out.println("hänge in schleife 1");
-						// System.out.println(lift_lane_endstopStatus);
+						Thread.sleep(10);
 					}
 //					chargier.stopLineToStorer();
-
 					chargier.stopLineToTable();
 					chargier.stopTableLine();
-
-					
 					//AB HIER NEU-----------
 					//chargier.turnToLift(false);
-					
 					chargier.rotateTable(true);
 					endstop_to_liftStatus = false;
 					while(!endstop_to_liftStatus) {
@@ -1700,10 +1460,8 @@ public class Steuerung {
 															// repair later
 
 							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -1754,10 +1512,8 @@ public class Steuerung {
 					System.out.println("N/IO: " + quality.getBadBalls() + "  IO: " + quality.getGoodBalls());
 
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

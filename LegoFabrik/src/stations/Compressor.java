@@ -49,10 +49,6 @@ public class Compressor {
 
 	public void stopCompressor() {
 		try {
-			m1.stop(true);
-			m2.stop(true);
-			m3.stop(true);
-			m4.stop(true);
 			m1.flt(false);
 			m2.flt(false);
 			m3.flt(false);
