@@ -489,8 +489,8 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </Label>
-                              <Button fx:id="airamsBack14" mnemonicParsing="false" onMousePressed="#airarmsBackButtonPressed14" onMouseReleased="#airarmsBackButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
-                              <Button fx:id="airarmsVor14" mnemonicParsing="false" onMousePressed="#airarmsVorButtonPressed14" onMouseReleased="#airarmsVorButtonReleased14" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
+                              <Button fx:id="airamsBack17" mnemonicParsing="false" onMousePressed="#airarmsBackButtonPressed17" onMouseReleased="#airarmsBackButtonReleased17" prefHeight="25.0" prefWidth="150.0" text="Rückwärts" />
+                              <Button fx:id="airarmsVor17" mnemonicParsing="false" onMousePressed="#airarmsVorButtonPressed17" onMouseReleased="#airarmsVorButtonReleased17" prefHeight="25.0" prefWidth="150.0" text="Vorwärts" />
                            </children>
                         </HBox>                        
                         <HBox layoutX="10.0" layoutY="1162.0" prefHeight="35.0" prefWidth="581.0" spacing="30.0">

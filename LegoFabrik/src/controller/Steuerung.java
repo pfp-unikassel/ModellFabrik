@@ -86,6 +86,7 @@ public class Steuerung {
 	static RMIRegulatedMotor b108a;
 	static RMIRegulatedMotor b108b;
 	static RMIRegulatedMotor b108c;
+	static RMIRegulatedMotor b108d;
 
 	static RMIRegulatedMotor b109a;
 	static RMIRegulatedMotor b109b;
@@ -184,7 +185,7 @@ public class Steuerung {
 		quality = new Quality(this, b104a, b104c, b104b, b104d);
 		qualitystation = new QualityStation(this, b109a, b109b, b109c, b109d);
 		compressor = new Compressor(this, b107a, b107b, b107c, b107d);
-		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b); 
+		airarms = new Airarms(this, b106a, b106b, b106c, b106d, b108a, b108b, b108c, b108d); 
 		deliverylane = new Deliverylane(this, b110a, b110b, b110c, b110d, b108c);
 		stock = new Stock(this, b112d, b112a, b112c, b112b, b111a, b111b, b111c, b111d);
 		//transport = new Transport(this, b115a, b115b, b115c, b115d);
@@ -207,7 +208,7 @@ public class Steuerung {
 	}
 
 	private void startSensordeamon() {
-		sensordeamon = new Sensordeamon(this, b101, b102, b104, b107, b112);
+		sensordeamon = new Sensordeamon(this, b101, b102, b104, b107, b109, b112);
 		sensordeamon.start();
 	}
 
@@ -358,10 +359,10 @@ public class Steuerung {
 			closePorts();
 			System.out.println("B6 not Found");
 		}
-		b106a = b106.createRegulatedMotor("A", 'M');
-		b106b = b106.createRegulatedMotor("B", 'M');
-		b106c = b106.createRegulatedMotor("C", 'M');
-		b106d = b106.createRegulatedMotor("D", 'M');
+		b106a = b106.createRegulatedMotor("A", 'L');
+		b106b = b106.createRegulatedMotor("B", 'L');
+		b106c = b106.createRegulatedMotor("C", 'L');
+		b106d = b106.createRegulatedMotor("D", 'L');
 		openMotorPorts.add(b106a);
 		openMotorPorts.add(b106b);
 		openMotorPorts.add(b106c);
@@ -408,9 +409,11 @@ public class Steuerung {
 		b108a = b108.createRegulatedMotor("A", 'M');
 		b108b = b108.createRegulatedMotor("B", 'M');
 		b108c = b108.createRegulatedMotor("C", 'L');
+		b108d = b108.createRegulatedMotor("D", 'L');
 		openMotorPorts.add(b108a);
 		openMotorPorts.add(b108b);
 		openMotorPorts.add(b108c);
+		openMotorPorts.add(b108d);
 		bricks.add(b108);
 	}
 
@@ -679,6 +682,22 @@ public class Steuerung {
 	public void resetDigitalTwin() {
 		sendMessage("ST");
 	}
+	
+	public void homeAll() {
+		sensordeamon.sethomingsensors_active(true);
+		System.out.println("Homing läuft");
+		 try {
+			stock.home();
+			chargier.home();
+			lift.home();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} 
+		sensordeamon.sethomingsensors_active(false);
+		System.out.println("Homing abgeschlossen");
+	}
 
 	public void sendMessage(String message) {
 		/**sendet Nachricht an den Zwilling, Ip und Port sind in der Methode hardcoded
@@ -822,6 +841,10 @@ public class Steuerung {
 	
 	public void qa_1_colorFired(String colorString) {
 		quality.colorSensorFired(colorString);
+	}
+	
+	public void qa_2_colorFired(String colorString) {
+//ToDo
 	}
 
 	public void compressor_sensorFired(boolean button) {
@@ -1090,11 +1113,7 @@ public class Steuerung {
 	}
 
 	public void runAirarms(boolean mode) { //runs Station standart ablauf in seperaten thread
-		if (mode == true) {
-			airarms.runAirArms();
-		} else {
-			airarms.reset();
-		}
+		airarms.runAirArms();
 	}
 
 	public void runStock(boolean mode) { //runs Station standart ablauf in seperaten thread
@@ -1253,6 +1272,7 @@ public class Steuerung {
 					lift.startShaker();
 					lift.start(false); // wait until it finished
 					lift.stopShaker();
+					sensordeamon.setqasensors_active(true);
 					cleaner.startCleaner(true);
 					cleaner.startLiftLine(true); 
 					chargier.startLineToLifter(true);
@@ -1292,6 +1312,7 @@ public class Steuerung {
 					quality.stopLine();
 					System.out.println("N/IO: " + quality.getBadBalls() + "  IO: " + quality.getGoodBalls());
 					//System.out.println("Speed: " + speed);
+					sensordeamon.setqasensors_active(false);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
@@ -1306,18 +1327,8 @@ public class Steuerung {
 		 new java.util.Timer().schedule(new java.util.TimerTask() {
 		 @Override
 		 public void run() {
-
-			 airarms.turnTower();
-//			 try {
-//				stock.home();
-//				chargier.home();
-//				lift.home();
-//
-//			} catch (RemoteException e) {
-//				e.printStackTrace();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			} 
+			 airarms.reset();
+			 
 		 	}
 		 }, 1000);
 	}
