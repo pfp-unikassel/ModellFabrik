@@ -359,10 +359,10 @@ public class Steuerung {
 			closePorts();
 			System.out.println("B6 not Found");
 		}
-		b106a = b106.createRegulatedMotor("A", 'L');
-		b106b = b106.createRegulatedMotor("B", 'L');
-		b106c = b106.createRegulatedMotor("C", 'L');
-		b106d = b106.createRegulatedMotor("D", 'L');
+		b106a = b106.createRegulatedMotor("A", 'M');
+		b106b = b106.createRegulatedMotor("B", 'M');
+		b106c = b106.createRegulatedMotor("C", 'M');
+		b106d = b106.createRegulatedMotor("D", 'M');
 		openMotorPorts.add(b106a);
 		openMotorPorts.add(b106b);
 		openMotorPorts.add(b106c);
@@ -408,8 +408,8 @@ public class Steuerung {
 
 		b108a = b108.createRegulatedMotor("A", 'M');
 		b108b = b108.createRegulatedMotor("B", 'M');
-		b108c = b108.createRegulatedMotor("C", 'L');
-		b108d = b108.createRegulatedMotor("D", 'L');
+		b108c = b108.createRegulatedMotor("C", 'M');
+		b108d = b108.createRegulatedMotor("D", 'M');
 		openMotorPorts.add(b108a);
 		openMotorPorts.add(b108b);
 		openMotorPorts.add(b108c);
@@ -430,8 +430,8 @@ public class Steuerung {
 			System.out.println("B9 not Found");
 		}
 		b109a = b109.createRegulatedMotor("A", 'M');
-		b109b = b109.createRegulatedMotor("B", 'M');
-		b109c = b109.createRegulatedMotor("C", 'M');
+		b109b = b109.createRegulatedMotor("B", 'L');
+		b109c = b109.createRegulatedMotor("C", 'L');
 		b109d = b109.createRegulatedMotor("D", 'M');
 		openMotorPorts.add(b109a);
 		openMotorPorts.add(b109b);
@@ -844,16 +844,13 @@ public class Steuerung {
 	}
 	
 	public void qa_2_colorFired(String colorString) {
-//ToDo
+		qualitystation.colorSensorFired(colorString);
 	}
 
 	public void compressor_sensorFired(boolean button) {
 		compressor.pressureButtonfired(button);
 	}
 
-	public void b1151Fired(String colorString) {
-		qualitystation.colorSensorFired(colorString);
-	}
 	public void lift_grabber_leftFired () {
 		lift.lift_grabber_leftFired();
 	}
@@ -1324,13 +1321,22 @@ public class Steuerung {
 
 	public void startSzenario2() {
 		setSzenario(2);
-		 new java.util.Timer().schedule(new java.util.TimerTask() {
-		 @Override
-		 public void run() {
-			 airarms.reset();
-			 
+		new java.util.Timer().schedule(new java.util.TimerTask() {
+		@Override
+		public void run() {
+				try {
+					airarms.reset();
+					//airarms.test();
+					airarms.runAirArms();
+					Thread.sleep(100);
+					airarms.motorshutdown();
+				} catch (InterruptedException e) {
+//				} catch (RemoteException e) {
+				}
+				
+				qualitystation.setSortStatus(false);
 		 	}
-		 }, 1000);
+		}, 1000);
 	}
 
 	public void startSzenario3() {

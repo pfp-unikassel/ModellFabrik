@@ -5,18 +5,21 @@ import java.rmi.RemoteException;
 import controller.Steuerung;
 import lejos.remote.ev3.RMIRegulatedMotor;
 
-public class Airarms {
+public class Airarms{
 	private boolean towerPosition = true; // 1 to QA, 2 to lane
-	private int turnDegree = -80;
-	private int towerTurnDegree = -200; //default 100
+	private int turnDegree = 60;
+	private int towerTurnDegree = -210; //default 100
 	private Steuerung s;
-	private boolean arm1Extended = true; //6A: Arm 2 ist eingezogen
+	private boolean armsExtended = true; //6A: Arme sind ausgefahren
 	private boolean arm1Up = 	   true; //8D
 	private boolean arm2Up = 	   true; //6C
 	private boolean grabber1Parallel = true; //6B: Greifer von Arm 1 ist parallel zur Armrichtung ,Arm 2 ist gedreht
 	private boolean arm1GrabOpen = true; //8C
 	private boolean arm2GrabOpen = true; //6D
-	private int valvespeed = 300;
+	private int valvespeed = 90;
+	private boolean arm1active = true;
+	private boolean arm2active = true;
+	private boolean armsactive = true;
 	
 	RMIRegulatedMotor extend;
 	RMIRegulatedMotor vertical1;
@@ -44,8 +47,8 @@ public class Airarms {
 			turnsGrabber.setSpeed(valvespeed);
 			vertical2.setSpeed(valvespeed);
 			grab2.setSpeed(valvespeed);
-			turnArm2.setSpeed(180); 
-			turnArm1.setSpeed(180);
+			turnArm2.setSpeed(250); 
+			turnArm1.setSpeed(250);
 			grab1.setSpeed(valvespeed);
 			vertical1.setSpeed(valvespeed);
 		} catch (RemoteException e) {
@@ -62,6 +65,8 @@ public class Airarms {
 			grab2.flt(true);
 			grab1.flt(true);
 			vertical1.flt(true);
+			turnArm1.flt(true);
+			turnArm2.flt(true);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -69,77 +74,58 @@ public class Airarms {
 	
 	public void reset () {
 		try {
-			extend.backward();
 			boolean stalled = false;
-			while (!stalled) {
-				stalled = extend.isStalled();
-				Thread.sleep(10);
-			}
-			extend.stop(true);
-			extend.flt(true);
-			
-			turnsGrabber.forward();
-			stalled = false;
-			while (!stalled) {
-				stalled = turnsGrabber.isStalled();
-				Thread.sleep(10);
-			}
-			turnsGrabber.stop(true);
+			turnsGrabber.backward();
+			turnsGrabber.waitComplete();
 			turnsGrabber.flt(true);
-			
-			vertical2.backward();
-			stalled = false;
-			while (!stalled) {
-				stalled = vertical2.isStalled();
-				Thread.sleep(10);
-			}
-			vertical2.stop(true);
-			vertical2.flt(true);
-			
-			grab2.backward();
-			stalled = false;
-			while (!stalled) {
-				stalled = grab2.isStalled();
-				Thread.sleep(10);
-			}
-			grab2.stop(true);
-			grab2.flt(true);
-			
 			grab1.forward();
-			stalled = false;
-			while (!stalled) {
-				stalled = grab1.isStalled();
-				Thread.sleep(10);
-			}
-			grab1.stop(true);
+			grab1.waitComplete();
 			grab1.flt(true);
-			
-			vertical1.forward();
-			stalled = false;
-			while (!stalled) {
-				stalled = vertical1.isStalled();
-				Thread.sleep(10);
-			}
-			vertical1.stop(true);
+			grab2.forward();
+			grab2.waitComplete();
+			grab2.flt(true);
+			vertical1.backward();
+			vertical1.waitComplete();
 			vertical1.flt(true);
+			vertical2.backward();
+			vertical2.waitComplete();
+			vertical2.flt(true);
+			extend.backward();
+			extend.waitComplete();
+			extend.flt(true);
+			armsExtended = true; //6A: Arm 2 ist eingezogen
+			arm1Up = 	   true; //8D
+			arm2Up = 	   true; //6C
+			grabber1Parallel = true; //6B: Greifer von Arm 1 ist parallel zur Armrichtung ,Arm 2 ist gedreht
+			arm1GrabOpen = true; //8C
+			arm2GrabOpen = true; //6D
 			
-			turnArm1.forward();
+			turnArm1.backward();
 			stalled = false;
 			while (!stalled) {
 				stalled = turnArm1.isStalled();
-				Thread.sleep(10);
+				Thread.sleep(100);
 			}
 			turnArm1.stop(true);
 			turnArm1.flt(true);
-			
 			turnArm2.backward();
 			stalled = false;
 			while (!stalled) {
 				stalled = turnArm2.isStalled();
-				Thread.sleep(10);
+				Thread.sleep(100);
 			}
 			turnArm2.stop(true);
 			turnArm2.flt(true);
+			towerPosition = true;
+			
+			turnsGrabber.resetTachoCount();
+			extend.resetTachoCount();
+			grab1.resetTachoCount();
+			grab2.resetTachoCount();
+			vertical1.resetTachoCount();
+			vertical2.resetTachoCount();
+			turnArm1.resetTachoCount();
+			turnArm2.resetTachoCount();
 			
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -148,32 +134,35 @@ public class Airarms {
 		}
 	}
 
-	public void retractArm1() {
-		if (arm1Extended) {
+	public void retractArms() {
+		if (armsExtended) {
 			try {
-				extend.rotate(turnDegree, false); //positiv -> Hebel nach links?
+				extend.rotate(turnDegree);
+				extend.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			arm1Extended = false;	
+			armsExtended = false;	
 		}
 	}
 	
-	public void extendArm1() {
-		if (!arm1Extended) {
+	public void extendArms() {
+		if (!armsExtended) {
 			try {
-				extend.rotate(-turnDegree, false);
+				extend.rotate(-turnDegree);
+				extend.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			arm1Extended = true;	
+			armsExtended = true;	
 		}
 	}
 	
-	public void moveArm1Up() {
+	public void moveArm1Up(boolean immediateReturn) {
 		if (!arm1Up) {
 			try {
-				vertical1.rotate(-turnDegree, false);
+				vertical1.rotate(-turnDegree, immediateReturn);
+				vertical1.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -181,20 +170,22 @@ public class Airarms {
 		}
 	}
 	
-	public void moveArm1Down() {
+	public void moveArm1Down(boolean immediateReturn) {
 		if (arm1Up) {
 			try {
-				vertical1.rotate(turnDegree, false);
+				vertical1.rotate(turnDegree, immediateReturn);
+				vertical1.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 			arm1Up = false;	
 		}
 	}
-	public void moveArm2Up() {
+	public void moveArm2Up(boolean immediateReturn) {
 		if (!arm2Up) {
 			try {
-				vertical2.rotate(-turnDegree, false);
+				vertical2.rotate(-turnDegree, immediateReturn);
+				vertical2.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -202,10 +193,11 @@ public class Airarms {
 		}
 	}
 	
-	public void moveArm2Down() {
+	public void moveArm2Down(boolean immediateReturn) {
 		if (arm2Up) {
 			try {
-				vertical2.rotate(turnDegree, false);
+				vertical2.rotate(turnDegree, immediateReturn);
+				vertical2.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -213,10 +205,11 @@ public class Airarms {
 		}
 	}
 	
-	public void turnGrabber() {
+	public void turnGrabber(boolean immediateReturn) {
 		if (grabber1Parallel) {
 			try {
-				turnsGrabber.rotate(turnDegree, false);
+				turnsGrabber.rotate(turnDegree, immediateReturn);
+				turnsGrabber.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -224,7 +217,8 @@ public class Airarms {
 		}
 		else {
 			try {
-				turnsGrabber.rotate(-turnDegree, false);
+				turnsGrabber.rotate(-turnDegree, immediateReturn);
+				turnsGrabber.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -232,10 +226,11 @@ public class Airarms {
 		}
 	}
 	
-	public void openGrabber1() {
+	public void openGrabber1(boolean immediateReturn) {
 		if (!arm1GrabOpen) {
 			try {
-				grab1.rotate(-turnDegree, false);
+				grab1.rotate(turnDegree, immediateReturn);
+				grab1.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -243,10 +238,11 @@ public class Airarms {
 		}
 	}
 	
-	public void closeGrabber1() {
+	public void closeGrabber1(boolean immediateReturn) {
 		if (arm1GrabOpen) {
 			try {
-				grab1.rotate(turnDegree, false);
+				grab1.rotate(-turnDegree, immediateReturn);
+				grab1.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -254,10 +250,11 @@ public class Airarms {
 		}
 	}
 	
-	public void openGrabber2() {
+	public void openGrabber2(boolean immediateReturn) {
 		if (!arm2GrabOpen) {
 			try {
-				grab2.rotate(-turnDegree, false);
+				grab2.rotate(turnDegree, immediateReturn);
+				grab2.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -265,10 +262,11 @@ public class Airarms {
 		}
 	}
 	
-	public void closeGrabber2() {
+	public void closeGrabber2(boolean immediateReturn) {
 		if (arm2GrabOpen) {
 			try {
-				grab2.rotate(turnDegree, false);
+				grab2.rotate(-turnDegree, immediateReturn);
+				grab2.flt(true);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -278,16 +276,16 @@ public class Airarms {
 	public void turnTowers() { //Dreht den Turm
 		if (towerPosition) {
 			try {
-				turnArm1.rotate(towerTurnDegree, false); // turn one after another
-				turnArm2.rotate(towerTurnDegree, false); // falls es probleme gibt heir war vorher true testen
+				turnArm2.rotate(-towerTurnDegree, false); // turn one after another
+				turnArm1.rotate(-towerTurnDegree, false); // 
 				towerPosition = false;
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				turnArm2.rotate(-towerTurnDegree, false);
-				turnArm1.rotate(-towerTurnDegree, false);
+				turnArm1.rotate(towerTurnDegree, false);
+				turnArm2.rotate(towerTurnDegree, false);
 				towerPosition = true;
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -296,23 +294,91 @@ public class Airarms {
 		}
 	}
 	
-
+	public void test() throws InterruptedException, RemoteException {
+//		vertical2.resetTachoCount();
+//		vertical1.resetTachoCount();
+//		moveArm2Down(false);
+//		moveArm1Down(false);
+//		vertical1.flt(true);
+//		vertical2.flt(true);
+//		turnGrabber();
+//		System.out.println("vertical 1: "+vertical1.getTachoCount());
+//		System.out.println("vertical 2: "+vertical2.getTachoCount());
+//		moveArm2Up(false);
+//		moveArm1Up(false);
+//		vertical1.flt(true);
+//		vertical2.flt(true);
+//		turnGrabber();
+//		System.out.println("vertical 1: "+vertical1.getTachoCount());
+//		System.out.println("vertical 2: "+vertical2.getTachoCount());
+		vertical1.resetTachoCount();
+		vertical1.rotateTo(60);
+		vertical1.rotateTo(0);
+		vertical1.rotateTo(60);
+		vertical1.rotateTo(0);
+		vertical1.rotateTo(60);
+		vertical1.rotateTo(0);
+		vertical1.rotateTo(60);
+		vertical1.rotateTo(0);
+		vertical1.rotateTo(60);
+		vertical1.rotateTo(0);
+	}
 	
-	public void runAirArms() {
-		moveArm1Down();
-		closeGrabber1();
-		moveArm1Up();
-		turnGrabber();
-		retractArm1();
-		turnTowers();
-		extendArm1();
-		moveArm1Down();
-		openGrabber1();
-		moveArm1Up();
-		retractArm1();
-		turnTowers();
-		extendArm1();
-		turnGrabber();
+	public void runAirArms() throws InterruptedException{ //move commands mit boolean: false: wartet bis bewegung fertig, true: sofort weiter
+		armsactive = true;
+		while (armsactive) {
+			if (arm1active && arm2active) { //beide Arme runter, 2 lässt los, 1 greift zu
+				moveArm2Down(true);
+				moveArm1Down(false);
+				openGrabber2(true);
+				closeGrabber1(false);
+				moveArm2Up(true);
+				moveArm1Up(false);
+				//Arm2 Check fehlt
+			}
+			else if (arm1active && !arm2active) { //nur arm 1 macht was, 2 bleibt oben über Ablage
+				moveArm1Down(false);
+				closeGrabber1(false);
+				moveArm1Up(false);
+			}
+			else if (!arm1active && arm2active) { //arm 2 legt ab, arm 1 steht still
+				moveArm2Down(false);
+				openGrabber2(false);
+				moveArm2Up(false);
+				//Arm2 Check fehlt
+			}
+			turnGrabber(true);
+			retractArms();
+			turnTowers();
+			extendArms();
+			if (arm1active && arm2active) { //beide Arme runter, 1 lässt los, 2 greift zu
+				moveArm1Down(true);
+				moveArm2Down(false);
+				openGrabber1(true);
+				closeGrabber2(false);
+				moveArm1Up(true);
+				moveArm2Up(false);
+				s.getQuality().setStoredBalls(s.getQuality().getStoredBalls()-2); //Arm1 hat Bälle weg transferiert
+				s.getQuality().checkStoredBalls(); //prüfen, ob Arm1 weiter aktiv sein soll
+			}
+			else if (arm1active && !arm2active) { //arm 1 legt ab, arm 2 steht still
+				moveArm1Down(false);
+				openGrabber1(false);
+				moveArm1Up(false);
+				s.getQuality().setStoredBalls(s.getQuality().getStoredBalls()-2); //Arm1 hat Bälle weg transferiert
+				s.getQuality().checkStoredBalls(); //prüfen, ob Arm1 weiter aktiv sein soll
+			}
+			else if (!arm1active && arm2active) { //arm 2 nimmt auf
+				moveArm2Down(false);
+				closeGrabber2(false);
+				moveArm2Up(false);
+			}
+			turnGrabber(true);
+			retractArms();
+			turnTowers();
+			extendArms(); //Zyklus abgeschlossen, kann von vorne beginnen
+			armsactive = false; //zur unterbrechung während der programmentwicklung
+		}
 		s.getQuality().setStoredBalls(s.getQuality().getStoredBalls()-2);
 		s.getQuality().checkStoredBalls();
 		
@@ -372,5 +438,9 @@ public class Airarms {
 
 	public void setgrab2(RMIRegulatedMotor grab2) {
 		this.grab2 = grab2;
+	}
+	
+	public void stoparms () {
+		armsactive = false;
 	}
 }

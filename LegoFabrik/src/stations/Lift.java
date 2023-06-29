@@ -12,7 +12,7 @@ public class Lift {
 	RMIRegulatedMotor grabber_left;
 	RMIRegulatedMotor shaker;
 	
-	private int winkelGreifen = 450;
+	private int winkelGreifen = 1080;
 	private int winkelHeben =  3700;
 	private int liftSpeed = 740;
 	private int shakerSpeed = 1000;
@@ -99,16 +99,20 @@ public class Lift {
 			Thread.sleep(10);
 		}
 		Heben.stop(true);
+		grabber_left.resetTachoCount();
+		grabber_right.resetTachoCount();
 		grabber_left.backward();
 		while (!endstop_left) {
 			Thread.sleep(10);
 		}
 		grabber_left.stop(true);
+		System.out.println(grabber_left.getTachoCount());
 		grabber_right.backward();
 		while (!endstop_right) {
 			Thread.sleep(10);
 		}
 		grabber_right.stop(true);
+		System.out.println(grabber_right.getTachoCount());
 
 	}
 	

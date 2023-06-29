@@ -24,7 +24,7 @@ public class Sensordeamon extends Thread {
 	private RemoteEV3 b109;
 	private RemoteEV3 b112;
 	private boolean qasensors_active = true; //Zähl&Farbsensoren nur bei traue aktiv, zur Performance Verbesserung
-	private boolean homingsensors_active = false;	
+	private boolean homingsensors_active = true;	//muss false, nur testweise true
 
 	public Sensordeamon(Steuerung s, RemoteEV3 b101, RemoteEV3 b102, RemoteEV3 b104, RemoteEV3 b107, RemoteEV3 b109,
 			RemoteEV3 b112) { // ad
@@ -92,7 +92,6 @@ public class Sensordeamon extends Thread {
 		float[] lift_grabber_left_array = new float[5];
 		float[] lift_grabber_right_array = new float[5];
 		float[] lift_hinge_array = new float[5];
-		float[] qa_2_distance_array = new float[5];
 
 		while (!stopper) { // kontrolliere jederzeit ob einer der Sensoren etwas erkennt
 			i++;
@@ -159,7 +158,6 @@ public class Sensordeamon extends Thread {
 					counter_array = counter.fetchSample();
 					qa_1_color_array = qa_1_color.fetchSample();
 					qa_2_color_array = qa_2_color.fetchSample();
-					qa_2_distance_array = qa_2_distance.fetchSample();
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
